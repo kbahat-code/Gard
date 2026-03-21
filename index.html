@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת ניהול גידול - ייצוא מלא לאקסל</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f2f5; padding: 10px; margin: 0; color: #333; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .nav-bar { display: flex; background: #2e7d32; border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+        .nav-item { flex: 1; padding: 15px; text-align: center; color: white; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .nav-item.active { background: #1b5e20; border-bottom: 4px solid #c8e6c9; }
+        .panel { display: none; }
+        .panel.active { display: block; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #555; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; margin-bottom: 10px; }
+        
+        .instruction-box { background: #fffde7; border: 2px solid #fbc02d; color: #5d4037; padding: 15px; border-radius: 10px; margin: 15px 0; display: none; }
+        .instruction-box h4 { margin: 0 0 10px 0; color: #f57f17; }
+        
+        .method-selector, .tab-container { display: flex; gap: 5px; margin-bottom: 10px; }
+        .opt, .tab-btn { flex: 1; padding: 10px; background: #f0f0f0; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; font-size: 12px; }
+        .active-opt, .active-tab { border-color: #2e7d32; background: #e8f5e9; font-weight: bold; }
+        .active-tab { background: #4caf50; color: white; }
+        
+        .main-btn { width: 100%; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; margin-top: 5px; }
+        .btn-excel { background: #1976d2; margin-top: 20px; }
+        .entry { padding: 12px; border-radius: 8px; margin-bottom: 10px; position: relative; border-right: 8px solid; background: #f9f9f9; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .type-veg { border-color: #4caf50; } .type-flower { border-color: #e91e63; } .type-manual { border-color: #ff9800; }
+        .type-hydro { border-color: #0288d1; } .type-water { border-color: #546e7a; }
+        
+        .err { color: #d32f2f; font-weight: bold; text-decoration: underline; }
+        .delete-btn { position: absolute; left: 10px; top: 10px; color: red; cursor: pointer; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="nav-bar">
+        <div class="nav-item active" onclick="showPanel('seedPanel', this)">זריעה</div>
+        <div class="nav-item" onclick="showPanel('hydroPanel', this)">הידרופוני</div>
+        <div class="nav-item" onclick="showPanel('dataPanel', this)">נתונים והתראות</div>
+    </div>
+
+    <!-- פנל זריעה -->
+    <div id="seedPanel" class="panel active">
+        <h2>🌱 יומן זריעה</h2>
+        <label>שיטת זריעה:</label>
+        <div class="method-selector">
+            <div class="opt active-opt" id="s_tray" onclick="setMethod('tray')">מגש (16x10)</div>
+            <div class="opt" id="s_wool" onclick="setMethod('wool')">צמר סלעים</div>
+            <div class="opt" id="s_cups" onclick="setMethod('cups')">כוסיות</div>
+        </div>
+        <div id="seedGrid" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
+            <div><label>שורה:</label><input type="number" id="sRow"></div>
+            <div><label>עמודה:</label><input type="number" id="sCol"></div>
+            <div><label>זרעים:</label><input type="number" id="sNum" value="1"></div>
+        </div>
+        <label>סוג צמח:</label>
+        <div class="tab-container">
+            <button class="tab-btn active-tab" id="tVeg" onclick="setPlantType('veg')">ירקות</button>
+            <button class="tab-btn" id="tFlo" onclick="setPlantType('flower')">פרחים</button>
+            <button class="tab-btn" id="tMan" onclick="setPlantType('manual')">ידני</button>
+        </div>
+        <select id="sSelect"><optgroup label="ירקות" id="gVeg"><option value="עגבנייה">עגבנייה</option><option value="חסה">חסה</option></optgroup></select>
+        <input type="text" id="sManual" class="hidden" placeholder="שם צמח חדש...">
+        <label>מיקום פיזי:</label><input type="text" id="sLoc">
+        <label>תאריך זריעה:</label><input type="date" id="sDate">
+        <button class="main-btn" style="background:#2e7d32" onclick="saveSeed()">שמור זריעה</button>
+    </div>
+
+    <!-- פנל הידרופוני -->
+    <div id="hydroPanel" class="panel">
+        <h2>💧 שתילה הידרופונית</h2>
+        <label>שם הצמח:</label><input type="text" id="hName">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <div><label>מספר שורה:</label><input type="number" id="hRow"></div>
+            <div><label>מספר חור:</label><input type="number" id="hHole"></div>
+        </div>
+        <label>תאריך העברה:</label><input type="date" id="hDate">
+        <button class="main-btn" style="background:#0277bd" onclick="saveHydro()">שמור למערכת</button>
+    </div>
+
+    <!-- פנל נתונים -->
+    <div id="dataPanel" class="panel">
+        <h2>📊 ניטור והגדרת טווחים</h2>
+        
+        <div style="background:#f1f8e9; padding:10px; border-radius:10px; display:grid; grid-template-columns: repeat(4, 1fr); gap:10px; margin-bottom:15px;">
+            <div style="grid-column: span 4; font-weight:bold; font-size:12px;">הגדרת טווחי מטרה:</div>
+            <div><label>מינ' pH</label><input type="number" step="0.1" id="minPH" value="5.5"></div>
+            <div><label>מקס' pH</label><input type="number" step="0.1" id="maxPH" value="6.5"></div>
+            <div><label>מינ' EC</label><input type="number" step="0.1" id="minEC" value="1.2"></div>
+            <div><label>מקס' EC</label><input type="number" step="0.1" id="maxEC" value="2.2"></div>
+            <div><label>מינ' טמפ'</label><input type="number" id="minT" value="18"></div>
+            <div><label>מקס' טמפ'</label><input type="number" id="maxT" value="25"></div>
+            <div><label>מינ' DO</label><input type="number" id="minD" value="5"></div>
+            <div><label>מקס' DO</label><input type="number" id="maxD" value="9"></div>
+        </div>
+
+        <div style="background:#eceff1; padding:15px; border-radius:10px;">
+            <label>תאריך בדיקה:</label>
+            <input type="date" id="wDate">
+            
+            <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;">
+                <div><label>pH הנמדד:</label><input type="number" step="0.1" id="wPH"></div>
+                <div><label>EC הנמדד:</label><input type="number" step="0.1" id="wEC"></div>
+                <div><label>טמפרטורה:</label><input type="number" id="wTemp"></div>
+                <div><label>חמצן DO:</label><input type="number" id="wDO"></div>
+            </div>
+            <button class="main-btn" style="background:#546e7a" onclick="saveWater()">שמור מדדים</button>
+        </div>
+
+        <div id="fixInstructions" class="instruction-box">
+            <h4>⚠️ הנחיות לתיקון:</h4>
+            <div id="fixList"></div>
+        </div>
+
+        <svg id="svgGraph" viewBox="0 0 400 120" style="width:100%; height:120px; background:#fff; border:1px solid #ddd; border-radius:10px; margin-top:15px;"></svg>
+        
+        <button class="main-btn btn-excel" onclick="exportToExcel()">📥 ייצא את כל הנתונים לאקסל (CSV)</button>
+
+        <div id="list" style="margin-top:20px;"></div>
+    </div>
+</div>
+
+<script>
+    let m = 'tray', t = 'veg';
+    function showPanel(id, el) {
+        document.querySelectorAll('.panel, .nav-item').forEach(x=>x.classList.remove('active'));
+        document.getElementById(id).classList.add('active'); el.classList.add('active');
+        if(id==='dataPanel') render();
+    }
+    function setMethod(val) { m=val; document.querySelectorAll('.opt').forEach(x=>x.classList.remove('active-opt')); document.getElementById('s_'+val).classList.add('active-opt'); }
+    function setPlantType(val) { 
+        t=val; document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active-tab')); 
+        document.getElementById(val==='veg'?'tVeg':val==='flower'?'tFlo':'tMan').classList.add('active-tab');
+        document.getElementById('sSelect').classList.toggle('hidden', val==='manual');
+        document.getElementById('sManual').classList.toggle('hidden', val!=='manual');
+    }
+    
+    function saveSeed() { push({ id:Date.now(), type:'seed', plantType:t, name:(t==='manual'?document.getElementById('sManual').value:document.getElementById('sSelect').value), date:document.getElementById('sDate').value, row:document.getElementById('sRow').value, col:document.getElementById('sCol').value }); }
+    function saveHydro() { push({ id:Date.now(), type:'hydro', name:document.getElementById('hName').value, date:document.getElementById('hDate').value, row:document.getElementById('hRow').value, hole:document.getElementById('hHole').value }); }
+    function saveWater() { 
+        push({ id:Date.now(), type:'water', name:'בדיקת מים', date:document.getElementById('wDate').value, ph:parseFloat(document.getElementById('wPH').value), ec:parseFloat(document.getElementById('wEC').value), temp:parseFloat(document.getElementById('wTemp').value), do:parseFloat(document.getElementById('wDO').value) }); 
+    }
+    
+    function push(obj) { let db=JSON.parse(localStorage.getItem('garden_v12')||"[]"); db.push(obj); localStorage.setItem('garden_v12',JSON.stringify(db)); render(); alert("נשמר!"); }
+
+    function render() {
+        let db = JSON.parse(localStorage.getItem('garden_v12')||"[]");
+        let conf = {
+            minP: parseFloat(document.getElementById('minPH').value), maxP: parseFloat(document.getElementById('maxPH').value),
+            minE: parseFloat(document.getElementById('minEC').value), maxE: parseFloat(document.getElementById('maxEC').value),
+            minT: parseFloat(document.getElementById('minT').value), maxT: parseFloat(document.getElementById('maxT').value),
+            minD: parseFloat(document.getElementById('minD').value), maxD: parseFloat(document.getElementById('maxD').value)
+        };
+
+        let last = db.filter(x=>x.type==='water').pop();
+        let fixBox = document.getElementById('fixInstructions'), fixList = document.getElementById('fixList');
+        fixList.innerHTML = "";
+        
+        if (last) {
+            if (last.ph < conf.minP) fixList.innerHTML += "<li>pH נמוך מדי - הוסף pH Up</li>";
+            if (last.ph > conf.maxP) fixList.innerHTML += "<li>pH גבוה מדי - הוסף pH Down</li>";
+            if (last.ec < conf.minE) fixList.innerHTML += "<li>EC נמוך - הוסף דשן</li>";
+            if (last.ec > conf.maxE) fixList.innerHTML += "<li>EC גבוה - דלל במים</li>";
+        }
+        fixBox.style.display = fixList.innerHTML ? "block" : "none";
+
+        document.getElementById('list').innerHTML = db.slice().reverse().map(x => {
+            const isErr = (v, min, max) => (v < min || v > max) ? 'class="err"' : '';
+            return `<div class="entry type-${x.type==='seed'?x.plantType:x.type}">
+                <span class="delete-btn" onclick="deleteItem(${x.id})">🗑️</span>
+                <strong>${x.name} (${x.date})</strong><br>
+                ${x.type==='water' ? `pH: <span ${isErr(x.ph, conf.minP, conf.maxP)}>${x.ph}</span> | EC: <span ${isErr(x.ec, conf.minE, conf.maxE)}>${x.ec}</span> | טמפ': <span ${isErr(x.temp, conf.minT, conf.maxT)}>${x.temp}</span> | DO: <span ${isErr(x.do, conf.minD, conf.maxD)}>${x.do}</span>` : `מיקום: ${x.row}/${x.col||x.hole}`}
+            </div>`;
+        }).join('');
+        drawGraph(db, conf.minP, conf.maxP);
+    }
+
+    function drawGraph(db, min, max) {
+        let data = db.filter(x=>x.type==='water').slice(-10);
+        let svg = document.getElementById('svgGraph');
+        if(data.length < 2) return svg.innerHTML = "";
+        let pts = data.map((x,i)=> `${i*40},${100-(x.ph*10)}`).join(' ');
+        svg.innerHTML = `<polyline fill="none" stroke="#2e7d32" stroke-width="3" points="${pts}" />`;
+    }
+
+    function deleteItem(id) { let db=JSON.parse(localStorage.getItem('garden_v12')).filter(x=>x.id!==id); localStorage.setItem('garden_v12',JSON.stringify(db)); render(); }
+    
+    function exportToExcel() {
+        let db = JSON.parse(localStorage.getItem('garden_v12')||"[]");
+        if(db.length === 0) return alert("אין נתונים לייצוא");
+        
+        let csv = "\uFEFFסוג,שם,תאריך,פרמטר1,פרמטר2,פרמטר3,פרמטר4\n";
+        db.forEach(x => {
+            if(x.type === 'seed') csv += `זריעה,${x.name},${x.date},שורה:${x.row},עמודה:${x.col},-,- \n`;
+            else if(x.type === 'hydro') csv += `הידרופוני,${x.name},${x.date},שורה:${x.row},חור:${x.hole},-,- \n`;
+            else if(x.type === 'water') csv += `בדיקת מים,${x.name},${x.date},pH:${x.ph},EC:${x.ec},טמפ:${x.temp},DO:${x.do} \n`;
+        });
+        
+        let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "garden_report.csv";
+        link.click();
+    }
+
+    document.querySelectorAll('input[type="date"]').forEach(i=>i.valueAsDate=new Date());
+    render();
+</script>
+</body>
+</html>

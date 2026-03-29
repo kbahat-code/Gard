@@ -15,6 +15,7 @@
         .panel.active { display: block; }
         .card { background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
         h2 { margin: 0 0 15px 0; font-size: 1.2rem; color: var(--primary); border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
+        h3 { margin: 10px 0; font-size: 1rem; color: var(--primary); }
         label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 11px; color: #777; }
         input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; margin-bottom: 10px; font-size: 15px; background: #fafafa; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -27,16 +28,58 @@
         .limits-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; background: #f9f9f9; padding: 10px 5px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #eee; }
         .limits-grid input { padding: 5px; margin-bottom: 0; font-size: 9px; text-align: center; }
         .main-btn { width: 100%; padding: 15px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; }
+        .main-btn:disabled { opacity: 0.5; cursor: not-allowed; }
         .entry { padding: 15px; border-radius: 12px; margin-bottom: 10px; position: relative; background: white; border-right: 6px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .type-seed { border-right-color: var(--primary); } .type-hydro { border-right-color: var(--secondary); } .type-water { border-right-color: var(--accent); }
+        .type-seed { border-right-color: var(--primary); } 
+        .type-hydro { border-right-color: var(--secondary); } 
+        .type-water { border-right-color: var(--accent); }
         .cam-box { background: #f0f0f0; border: 2px dashed #ccc; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; margin-bottom: 10px; }
         .status-tag { display: inline-block; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; color: white; margin-top: 5px; margin-left: 5px; }
-        .tag-early { background: var(--success); } .tag-late { background: var(--error); } .tag-ontime { background: var(--secondary); }
-        .tag-moved { background: #673ab7; } .tag-harvested { background: #ff9800; } .tag-dead { background: #212121; }
+        .tag-early { background: var(--success); } 
+        .tag-late { background: var(--error); } 
+        .tag-ontime { background: var(--secondary); }
+        .tag-moved { background: #673ab7; } 
+        .tag-harvested { background: #ff9800; } 
+        .tag-dead { background: #212121; }
+        .tag-count { background: #795548; }
         .hidden { display: none; }
         .search-box { background: #f1f8e9; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #c8e6c9; }
         .status-btn-group { display: flex; gap: 5px; margin-top: 10px; }
         .status-btn { flex: 1; padding: 5px; font-size: 10px; border-radius: 5px; border: 1px solid #ddd; cursor: pointer; background: #fff; }
+        .status-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .charts-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .charts-container { grid-template-columns: 1fr; } }
+        .plant-dropdown { position: relative; }
+        .plant-options { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ddd; border-radius: 10px; max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .plant-options.show { display: block; }
+        .plant-option { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
+        .plant-option:hover { background: #f5f5f5; }
+        .plant-option.selected { background: #e8f5e9; font-weight: bold; }
+        .tips-box { background: #fff3e0; border-right: 4px solid #ff9800; padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 12px; }
+        .tips-box h4 { margin: 0 0 8px 0; color: #ff9800; }
+        .tips-box ul { margin: 5px 0; padding-right: 20px; }
+        .tips-box li { margin: 3px 0; }
+        .danger-btn { width: 100%; padding: 15px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; background: var(--error); margin-top: 20px; }
+        .img-preview { max-width: 100%; max-height: 150px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
+        .hydro-plant-dropdown { position: relative; }
+        .hydro-plant-options { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ddd; border-radius: 10px; max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .hydro-plant-options.show { display: block; }
+        .hydro-plant-option { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
+        .hydro-plant-option:hover { background: #f5f5f5; }
+        .seed-header { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
+        .seed-header-field { display: flex; flex-direction: column; }
+        .seed-header-field label { margin-bottom: 5px; }
+        .seed-header-field input { margin-bottom: 0; }
+        .hole-range-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .hole-range-wrapper-field { display: flex; flex-direction: column; }
+        .hole-range-wrapper-field label { margin-bottom: 5px; }
+        .hole-range-wrapper-field input { margin-bottom: 0; }
+        .source-dropdown { position: relative; }
+        .source-options { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ddd; border-radius: 10px; max-height: 150px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .source-options.show { display: block; }
+        .source-option { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 12px; }
+        .source-option:hover { background: #f5f5f5; }
+        .info-box { background: #e3f2fd; border-right: 4px solid var(--secondary); padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 12px; color: #1565c0; }
     </style>
 </head>
 <body>
@@ -59,13 +102,39 @@
                 <div class="opt" id="typeRock" onclick="setSubstrate('צמר סלעים')">צמר סלעים</div>
                 <div class="opt" id="typePots" onclick="setSubstrate('עציצי פלסטיק')">עציצי פלסטיק</div>
             </div>
-            <div class="grid-5">
-                <div><label>מחזור:</label><input type="text" id="sCycle" value="1"></div>
-                <div><label id="lblTray">מגש:</label><input type="text" id="sTray" value="1"></div>
-                <div><label id="lblRow">שורה:</label><input type="text" id="sRow"></div>
-                <div><label id="lblCol">עמודה:</label><input type="text" id="sCol"></div>
-                <div><label id="lblHole">גומה:</label><input type="text" id="sHole"></div>
+
+            <div class="seed-header">
+                <div class="seed-header-field">
+                    <label>מחזור</label>
+                    <input type="text" id="sCycle" value="1">
+                </div>
+                <div class="seed-header-field">
+                    <label id="lblTray">מגש</label>
+                    <input type="text" id="sTray" value="1">
+                </div>
+                <div class="seed-header-field">
+                    <label id="lblRow">שורה</label>
+                    <input type="text" id="sRow">
+                </div>
+                <div class="seed-header-field">
+                    <label id="lblCol">עמודה</label>
+                    <input type="text" id="sCol">
+                </div>
             </div>
+
+            <div class="hole-range-wrapper">
+                <div class="hole-range-wrapper-field">
+                    <label>מי גומה מספר</label>
+                    <input type="text" id="sHoleFrom" oninput="calcPlantCount()">
+                </div>
+                <div class="hole-range-wrapper-field">
+                    <label>עד גומה מספר</label>
+                    <input type="text" id="sHoleTo" oninput="calcPlantCount()">
+                </div>
+            </div>
+
+            <div id="plantCountDisplay" class="info-box" style="display:none;"></div>
+
             <div class="selector">
                 <div class="opt active-opt" id="catVeg" onclick="setCat('veg')">ירקות</div>
                 <div class="opt" id="catFlo" onclick="setCat('flo')">פרחים</div>
@@ -79,12 +148,13 @@
                     <input type="text" id="sPlantMan" class="hidden" placeholder="שם הצמח...">
                 </div>
                 <div><label>תאריך זריעה:</label><input type="date" id="sDate"></div>
-                <div><label>ימי הצצה:</label><input type="number" id="sGermTarget"></div>
+                <div><label>ימי הצצה:</label><input type="number" id="sGermTarget" readonly></div>
                 <div><label>נביטה בפועל:</label><input type="date" id="sGermActual"></div>
             </div>
+            <div id="tipsArea"></div>
             <div class="cam-box" onclick="document.getElementById('sFile').click()">📸 לחץ לצילום</div>
             <input type="file" id="sFile" accept="image/*" capture="environment" class="hidden" onchange="compressImg(this)">
-            <img id="sPreview" style="width:100%; max-height:150px; object-fit:cover; display:none; border-radius:10px; margin-bottom:10px;">
+            <img id="sPreview" class="img-preview" style="display:none;">
             <textarea id="sNotes" placeholder="הערות..."></textarea>
             <button id="btnSaveSeed" class="main-btn" style="background:var(--primary)" onclick="saveData('seed')">שמור זריעה</button>
         </div>
@@ -101,7 +171,16 @@
                 <div><label>שורה:</label><input type="number" id="hRow"></div>
                 <div><label>חור:</label><input type="number" id="hHole"></div>
             </div>
-            <input type="text" id="hPlant" placeholder="שם הצמח (זהה לזריעה)">
+            <label>שם הצמח:</label>
+            <div class="hydro-plant-dropdown">
+                <input type="text" id="hPlant" placeholder="חפש או בחר שם צמח..." onkeyup="filterHydroPlants()">
+                <div id="hydroPlantDropdown" class="hydro-plant-options"></div>
+            </div>
+            <label>מקור השתיל:</label>
+            <div class="source-dropdown">
+                <input type="text" id="hSource" placeholder="בחר מקור (מחזור/מגש/שורה/עמודה/גומה)..." onkeyup="filterSources()" readonly style="cursor:pointer;">
+                <div id="sourceDropdown" class="source-options"></div>
+            </div>
             <input type="date" id="hDate">
             <textarea id="hNotes" placeholder="הערות שתילה..."></textarea>
             <button id="btnSaveHydro" class="main-btn" style="background:var(--secondary)" onclick="saveData('hydro')">שמור שתילה</button>
@@ -131,13 +210,37 @@
             </div>
             <button id="btnSaveWater" class="main-btn" style="background:var(--accent)" onclick="saveData('water')">שמור מדדים</button>
         </div>
+
+        <div class="card">
+            <h3>📈 גרף pH</h3>
+            <canvas id="phChart" width="400" height="200"></canvas>
+        </div>
+
+        <div class="card">
+            <h3>📈 גרף EC</h3>
+            <canvas id="ecChart" width="400" height="200"></canvas>
+        </div>
+
+        <div class="card">
+            <h3>📈 גרף טמפרטורה</h3>
+            <canvas id="tempChart" width="400" height="200"></canvas>
+        </div>
+
+        <div class="card">
+            <h3>📈 גרף DO (חמצן)</h3>
+            <canvas id="doChart" width="400" height="200"></canvas>
+        </div>
     </div>
 
     <div id="historyPanel" class="panel">
         <div class="card">
             <h2>🔍 חיפוש מתקדם</h2>
             <div class="search-box">
-                <input type="text" id="qPlant" placeholder="חפש שם צמח..." onkeyup="refreshAll()">
+                <label>חפש צמח:</label>
+                <div class="plant-dropdown">
+                    <input type="text" id="qPlant" placeholder="חפש או בחר שם צמח..." onkeyup="filterPlants()">
+                    <div id="plantDropdown" class="plant-options"></div>
+                </div>
                 <div class="grid-4">
                     <input type="text" id="qTray" placeholder="מגש" oninput="refreshAll()">
                     <input type="text" id="qRowS" placeholder="שורה" oninput="refreshAll()">
@@ -148,24 +251,113 @@
                     <input type="number" id="qSide" placeholder="צד" oninput="refreshAll()">
                     <input type="number" id="qRowH" placeholder="שורה" oninput="refreshAll()">
                     <input type="number" id="qHole" placeholder="חור" oninput="refreshAll()">
-<button onclick="exportCSV()" style="width:100%; padding:10px; background:#1b5e20; color:white; border:none; border-radius:10px; cursor:pointer; font-weight:bold; margin-top:10px;">📥 ייצוא לאקסל (CSV)</button>
-
                 </div>
             </div>
             <div id="historyList"></div>
         </div>
     </div>
 
-    <div id="reportPanel" class="panel"><div class="card"><h2>🗂️ כרטיסיות צמחים</h2><div id="reportList"></div></div></div>
+    <div id="reportPanel" class="panel">
+        <div class="card">
+            <h2>🗂️ כרטיסיות צמחים</h2>
+            <div id="reportList"></div>
+            <button onclick="exportCSV()" class="main-btn" style="background:var(--secondary); margin-top:20px;">📊 ייצוא לאקסל (CSV)</button>
+            <button onclick="exportWithImages()" class="main-btn" style="background:#1976d2; margin-top:10px;">📸 ייצוא עם תמונות (ZIP)</button>
+            <button onclick="confirmDeleteAll()" class="danger-btn">🗑️ מחק את כל ההיסטוריה</button>
+        </div>
+    </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
     const plants = { 
-        veg: [{n:"חסה", d:3}, {n:"עגבניה", d:7}, {n:"בזיליקום", d:5}, {n:"מלפפון", d:4}, {n:"פלפל", d:10}, {n:"קישוא", d:5}, {n:"גזר", d:14}, {n:"צנון", d:4}, {n:"שעועית", d:8}, {n:"דלעת", d:6}, {n:"ברוקולי", d:5}, {n:"כרובית", d:5}, {n:"חציל", d:10}, {n:"קייל", d:5}, {n:"תרד", d:7}, {n:"סלק", d:6}, {n:"בצל", d:6}, {n:"פטרוזיליה", d:14}, {n:"תירס", d:5}, {n:"שמיר", d:10}], 
-        flo: [{n:"חמניה", d:5}, {n:"ציניה", d:4}, {n:"מריגולד", d:5}, {n:"כובע נזיר", d:10}, {n:"פטוניה", d:10}, {n:"גרניום", d:14}, {n:"לוונדר", d:21}, {n:"אליסום", d:5}, {n:"לובליה", d:12}, {n:"קולאוס", d:10}, {n:"אסטר", d:8}, {n:"קוזמוס", d:7}, {n:"ורבנה", d:14}, {n:"פורטולקה", d:7}, {n:"בגוניה", d:15}, {n:"סלביה", d:10}, {n:"דליה", d:8}, {n:"לוע הארי", d:10}, {n:"אמנון ותמר", d:14}, {n:"אמנרה", d:8}] 
+         veg: [
+            {n:"חסה", d:3, tips:{זריעה:["הכנה: אל תחמם זרעים מעל 20°C", "שטוף זרעים במים קרים לפני זריעה", "שימוש בזרעים טרים בעדיפות", "זריעה בעומק 0.5 ס\"מ", "שמור לחות קבועה", "טמפ' אופטימלית 18-22°C"], גידול:["אור 14-16 שעות ביום", "הימנע מ-יבול צמוד יתר", "קצור לאחר 3-4 שבועות"]}},
+            {n:"עגבניה", d:7, tips:{זריעה:["הכנה: שרה זרעים ב-80°C למשך 25 דקות להשמדת מחלות", "קח זרעים מפרי עגבניה בשל בלבד", "ייבוש הזרעים כראוי לפני אחסון", "זריעה עמוקה 0.5 ס\"מ", "חום ועקביות לחות", "בדיקת נביטה יום 3-7"], גידול:["אור חזק 16+ שעות", "תמיכה בצמחים", "קצור פירות בשלים"]}},
+            {n:"בזיליקום", d:5, tips:{זריעה:["הכנה: השרה זרעים 12 שעות במים לפני זריעה", "לא להחזיק זרעים בחום מעל 25°C בטווח ארוך", "זריעה שטחית", "טמפ' חמה (21-27°C)", "הימנע מהצטברות מים"], גידול:["קטיפת הדרכים לצפיפות", "הפרחה מאוחרת", "אריסה רציפה"]}},
+            {n:"מלפפון", d:4, tips:{זריעה:["הכנה: טבל זרעים בתמיסת תופחי בעדיפות", "בדוק זרעים לשלמות (ללא סדקים)", "משוך זרעים חלשים ודקים", "זריעה בעומק 1-2 ס\"מ", "מצע חם ועיר", "טמפ' מינימום 20°C"], גידול:["תמיכה וקשירה", "הרטבה שוטפת", "קצור בטרי צעיר"]}},
+            {n:"פלפל", d:10, tips:{זריעה:["הכנה: בדוק ישנות זרעים - זרעים ישנים לא ינובטו", "השרה זרעים ב-50°C למשך 30 דקות", "תן להם להתחזק בחום רטוב", "זריעה עמוקה 0.5-1 ס\"מ", "גבוה חום", "סבלנות בנביטה"], גידול:["אור חזק כל היום", "טמפ' יציבה", "קצור בעדיפות הדרגתית"]}},
+            {n:"קישוא", d:5, tips:{זריעה:["הכנה: אחסון בטמפ' 25-30°C לפני זריעה", "ודא שזרעים שלמים ללא שחיקה", "השרה 2 שעות במים חמים בהעדפה", "זריעה בעומק 1-2 ס\"מ", "מצע חם", "כל 2-3 זרעים בחור"], גידול:["הרטבה עובי", "דליקה בבלוטות", "קטיפת קצוות"]}},
+            {n:"גזר", d:14, tips:{זריעה:["הכנה: קח זרעים מקופסא טרית בלבד", "זרעים ישנים עלולים להיות בעלי שיעור נביטה נמוך", "טבל בתמיסה לשיפור נביטה", "זריעה שטחית מאד", "לא לשכוח בתקופת נביטה", "סדה קלה"], גידול:["תדירות הרטבה", "דקות בניתור", "קצור לאחר 60-80 יום"]}},
+            {n:"צנון", d:4, tips:{זריעה:["הכנה: בחר זרעים מטעם חזק בעדיפות", "וודא שהזרעים טרים וללא ריח מעופש", "זריעה שטחית", "הימנע מגחליל", "לחות כל הזמן"], גידול:["טמפ' קרה בהעדיפות", "סדה קלה", "קטיפה רגילה"]}},
+            {n:"שעועית", d:8, tips:{זריעה:["הכנה: בחר זרעים גדולים וחזקים בלבד", "השרה זרעים 12 שעות לשיפור נביטה", "עיין זרעים קטנים או שחורים", "זריעה בעומק 1.5-2 ס\"מ", "אל תהרטב יתר", "מצע פחוח"], גידול:["עדכון דומם", "קיום כלונסאות", "קצור צעיר"]}},
+            {n:"דלעת", d:6, tips:{זריעה:["הכנה: קח זרעים מדלעת בשלה בלבד", "ניקוי הזרעים מבשר ודיוק ייבוש", "השרה זרעים 24 שעות להרחקת פטריות", "זריעה בעומק 1-2 ס\"מ", "חום עדיף", "מצע דק וטוב"], גידול:["הרטבה שוטפת", "תמיכה הכרחית", "קצור בבשלות"]}},
+            {n:"ברוקולי", d:5, tips:{זריעה:["הכנה: בחר זרעים בעלי צבע אחיד וחזקים", "וודא ללא הלם טמפרטורות בעת אחסון", "זריעה ישירה או עציץ", "אור הכרחי", "טמפ' 15-20°C"], גידול:["הימנע מטמפ' גבוה", "אור ישיר דרוש", "קטיפה מוקדמת"]}},
+            {n:"כרובית", d:5, tips:{זריעה:["הכנה: זרעים מאותה משפחה כמו ברוקולי", "הגנה מפתיות בזמן אחסון", "דרישות דומות לברוקולי", "הצעפים חשובים", "אור מספיק"], גידול:["טמפ' בעדיפות קרה", "הרטבה עקבית", "הגנה מפרות"]}},
+            {n:"חציל", d:10, tips:{זריעה:["הכנה: בחר זרעים מחציל בשל בלבד", "השרה זרעים 24 שעות בתמיסת חיטוי", "זריעה עמוקה קלות", "חום גבוה מומלץ", "סבלנות בנביטה"], גידול:["אור חזק הכרחי", "הרטבה עדינה", "תמיכה בפירות"]}},
+            {n:"קייל", d:5, tips:{זריעה:["הכנה: אחסון בטמפ' 5-10°C לשיפור קוש", "עיין זרעים שטוחים או קטנים", "זריעה ישירה בעדיפות", "אור מוקדם", "קור מתקדם"], גידול:["טמפ' קרה יותר טוב", "אור 14-16 שעות", "קטיפה בוקר"]}},
+            {n:"תרד", d:7, tips:{זריעה:["הכנה: טבל זרעים בתמיסה לשיפור ספיגה", "בחר זרעים בעלי קליפה שלמה", "זריעה ישירה בעומק 1 ס\"מ", "לחות קבועה", "קור בהעדיפות"], גידול:["אור בעדיפות", "קטיפת עלים בקביעות", "הימנע מהצצה"]}},
+            {n:"סלק", d:6, tips:{זריעה:["הכנה: קח זרעים מזנוקים איכותיים", "שרה זרעים 12 שעות לשיפור נביטה", "זריעה בעומק 1-2 ס\"מ", "מצע רטוב", "ניתור לאחר הצצה"], גידול:["ריווח של 10 ס\"מ", "הרטבה תדירה", "קצור בשלוש שבועות"]}},
+            {n:"בצל", d:6, tips:{זריעה:["הכנה: זרעים עדיפות בגיל 1-2 שנה בלבד", "וודא ללא ריח חריף משונה בזרעים", "זריעה שטחית", "טמפ' בעדיפות מתונה", "לחות כל הזמן"], גידול:["שתיל בשלושה שבועות", "קור לצמיחה", "קצור בבשלות"]}},
+            {n:"פטרוזיליה", d:14, tips:{זריעה:["הכנה: ניקוע קרום זרעים בחופן חול דק", "השרה 24 שעות לשיפור נביטה משמעותי", "זריעה שטחית מאד", "ביקוע קרום", "סבלנות בנביטה"], גידול:["אור הכרחי", "הרטבה עדינה", "קטיפת עלים בקביעות"]}},
+            {n:"תירס", d:5, tips:{זריעה:["הכנה: בחר זרעים גדולים וטעונים בלבד", "עיין זרעים מכוסים או דקים", "זריעה בעומק 2 ס\"מ", "אל תהרטב יתר", "חום עדיף"], גידול:["תמיכה הכרחית", "אור מלא", "קצור בשלות חלקית"]}},
+            {n:"שמיר", d:10, tips:{זריעה:["הכנה: בחר זרעים בעלי קליפה שלמה בלבד", "השרה 36 שעות בתמיסה להאצת נביטה", "זריעה עמוקה 1 ס\"מ", "לחות עדינה", "אור הכרחי"], גידול:["טמפ' משתנה", "הרטבה משמרת", "קטיפה בשלוש שבועות"]}},
+            {n:"יירק בק צוי", d:7, tips:{זריעה:["הכנה: קח זרעים מחנות בעלי אמינות", "וודא תאריך תפוקה לא עבר מ-2 שנים", "זריעה שטחית או עציץ", "אור הכרחי מוקדם", "טמפ' 15-20°C בהעדיפות"], גידול:["עוצמת אור 300+ µmol", "אוויר זורם חיוני", "קצור ממוקד בעלים"]}},
+            {n:"עלי מנתה", d:4, tips:{זריעה:["הכנה: זרעים קטנים מאד - תן לתמיסה לחזור", "טבל בתמיסה משד לשיפור ספיגה", "זריעה שטחית", "חום מתונה", "לחות קבועה"], גידול:["מהיר צמיחה", "גיזום קבוע", "הרבה אור"]}},
+            {n:"זוקיני", d:3, tips:{זריעה:["הכנה: בחר זרעים טעונים ותלויים בצפיפות", "השרה 12 שעות לשיפור נביטה", "זריעה בעומק 1-2 ס\"מ", "חום גבוה", "מצע ישר"], גידול:["צמיחה מהירה מאד", "הרטבה מתמדת", "קצור בצעיר"]}},
+            {n:"אנדיב", d:8, tips:{זריעה:["הכנה: בחר זרעים בגוון אחיד וללא שחיקה", "וודא ללא ריח מעופש בעת קנייה", "זריעה שטחית", "הימנע מחום יתר", "אור הכרחי"], גידול:["טמפ' בעדיפות קרה", "קטיפה מדורגת", "טעם משתפר בקור"]}},
+            {n:"כרוב", d:6, tips:{זריעה:["הכנה: קח זרעים מחברה מוקצעת בעדיפות", "השרה בתמיסה לחיטוי מחלות אפשריות", "זריעה ישירה בעומק 0.5 ס\"מ", "אור מוקדם", "קור בהעדיפות"], גידול:["ריווח של 30 ס\"מ", "אור 14-16 שעות", "הגנה מפרות"]}},
+            {n:"כרוב אדום", d:8, tips:{זריעה:["הכנה: זרעים מאותה משפחה וברירה קפדנית", "טבל בתמיסה להשמדת פתיות וחרקים", "זריעה זהה לכרוב", "טמפ' יציבה", "לחות קבועה"], גידול:["אור חזק", "דלק לטעם עמוק", "קצור בבשלות"]}},
+            {n:"קלוקל", d:9, tips:{זריעה:["הכנה: בחר זרעים מקופסא סגורה בלבד", "השרה 48 שעות בתמיסת חיטוי בהנדסה", "זריעה עמוקה 0.5 ס\"מ", "חום גבוה בהעדיפות", "לחות גבוהה"], גידול:["אור מלא 16+ שעות", "טמפ' יציבה", "קטיפה מדורגת"]}},
+            {n:"ספינץ", d:5, tips:{זריעה:["הכנה: בחר זרעים מעונני קור בעדיפות", "שרה לא מומלץ - גורם לנביטה מוקדמת", "זריעה שטחית בעומק קל", "טמפ' מתונה", "אור מוקדם"], גידול:["קור בהעדיפות", "אור 14-16 שעות", "קטיפה בצעיר"]}},
+            {n:"רוקט", d:3, tips:{זריעה:["הכנה: קח זרעים ממקור ידוע בעדיפות", "וודא תוקף וללא הדבקות", "זריעה שטחית מאד", "לחות כל הזמן", "הימנע מחום"], גידול:["צמיחה במהירות רבה", "אור 12-14 שעות", "קטיפה לפני הפרחה"]}},
+            {n:"בטוויה", d:5, tips:{זריעה:["הכנה: בחר זרעים אחידים בגוון בלבד", "השרה בתמיסה להשמדת פתיות אפשריות", "זריעה שטחית", "קור בהעדיפות", "אור הכרחי"], גידול:["לחות קבועה", "מניעת הפרחה", "קטיפה מדורגת"]}},
+            {n:"פרגית", d:6, tips:{זריעה:["הכנה: בחר זרעים טרים מ-1-2 שנים בלבד", "ניקוע קרום ב-50°C לשיפור נביטה", "זריעה שטחית מאד", "אור הכרחי", "טמפ' בעדיפות קרה"], גידול:["סדה קלה", "קטיפה בוקר", "לא להשחרות"]}},
+            {n:"סלרי", d:14, tips:{זריעה:["הכנה: קח זרעים מחברה מוקצעת בעדיפות", "וודא ללא ריח חריף בעת קנייה", "זריעה שטחית מאד", "לא להשתהות בנביטה", "קור משפר"], גידול:["קור לאורך הגידול", "הרטבה עקבית", "קטיפה בעדיפות"]}},
+            {n:"סלק גבעול", d:10, tips:{זריעה:["הכנה: בחר זרעים מאתר בעלי אמינות", "השרה 12 שעות לשיפור נביטה", "זריעה בעומק 1 ס\"מ", "לחות קבועה", "אור בהעדיפות"], גידול:["ניתור לא הכרחי", "הרטבה תדירה", "קטיפה בעמודי צעירים"]}},
+            {n:"בצל ירוק", d:4, tips:{זריעה:["הכנה: בחר זרעים בעלי קליפה שלמה בלבד", "לא להשרות - מביא לנביטה מוקדמת", "זריעה שטחית", "מצע ישר", "לחות קל"], גידול:["צמיחה מהירה", "אור 14-16 שעות", "קטיפה בגובה 15 ס\"מ"]}},
+            {n:"שום", d:14, tips:{זריעה:["הכנה: בחר שיני שום בריאות וקשוחות בלבד", "חיטוי בתמיסה 2 דקות לפני זריעה", "זריעה של שיני שום", "קור חיוני", "אור בהעדיפות"], גידול:["טמפ' קרה 15°C", "הרטבה משמרת", "קצור בשלוש חודשים"]}},
+            {n:"פטריות", d:8, tips:{זריעה:["הכנה: קנייה מחברה מוקצעת בלבד", "אחסון בטמפ' 10-15°C עד זריעה", "זריעה של תרבות", "אפל בהעדיפות", "לחות גבוה מאד"], גידול:["טמפ' 12-18°C", "אוויר טוב", "קטיפה לפני בשלות"]}},
+            {n:"מעמברנה", d:6, tips:{זריעה:["הכנה: בחר זרעים מטעם עמוק בעדיפות", "וודא אחסון נכון ללא חום יתר", "זריעה שטחית", "טמפ' מתונה", "אור מוקדם"], גידול:["הרטבה עדינה", "אור בעדיפות", "קטיפה בעלים צעירים"]}},
+            {n:"אורכיד אדום", d:7, tips:{זריעה:["הכנה: זרעים קטנים מאד - גדול בטיפול", "השרה דקות בלבד - לא שעות", "זריעה שטחית מאד", "קור בעדיפות", "לחות גבוה"], גידול:["אור בעדיפות 14+ שעות", "הרטבה משמרת", "קטיפה מדורגת"]}},
+            {n:"נדיל", d:5, tips:{זריעה:["הכנה: בחר זרעים בעלי צבע אחיד וחזקים", "וודא אחסון בתנאים קרים", "זריעה שטחית", "טמפ' בעדיפות קרה", "אור הכרחי"], גידול:["לחות קבועה", "אור 14-16 שעות", "קטיפה בעלים צעירים"]}},
+            {n:"קנתריון", d:4, tips:{זריעה:["הכנה: בחר זרעים מחברה מוקצעת בעדיפות", "לא להשרות - קטן וקל להנזקה", "זריעה שטחית מאד", "הימנע מעומק", "אור הכרחי"], גידול:["צמיחה מהירה", "אור 16+ שעות", "קטיפה בצעיר"]}},
+            {n:"סלטה בר", d:5, tips:{זריעה:["הכנה: בחר זרעים טרים מעל הכל", "וודא ללא הלם טמפרטורות בעת אחסון", "זריעה שטחית", "קור בהעדיפות", "לחות כל הזמן"], גידול:["טמפ' מתונה", "אור 12-14 שעות", "קטיפה בוקר בהעדיפות"]}}
+        ], 
+        flo: [
+            {n:"חמניה", d:5, tips:{זריעה:["הכנה: בחר זרעים גדולים וטעונים בלבד", "השרה 12 שעות לשיפור נביטה", "זריעה בעומק 1 ס\"מ", "מצע ישר", "טמפ' חמה"], גידול:["אור מלא הכרחי", "תמיכה בגבעול", "קצור בבשלות"]}},
+            {n:"ציניה", d:4, tips:{זריעה:["הכנה: בחר זרעים צעירים בעדיפות", "וודא ללא ריח מעופש בעת קנייה", "זריעה שטחית", "חום גבוה", "אור בהעדיפות"], גידול:["אור 14-16 שעות", "גיזום קבוע", "קטיפת פרחים"]}},
+            {n:"מריגולד", d:5, tips:{זריעה:["הכנה: קח זרעים מחברה מוקצעת בלבד", "לא להשרות - עלול לגרום לתחלואה", "זריעה שטחית", "טמפ' חמה", "לחות משמרת"], גידול:["אור בעדיפות", "הרטבה עדינה", "גיזום מוקדם"]}},
+            {n:"כובע נזיר", d:10, tips:{זריעה:["הכנה: בחר זרעים בעלי קליפה שלמה בלבד", "ניקוע קרום ב-80°C לשיפור נביטה", "זריעה שטחית", "קור בהעדיפות", "אור הכרחי"], גידול:["טמפ' מתונה 18-22°C", "אור 16+ שעות", "קטיפה מדורגת"]}},
+            {n:"פטוניה", d:10, tips:{זריעה:["הכנה: זרעים קטנים מאד - גדול בטיפול", "השרה דקות בלבד לא שעות", "זריעה שטחית מאד", "חום מתונה", "אור בהעדיפות"], גידול:["אור חזק 14-16 שעות", "הרטבה עדינה", "גיזום קבוע"]}},
+            {n:"גרניום", d:14, tips:{זריעה:["הכנה: בחר זרעים מחברה בעלת שם ידוע", "וודא אחסון בתנאים קרים בעדיפות", "זריעה בעומק 0.5 ס\"מ", "טמפ' מתונה", "אור הכרחי"], גידול:["קור לצמיחה", "הרטבה משמרת", "קטיפת פרחים בקביעות"]}},
+            {n:"לוונדר", d:21, tips:{זריעה:["הכנה: ניקוע קרום בעדיפות או שרה 36 שעות", "טבל בתמיסה חיטוי לשיפור נביטה", "זריעה שטחית מאד", "ביקוע קרום בהעדיפות", "קור משפר"], גידול:["אור בעדיפות", "הרטבה משמרת מאד", "גיזום קבוע למבנה"]}},
+            {n:"אליסום", d:5, tips:{זריעה:["הכנה: בחר זרעים אחידים בגוון בלבד", "וודא תוקף תפוקה טוב", "זריעה שטחית", "טמפ' מתונה", "לחות קבועה"], גידול:["אור 14-16 שעות", "צמיחה מהירה", "גיזום לעצפיות"]}},
+            {n:"לובליה", d:12, tips:{זריעה:["הכנה: זרעים קטנים מאד - גדול בטיפול", "לא להשרות - קטן מדי להנזקה", "זריעה שטחית מאד", "קור בהעדיפות", "אור הכרחי"], גידול:["אור חזק 16+ שעות", "הרטבה משמרת", "גיזום למראה"]}},
+            {n:"קולאוס", d:10, tips:{זריעה:["הכנה: בחר זרעים טרים בעדיפות", "השרה 12 שעות לשיפור ספיגה", "זריעה שטחית", "חום בהעדיפות", "אור בהעדיפות"], גידול:["אור חזק לצבע", "הרטבה עקבית", "גיזום מוקדם"]}},
+            {n:"אסטר", d:8, tips:{זריעה:["הכנה: בחר זרעים מחברה מוקצעת בלבד", "וודא ללא ריח משונה בעת קנייה", "זריעה שטחית", "טמפ' מתונה", "אור הכרחי"], גידול:["אור 16+ שעות", "הרטבה עדינה", "תמיכה בגבעול"]}},
+            {n:"קוזמוס", d:7, tips:{זריעה:["הכנה: קח זרעים מחברה בעלת מוניטין", "השרה 12 שעות לשיפור נביטה", "זריעה בעומק קל", "חום גבוה", "אור בהעדיפות"], גידול:["אור מלא הכרחי", "הרטבה משמרת", "גיזום לעצפיות"]}},
+            {n:"ורבנה", d:14, tips:{זריעה:["הכנה: בחר זרעים בעלי קליפה שלמה בלבד", "ניקוע קרום ב-80°C לשיפור נביטה", "זריעה שטחית", "קור בהעדיפות", "אור בהעדיפות"], גידול:["אור חזק 16+ שעות", "הרטבה משמרת", "קטיפת פרחים"]}},
+            {n:"פורטולקה", d:7, tips:{זריעה:["הכנה: בחר זרעים קטנים מאד בעדיפות", "וודא אחסון בתנאים קרים", "זריעה שטחית מאד", "חום גבוה", "אור הכרחי"], גידול:["אור מלא כל היום", "הרטבה משמרת", "עמידה בקור רעיע"]}},
+            {n:"בגוניה", d:15, tips:{זריעה:["הכנה: זרעים קטנים מאד ודקים מאד", "לא להשרות בהחלט - נשמדים בקלות", "זריעה שטחית מאד", "טמפ' חמה", "אור בהעדיפות"], גידול:["אור בעדיפות אך לא ישיר", "הרטבה משמרת מאד", "קטיפה מדורגת"]}},
+            {n:"סלביה", d:10, tips:{זריעה:["הכנה: בחר זרעים מחברה בעלת שם ידוע", "וודא אחסון ללא חום יתר", "זריעה בעומק קל", "טמפ' מתונה", "אור בהעדיפות"], גידול:["אור חזק 16+ שעות", "קור לצמיחה", "גיזום לצפיפות"]}},
+            {n:"דליה", d:8, tips:{זריעה:["הכנה: קח זרעים מעונני קור בעדיפות", "השרה 12 שעות לשיפור נביטה", "זריעה בעומק קל", "חום בהעדיפות", "אור הכרחי"], גידול:["אור מלא", "הרטבה משמרת", "קטיפות מדורגות"]}},
+            {n:"לוע הארי", d:10, tips:{זריעה:["הכנה: בחר זרעים בעלי צבע אחיד בלבד", "ניקוע קרום ב-50°C לשיפור נביטה", "זריעה שטחית", "קור בהעדיפות", "אור הכרחי"], גידול:["אור 14-16 שעות", "טמפ' מתונה", "גיזום לעצפיות"]}},
+            {n:"אמנון ותמר", d:14, tips:{זריעה:["הכנה: בחר זרעים קטנים מאד בעדיפות", "השרה דקות בלבד לשיפור ספיגה", "זריעה שטחית מאד", "קור חיוני", "אור בהעדיפות"], גידול:["אור חזק 16+ שעות", "הרטבה משמרת", "קטיפה מדורגת"]}},
+            {n:"אמנרה", d:8, tips:{זריעה:["הכנה: בחר זרעים מחברה מוקצעת בלבד", "וודא ללא ריח משונה בעת קנייה", "זריעה בעומק קל", "טמפ' מתונה", "אור בהעדיפות"], גידול:["אור 14-16 שעות", "הרטבה משמרת", "גיזום קבוע"]}},
+            {n:"פטוניה ורודה", d:10, tips:{זריעה:["הכנה: זרעים קטנים מאד - גדול בטיפול", "לא להשרות - גורם להנזקה", "זריעה שטחית", "חום בהעדיפות", "אור הכרחי"], גידול:["אור חזק 16+ שעות", "הרטבה עדינה", "גיזום למבנה"]}},
+            {n:"אימפטיינס", d:12, tips:{זריעה:["הכנה: בחר זרעים בעלי קליפה שלמה בלבד", "השרה 12 שעות לשיפור ספיגה", "זריעה שטחית", "קור בהעדיפות", "לחות גבוה"], גידול:["אור בעדיפות אך לא ישיר", "הרטבה עקבית", "קטיפה מדורגת"]}},
+            {n:"כלנדולה", d:5, tips:{זריעה:["הכנה: קח זרעים מחברה בעלת אמינות", "וודא ללא הלם טמפרטורות בעת אחסון", "זריעה בעומק קל", "טמפ' מתונה", "אור בהעדיפות"], גידול:["אור 12-14 שעות", "הרטבה משמרת", "קטיפה בוקר"]}},
+            {n:"קוקרדיה", d:8, tips:{זריעה:["הכנה: בחר זרעים טעונים בלבד", "השרה 24 שעות לשיפור נביטה", "זריעה שטחית", "חום בהעדיפות", "אור הכרחי"], גידול:["אור חזק", "הרטבה משמרת", "גיזום לעצפיות"]}},
+            {n:"דיאנתוס", d:7, tips:{זריעה:["הכנה: בחר זרעים בעלי צבע אחיד בלבד", "וודא אחסון בתנאים קרים", "זריעה שטחית", "קור בהעדיפות", "אור בהעדיפות"], גידול:["אור 14-16 שעות", "טמפ' מתונה", "גיזום מוקדם"]}},
+            {n:"גוברה", d:10, tips:{זריעה:["הכנה: בחר זרעים קטנים מאד בעדיפות", "לא להשרות - קטן מדי להנזקה", "זריעה בעומק קל", "טמפ' מתונה", "אור בהעדיפות"], גידול:["אור חזק 16+ שעות", "הרטבה משמרת", "קטיפה מדורגת"]}},
+            {n:"לימונום", d:14, tips:{זריעה:["הכנה: בחר זרעים מחברה בעלת שם ידוע", "ניקוע קרום בעדיפות או שרה", "זריעה שטחית מאד", "קור בהעדיפות", "אור בהעדיפות"], גידול:["אור 16+ שעות", "הרטבה משמרת", "גיזום לעצפיות"]}},
+            {n:"סקביוזה", d:12, tips:{זריעה:["הכנה: בחר זרעים בעלי קליפה שלמה בלבד", "השרה 12 שעות לשיפור נביטה", "זריעה שטחית", "טמפ' בעדיפות קרה", "אור בהעדיפות"], גידול:["אור 14-16 שעות", "הרטבה משמרת", "קטיפה מדורגת"]}},
+            {n:"קט אי", d:10, tips:{זריעה:["הכנה: בחר זרעים מחברה מוקצעת בלבד", "וודא תוקף תפוקה טוב", "זריעה בעומק קל", "טמפ' מתונה", "אור בהעדיפות"], גידול:["אור חזק", "הרטבה משמרת", "גיזום למראה"]}},
+            {n:"פלוקס", d:10, tips:{זריעה:["הכנה: בחר זרעים בעלי צבע אחיד בלבד", "ניקוע קרום ב-50°C לשיפור נביטה", "זריעה שטחית", "קור בהעדיפות", "אור בהעדיפות"], גידול:["אור 14-16 שעות", "הרטבה משמרת", "גיזום קבוע"]}},
+            {n:"מיליניום", d:8, tips:{זריעה:["הכנה: קח זרעים מחברה בעלת מוניטין", "השרה 12 שעות לשיפור ספיגה", "זריעה בעומק קל", "טמפ' מתונה", "אור בהעדיפות"], גידול:["אור חזק", "הרטבה משמרת", "קטיפה מדורגת"]}},
+            {n:"ניקוטיאנה", d:6, tips:{זריעה:["הכנה: זרעים קטנים מאד - גדול בטיפול", "לא להשרות - קטן מדי להנזקה", "זריעה שטחית מאד", "חום בהעדיפות", "אור בהעדיפות"], גידול:["אור חזק 16+ שעות", "הרטבה משמרת", "גיזום מוקדם"]}},
+            {n:"מתיולה", d:5, tips:{זריעה:["הכנה: בחר זרעים טרים בעדיפות", "וודא אחסון בתנאים קרים", "זריעה בעומק קל", "קור בהעדיפות", "אור בהעדיפות"], גידול:["אור 12-14 שעות", "טמפ' מתונה", "קטיפה בוקר"]}},
+            {n:"ורוניקה", d:12, tips:{זריעה:["הכנה: בחר זרעים מחברה מוקצעת בלבד", "וודא ללא ריח משונה בעת קנייה", "זריעה שטחית", "טמפ' בעדיפות קרה", "אור בהעדיפות"], גידול:["אור 14-16 שעות", "הרטבה משמרת", "גיזום לעצפיות"]}},
+            {n:"זוכיה", d:9, tips:{זריעה:["הכנה: בחר זרעים בעלי קליפה שלמה בלבד", "השרה 12 שעות לשיפור נביטה", "זריעה בעומק קל", "טמפ' מתונה", "אור בהעדיפות"], גידול:["אור חזק", "הרטבה משמרת", "קטיפה מדורגת"]}}
+        ] 
     };
+    
     let db = JSON.parse(localStorage.getItem('growData')) || [];
     let activeImg = "", currentCat = 'veg', currentSide = 1, currentSubstrate = '', editId = null;
+    let charts = { ph: null, ec: null, temp: null, do: null };
+    let allPlantsForDropdown = [];
 
     window.onload = () => {
         const v = document.getElementById('sPlantVeg'), f = document.getElementById('sPlantFlo');
@@ -174,16 +366,253 @@
             plants.flo.forEach(p => f.innerHTML += `<option value="${p.n}">${p.n}</option>`);
         }
         document.querySelectorAll('input[type="date"]').forEach(i => i.valueAsDate = new Date());
-        updateGerm(); refreshAll();
+        updateGerm(); 
+        refreshAll(); 
+        updateCharts(); 
+        initPlantDropdown();
+        initHydroPlantDropdown();
     };
+
+    function initPlantDropdown() {
+        allPlantsForDropdown = [...plants.veg, ...plants.flo].map(p => p.n).filter((v, i, a) => a.indexOf(v) === i).sort();
+        document.getElementById('qPlant').addEventListener('blur', () => {
+            setTimeout(() => {
+                document.getElementById('plantDropdown').classList.remove('show');
+            }, 200);
+        });
+    }
+
+    function initHydroPlantDropdown() {
+        document.getElementById('hPlant').addEventListener('blur', () => {
+            setTimeout(() => {
+                document.getElementById('hydroPlantDropdown').classList.remove('show');
+            }, 200);
+        });
+        document.getElementById('hSource').addEventListener('focus', () => {
+            filterSources();
+        });
+    }
+
+    function filterPlants() {
+        const input = document.getElementById('qPlant').value.toLowerCase();
+        const dropdown = document.getElementById('plantDropdown');
+        
+        if(input.length === 0) {
+            dropdown.classList.remove('show');
+            refreshAll();
+            return;
+        }
+
+        const filtered = allPlantsForDropdown.filter(p => p.toLowerCase().includes(input));
+        dropdown.innerHTML = filtered.map(p => `<div class="plant-option" onclick="selectPlantFromDropdown('${p}')">${p}</div>`).join('');
+        dropdown.classList.add('show');
+    }
+
+    function selectPlantFromDropdown(plant) {
+        document.getElementById('qPlant').value = plant;
+        document.getElementById('plantDropdown').classList.remove('show');
+        refreshAll();
+    }
+
+    function filterHydroPlants() {
+        const input = document.getElementById('hPlant').value.toLowerCase();
+        const dropdown = document.getElementById('hydroPlantDropdown');
+        
+        if(input.length === 0) {
+            dropdown.classList.remove('show');
+            return;
+        }
+
+        const filtered = allPlantsForDropdown.filter(p => p.toLowerCase().includes(input));
+        dropdown.innerHTML = filtered.map(p => `<div class="hydro-plant-option" onclick="selectHydroPlant('${p}')">${p}</div>`).join('');
+        dropdown.classList.add('show');
+    }
+
+    function selectHydroPlant(plant) {
+        document.getElementById('hPlant').value = plant;
+        document.getElementById('hydroPlantDropdown').classList.remove('show');
+        filterSources();
+    }
+
+    function filterSources() {
+        const plantName = document.getElementById('hPlant').value;
+        if(!plantName) {
+            document.getElementById('sourceDropdown').classList.remove('show');
+            return;
+        }
+
+        const seedEntries = db.filter(e => e.type === 'seed' && e.plant === plantName && !e.lifecycle);
+        const dropdown = document.getElementById('sourceDropdown');
+        
+        if(seedEntries.length === 0) {
+            dropdown.innerHTML = '<div class="source-option" style="color:red;">אין שתילים זמינים מצמח זה</div>';
+            dropdown.classList.add('show');
+            return;
+        }
+
+        dropdown.innerHTML = seedEntries.map(e => {
+            let sourceStr = '';
+            if(e.substrate === 'עציצי פלסטיק') {
+                sourceStr = e.rawLoc.holeFrom || e.rawLoc.hole;
+            } else {
+                sourceStr = `${e.rawLoc.cycle}/${e.rawLoc.tray}/${e.rawLoc.row}/${e.rawLoc.col}/${e.rawLoc.holeFrom || e.rawLoc.hole}`;
+            }
+            return `<div class="source-option" onclick="selectSource('${e.id}', '${sourceStr}')">${sourceStr}</div>`;
+        }).join('');
+        dropdown.classList.add('show');
+    }
+
+    function selectSource(seedId, sourceStr) {
+        document.getElementById('hSource').value = sourceStr;
+        document.getElementById('hSource').dataset.seedId = seedId;
+        document.getElementById('sourceDropdown').classList.remove('show');
+    }
+
+    function calcPlantCount() {
+        const holeFrom = parseInt(document.getElementById('sHoleFrom').value);
+        const holeTo = parseInt(document.getElementById('sHoleTo').value);
+        const substrate = currentSubstrate;
+        
+        if(!substrate) return;
+
+        let count = 0;
+        if(substrate === 'עציצי פלסטיק') {
+            count = 1;
+        } else {
+            if(!isNaN(holeFrom) && !isNaN(holeTo) && holeTo >= holeFrom) {
+                count = holeTo - holeFrom + 1;
+            } else if(!isNaN(holeFrom) && isNaN(holeTo)) {
+                count = 1;
+            }
+        }
+
+        const display = document.getElementById('plantCountDisplay');
+        if(count > 0) {
+            display.innerHTML = `📊 כמות צמחים בזריעה: <strong>${count}</strong> צמחים`;
+            display.style.display = 'block';
+        } else {
+            display.style.display = 'none';
+        }
+    }
+
+    function updateCharts() {
+        let phData = [], ecData = [], tempData = [], doData = [], labels = [];
+        let waterEntries = db.filter(e => e.type === 'water').sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        waterEntries.forEach(entry => {
+            if(entry.wPH !== undefined) phData.push(entry.wPH);
+            if(entry.wEC !== undefined) ecData.push(entry.wEC);
+            if(entry.wTemp !== undefined) tempData.push(entry.wTemp);
+            if(entry.wDO !== undefined) doData.push(entry.wDO);
+            labels.push(new Date(entry.date).toLocaleDateString('he-IL'));
+        });
+
+        const chartConfig = {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                y: { beginAtZero: true }
+            },
+            plugins: {
+                legend: { labels: { font: { size: 12 } } }
+            }
+        };
+
+        const phCtx = document.getElementById('phChart').getContext('2d');
+        if(charts.ph) charts.ph.destroy();
+        charts.ph = new Chart(phCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'pH',
+                    data: phData,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: chartConfig
+        });
+
+        const ecCtx = document.getElementById('ecChart').getContext('2d');
+        if(charts.ec) charts.ec.destroy();
+        charts.ec = new Chart(ecCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'EC',
+                    data: ecData,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: chartConfig
+        });
+
+        const tempCtx = document.getElementById('tempChart').getContext('2d');
+        if(charts.temp) charts.temp.destroy();
+        charts.temp = new Chart(tempCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'טמפרטורה (°C)',
+                    data: tempData,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: chartConfig
+        });
+
+        const doCtx = document.getElementById('doChart').getContext('2d');
+        if(charts.do) charts.do.destroy();
+        charts.do = new Chart(doCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'DO (חמצן מומס)',
+                    data: doData,
+                    borderColor: 'rgba(75, 192, 75, 1)',
+                    backgroundColor: 'rgba(75, 192, 75, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: chartConfig
+        });
+    }
 
     function showPanel(id, el) {
         document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(id).classList.add('active'); el.classList.add('active');
-        if(id !== 'seedPanel') resetEditMode('seed');
-        if(id !== 'hydroPanel') resetEditMode('hydro');
-        refreshAll();
+        document.getElementById(id).classList.add('active'); 
+        el.classList.add('active');
+        
+        setTimeout(() => {
+            if(id === 'seedPanel') {
+                resetEditMode('seed');
+            } else if(id === 'hydroPanel') {
+                resetEditMode('hydro');
+            } else if(id === 'dataPanel') {
+                resetEditMode('water');
+                updateCharts();
+            } else {
+                refreshAll();
+            }
+        }, 100);
     }
 
     function setSubstrate(type) {
@@ -192,14 +621,15 @@
         document.getElementById('typeRock').classList.toggle('active-opt', type === 'צמר סלעים');
         document.getElementById('typePots').classList.toggle('active-opt', type === 'עציצי פלסטיק');
         const fields = ['sTray', 'sRow', 'sCol'];
-        const lblHole = document.getElementById('lblHole');
+        const lblTray = document.getElementById('lblTray');
         if(type === 'עציצי פלסטיק') {
             fields.forEach(id => { const el = document.getElementById(id); el.value = 'לא רלוונטי'; el.style.backgroundColor = '#e0e0e0'; });
-            lblHole.innerText = 'עציץ מספר:';
+            lblTray.innerText = 'עציץ מספר:';
         } else {
             fields.forEach(id => { const el = document.getElementById(id); if(el.value === 'לא רלוונטי') el.value = '1'; el.style.backgroundColor = '#fafafa'; });
-            lblHole.innerText = 'גומה:';
+            lblTray.innerText = 'מגש';
         }
+        calcPlantCount();
     }
 
     function setCat(c) {
@@ -213,13 +643,41 @@
         updateGerm();
     }
 
-    function setSide(s) { currentSide = s; document.getElementById('side1').classList.toggle('active-opt', s===1); document.getElementById('side2').classList.toggle('active-opt', s===2); }
+    function setSide(s) { 
+        currentSide = s; 
+        document.getElementById('side1').classList.toggle('active-opt', s===1); 
+        document.getElementById('side2').classList.toggle('active-opt', s===2); 
+    }
 
     function updateGerm() {
-        if(currentCat === 'man') return;
+        if(currentCat === 'man') {
+            document.getElementById('sGermTarget').value = '';
+            document.getElementById('tipsArea').innerHTML = '';
+            return;
+        }
         const sel = currentCat === 'veg' ? 'sPlantVeg' : 'sPlantFlo';
-        const p = plants[currentCat].find(x => x.n === document.getElementById(sel).value);
-        if(p) document.getElementById('sGermTarget').value = p.d;
+        const selectedPlantName = document.getElementById(sel).value;
+        const p = plants[currentCat].find(x => x.n === selectedPlantName);
+        if(p) {
+            document.getElementById('sGermTarget').value = p.d;
+            displayTips(p);
+        } else {
+            document.getElementById('tipsArea').innerHTML = '';
+        }
+    }
+
+    function displayTips(plant) {
+        let tipsHTML = '<div class="tips-box"><h4>💡 טיפים לצמח: ' + plant.n + '</h4>';
+        tipsHTML += '<strong>זריעה (הכנת זרעים וביצוע):</strong><ul>';
+        if(plant.tips.זריעה) {
+            plant.tips.זריעה.forEach(tip => tipsHTML += '<li>' + tip + '</li>');
+        }
+        tipsHTML += '</ul><strong>גידול ותחזוקה:</strong><ul>';
+        if(plant.tips.גידול) {
+            plant.tips.גידול.forEach(tip => tipsHTML += '<li>' + tip + '</li>');
+        }
+        tipsHTML += '</ul></div>';
+        document.getElementById('tipsArea').innerHTML = tipsHTML;
     }
 
     function checkLim() {
@@ -238,15 +696,57 @@
             const img = new Image();
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                const MAX = 400; const scale = MAX / img.width;
-                canvas.width = MAX; canvas.height = img.height * scale;
+                const MAX = 400; 
+                const scale = MAX / img.width;
+                canvas.width = MAX; 
+                canvas.height = img.height * scale;
                 canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
                 activeImg = canvas.toDataURL('image/jpeg', 0.7);
-                document.getElementById('sPreview').src = activeImg; document.getElementById('sPreview').style.display = 'block';
+                document.getElementById('sPreview').src = activeImg; 
+                document.getElementById('sPreview').style.display = 'block';
             };
             img.src = e.target.result;
         };
         reader.readAsDataURL(input.files[0]);
+    }
+
+    function clearSeedForm() {
+        document.getElementById('sCycle').value = '1';
+        document.getElementById('sTray').value = '1';
+        document.getElementById('sRow').value = '';
+        document.getElementById('sCol').value = '';
+        document.getElementById('sHoleFrom').value = '';
+        document.getElementById('sHoleTo').value = '';
+        document.getElementById('sDate').valueAsDate = new Date();
+        document.getElementById('sGermTarget').value = '';
+        document.getElementById('sGermActual').value = '';
+        document.getElementById('sNotes').value = '';
+        document.getElementById('sPreview').style.display = 'none';
+        document.getElementById('plantCountDisplay').style.display = 'none';
+        activeImg = '';
+        document.getElementById('sFile').value = '';
+        resetEditMode('seed');
+    }
+
+    function clearHydroForm() {
+        setSide(1);
+        document.getElementById('hRow').value = '';
+        document.getElementById('hHole').value = '';
+        document.getElementById('hPlant').value = '';
+        document.getElementById('hSource').value = '';
+        document.getElementById('hSource').dataset.seedId = '';
+        document.getElementById('hDate').valueAsDate = new Date();
+        document.getElementById('hNotes').value = '';
+        resetEditMode('hydro');
+    }
+
+    function clearWaterForm() {
+        document.getElementById('wDate').valueAsDate = new Date();
+        document.getElementById('wPH').value = '';
+        document.getElementById('wEC').value = '';
+        document.getElementById('wTemp').value = '';
+        document.getElementById('wDO').value = '';
+        resetEditMode('water');
     }
 
     function editEntry(id) {
@@ -260,12 +760,18 @@
             document.getElementById('sTray').value = item.rawLoc.tray;
             document.getElementById('sRow').value = item.rawLoc.row;
             document.getElementById('sCol').value = item.rawLoc.col;
-            document.getElementById('sHole').value = item.rawLoc.hole;
+            document.getElementById('sHoleFrom').value = item.rawLoc.holeFrom || item.rawLoc.hole;
+            document.getElementById('sHoleTo').value = item.rawLoc.holeTo || '';
             document.getElementById('sDate').value = item.date;
             document.getElementById('sGermTarget').value = item.germ ? item.germ.target : '';
             document.getElementById('sGermActual').value = item.germActualDate || '';
             document.getElementById('sNotes').value = item.notes;
-            if(item.img) { activeImg = item.img; document.getElementById('sPreview').src = item.img; document.getElementById('sPreview').style.display = 'block'; }
+            if(item.img) { 
+                activeImg = item.img; 
+                document.getElementById('sPreview').src = item.img; 
+                document.getElementById('sPreview').style.display = 'block'; 
+            }
+            calcPlantCount();
             document.getElementById('btnSaveSeed').innerText = "עדכן נתונים";
         } else if(item.type === 'hydro') {
             showPanel('hydroPanel', document.getElementById('navHydro'));
@@ -273,16 +779,33 @@
             document.getElementById('hRow').value = item.rawLoc.row;
             document.getElementById('hHole').value = item.rawLoc.hole;
             document.getElementById('hPlant').value = item.plant;
+            document.getElementById('hSource').value = item.rawLoc.sourceStr || '';
+            document.getElementById('hSource').dataset.seedId = item.rawLoc.sourceId || '';
             document.getElementById('hDate').value = item.date;
             document.getElementById('hNotes').value = item.notes;
             document.getElementById('btnSaveHydro').innerText = "עדכן נתונים";
+        } else if(item.type === 'water') {
+            showPanel('dataPanel', document.getElementById('navData'));
+            document.getElementById('wDate').value = item.date;
+            document.getElementById('wPH').value = item.wPH || '';
+            document.getElementById('wEC').value = item.wEC || '';
+            document.getElementById('wTemp').value = item.wTemp || '';
+            document.getElementById('wDO').value = item.wDO || '';
+            document.getElementById('btnSaveWater').innerText = "עדכן מדדים";
         }
     }
 
     function resetEditMode(type) {
         editId = null;
-        if(type==='seed') { document.getElementById('btnSaveSeed').innerText = "שמור זריעה"; }
-        if(type==='hydro') { document.getElementById('btnSaveHydro').innerText = "שמור שתילה"; }
+        if(type==='seed') { 
+            document.getElementById('btnSaveSeed').innerText = "שמור זריעה"; 
+        }
+        if(type==='hydro') { 
+            document.getElementById('btnSaveHydro').innerText = "שמור שתילה"; 
+        }
+        if(type==='water') { 
+            document.getElementById('btnSaveWater').innerText = "שמור מדדים"; 
+        }
     }
 
     function saveData(type) {
@@ -292,11 +815,24 @@
             entry.plant = currentCat === 'man' ? document.getElementById('sPlantMan').value : document.getElementById(currentCat === 'veg' ? 'sPlantVeg' : 'sPlantFlo').value;
             entry.date = document.getElementById('sDate').value;
             entry.substrate = currentSubstrate;
-            entry.rawLoc = { cycle: document.getElementById('sCycle').value, tray: document.getElementById('sTray').value, row: document.getElementById('sRow').value, col: document.getElementById('sCol').value, hole: document.getElementById('sHole').value };
+            const holeFrom = document.getElementById('sHoleFrom').value;
+            const holeTo = document.getElementById('sHoleTo').value;
+            entry.rawLoc = { cycle: document.getElementById('sCycle').value, tray: document.getElementById('sTray').value, row: document.getElementById('sRow').value, col: document.getElementById('sCol').value, holeFrom: holeFrom, holeTo: holeTo };
             let locStr = `מחזור ${entry.rawLoc.cycle} `;
-            locStr += (entry.substrate === 'עציצי פלסטיק') ? `עציץ ${entry.rawLoc.hole}` : `מגש ${entry.rawLoc.tray} [${entry.rawLoc.row},${entry.rawLoc.col}] גומה ${entry.rawLoc.hole}`;
+            let holeStr = '';
+            if(entry.substrate === 'עציצי פלסטיק') {
+                holeStr = `עציץ ${holeFrom}`;
+            } else {
+                if(holeTo && holeTo !== '') {
+                    holeStr = `גומות ${holeFrom}-${holeTo}`;
+                } else if(holeFrom) {
+                    holeStr = `גומה ${holeFrom}`;
+                }
+            }
+            locStr += `מגש ${entry.rawLoc.tray} [${entry.rawLoc.row},${entry.rawLoc.col}] ${holeStr}`;
             entry.loc = `${locStr} ${entry.substrate ? '| ' + entry.substrate : ''}`;
-            entry.img = activeImg; entry.notes = document.getElementById('sNotes').value;
+            entry.img = activeImg; 
+            entry.notes = document.getElementById('sNotes').value;
             const target = parseInt(document.getElementById('sGermTarget').value);
             const actual = document.getElementById('sGermActual').value;
             entry.germActualDate = actual;
@@ -307,87 +843,317 @@
         } else if(type === 'hydro') {
             entry.plant = document.getElementById('hPlant').value;
             entry.date = document.getElementById('hDate').value;
-            entry.rawLoc = { side: currentSide, row: document.getElementById('hRow').value, hole: document.getElementById('hHole').value };
+            const sourceId = document.getElementById('hSource').dataset.seedId;
+            const sourceStr = document.getElementById('hSource').value;
+            
+            if(!sourceId && !editId) {
+                return alert("יש לבחור מקור שתיל");
+            }
+
+            entry.rawLoc = { side: currentSide, row: document.getElementById('hRow').value, hole: document.getElementById('hHole').value, sourceId: sourceId, sourceStr: sourceStr };
             entry.loc = `הידרו צד ${entry.rawLoc.side} [${entry.rawLoc.row}/${entry.rawLoc.hole}]`;
             entry.notes = document.getElementById('hNotes').value;
-        } else {
-            entry.plant = "מדדי מים"; entry.date = document.getElementById('wDate').value;
-            entry.loc = `pH:${document.getElementById('wPH').value} EC:${document.getElementById('wEC').value} DO:${document.getElementById('wDO').value}`;
+
+            // הקטנת הספירה מהמקור
+            if(sourceId && !editId) {
+                const sourceSeed = db.find(s => s.id == sourceId);
+                if(sourceSeed) {
+                    const holeFrom = parseInt(sourceSeed.rawLoc.holeFrom);
+                    const holeTo = parseInt(sourceSeed.rawLoc.holeTo);
+                    const currentCount = holeTo ? (holeTo - holeFrom + 1) : 1;
+                    
+                    if(!sourceSeed.usedCount) sourceSeed.usedCount = 0;
+                    sourceSeed.usedCount++;
+                    
+                    if(sourceSeed.usedCount >= currentCount && !editId) {
+                        sourceSeed.availableForTransfer = false;
+                    }
+                }
+            }
+        } else if(type === 'water') {
+            entry.plant = "מדדי מים"; 
+            entry.date = document.getElementById('wDate').value;
+            entry.wPH = parseFloat(document.getElementById('wPH').value) || 0;
+            entry.wEC = parseFloat(document.getElementById('wEC').value) || 0;
+            entry.wTemp = parseFloat(document.getElementById('wTemp').value) || 0;
+            entry.wDO = parseFloat(document.getElementById('wDO').value) || 0;
+            entry.loc = `pH:${entry.wPH} EC:${entry.wEC} DO:${entry.wDO}`;
         }
         if(!entry.plant) return alert("הזן שם צמח");
         if(!editId) db.unshift(entry);
         localStorage.setItem('growData', JSON.stringify(db));
         alert("נשמר!");
-        resetEditMode(type); activeImg = ""; refreshAll();
+        
+        if(type === 'seed') {
+            clearSeedForm();
+        } else if(type === 'hydro') {
+            clearHydroForm();
+        } else if(type === 'water') {
+            clearWaterForm();
+        }
+        
+        activeImg = ""; 
+        refreshAll(); 
+        updateCharts();
     }
 
     function setLifecycle(id, status) {
         const idx = db.findIndex(i => i.id === id);
         if(idx !== -1) { 
-            db[idx].lifecycle = status; 
-            if(status === 'הועבר') {
-                const plantName = db[idx].plant;
+            const entry = db[idx];
+            
+            // אם זה זריעה והמצב הוא הועבר - יש לבדוק אם יש עדיין זמינות
+            if(entry.type === 'seed' && status === 'הועבר') {
+                const holeFrom = parseInt(entry.rawLoc.holeFrom);
+                const holeTo = parseInt(entry.rawLoc.holeTo);
+                const totalCount = entry.substrate === 'עציצי פלסטיק' ? 1 : (holeTo ? (holeTo - holeFrom + 1) : 1);
+                const usedCount = entry.usedCount || 0;
+                
+                if(usedCount >= totalCount) {
+                    return alert(`לא ניתן להעביר - כל ${totalCount} הצמחים מאצווה זו כבר הועברו או הושמדו`);
+                }
+            }
+            
+            db[idx].lifecycle = status;
+            
+            // אם זה שתילה בהידרופוני - הקטן את הספירה מהמקור
+            if(entry.type === 'hydro' && status === 'הועבר' && entry.rawLoc.sourceId) {
+                const sourceSeed = db.find(s => s.id == entry.rawLoc.sourceId);
+                if(sourceSeed) {
+                    if(!sourceSeed.usedCount) sourceSeed.usedCount = 0;
+                    sourceSeed.usedCount++;
+                    
+                    const holeFrom = parseInt(sourceSeed.rawLoc.holeFrom);
+                    const holeTo = parseInt(sourceSeed.rawLoc.holeTo);
+                    const currentCount = holeTo ? (holeTo - holeFrom + 1) : 1;
+                    
+                    if(sourceSeed.usedCount >= currentCount) {
+                        sourceSeed.availableForTransfer = false;
+                    }
+                }
+            }
+            
+            if(status === 'הועבר' && entry.type === 'seed') {
+                const plantName = entry.plant;
                 showPanel('hydroPanel', document.getElementById('navHydro'));
                 document.getElementById('hPlant').value = plantName;
             }
+            
             localStorage.setItem('growData', JSON.stringify(db)); 
             refreshAll(); 
         }
     }
 
     function refreshAll() {
-        const qPlantEl = document.getElementById('qPlant'); if(!qPlantEl) return;
+        const qPlantEl = document.getElementById('qPlant'); 
+        if(!qPlantEl) return;
         const qP = qPlantEl.value.toLowerCase();
-        const qT = document.getElementById('qTray').value, qRS = document.getElementById('qRowS').value, qCS = document.getElementById('qColS').value, qHS = document.getElementById('qHoleS').value;
-        const qSi = document.getElementById('qSide').value, qRH = document.getElementById('qRowH').value, qHo = document.getElementById('qHole').value;
+        const qT = document.getElementById('qTray').value, 
+              qRS = document.getElementById('qRowS').value, 
+              qCS = document.getElementById('qColS').value, 
+              qHS = document.getElementById('qHoleS').value;
+        const qSi = document.getElementById('qSide').value, 
+              qRH = document.getElementById('qRowH').value, 
+              qHo = document.getElementById('qHole').value;
         const filtered = db.filter(i => {
             const mP = i.plant.toLowerCase().includes(qP);
             let mLoc = true;
-            if(i.type === 'seed' && (qT || qRS || qCS || qHS)) mLoc = (!qT || i.rawLoc.tray == qT) && (!qRS || i.rawLoc.row == qRS) && (!qCS || i.rawLoc.col == qCS) && (!qHS || i.rawLoc.hole == qHS);
-            else if(i.type === 'hydro' && (qSi || qRH || qHo)) mLoc = (!qSi || i.rawLoc.side == qSi) && (!qRH || i.rawLoc.row == qRH) && (!qHo || i.rawLoc.hole == qHo);
+            if(i.type === 'seed' && (qT || qRS || qCS || qHS)) {
+                mLoc = (!qT || i.rawLoc.tray == qT) && (!qRS || i.rawLoc.row == qRS) && (!qCS || i.rawLoc.col == qCS) && (!qHS || (i.rawLoc.holeFrom == qHS || i.rawLoc.hole == qHS));
+            }
+            else if(i.type === 'hydro' && (qSi || qRH || qHo)) {
+                mLoc = (!qSi || i.rawLoc.side == qSi) && (!qRH || i.rawLoc.row == qRH) && (!qHo || i.rawLoc.hole == qHo);
+            }
             return mP && mLoc;
         });
-        document.getElementById('historyList').innerHTML = filtered.map(i => `
+        
+        document.getElementById('historyList').innerHTML = filtered.map(i => {
+            let germDisplay = '';
+            let countDisplay = '';
+            if(i.type === 'seed') {
+                const holeFrom = parseInt(i.rawLoc.holeFrom);
+                const holeTo = parseInt(i.rawLoc.holeTo);
+                const totalCount = i.substrate === 'עציצי פלסטיק' ? 1 : (holeTo ? (holeTo - holeFrom + 1) : 1);
+                const usedCount = i.usedCount || 0;
+                const remaining = totalCount - usedCount;
+                
+                countDisplay = `<span class="status-tag tag-count">צמחים: ${remaining}/${totalCount}</span>`;
+            }
+            if(i.germ) {
+                germDisplay = `<span class="status-tag ${i.germ.status==='מוקדם'?'tag-early':i.germ.status==='מאוחר'?'tag-late':'tag-ontime'}">${i.germ.status} (${i.germ.diff} ימים)</span>`;
+            }
+            let sourceDisplay = '';
+            if(i.type === 'hydro' && i.rawLoc.sourceStr) {
+                sourceDisplay = `<br><small>מקור: ${i.rawLoc.sourceStr}</small>`;
+            }
+            
+            return `
             <div class="entry type-${i.type}">
                 <span style="float:left; color:red; cursor:pointer; margin-right:10px;" onclick="del(${i.id})">🗑️</span>
                 <span style="float:left; color:var(--secondary); cursor:pointer; font-size:14px;" onclick="editEntry(${i.id})">עריכה 📝</span>
-                <strong>${i.plant}</strong> | ${new Date(i.date).toLocaleDateString('he-IL')}<br><small>${i.loc}</small>
-                ${i.germ ? `<br><span class="status-tag ${i.germ.status==='מוקדם'?'tag-early':i.germ.status==='מאוחר'?'tag-late':'tag-ontime'}">${i.germ.status}</span>` : ''}
+                <strong>${i.plant}</strong> | ${new Date(i.date).toLocaleDateString('he-IL')}<br><small>${i.loc}</small>${sourceDisplay}
+                ${germDisplay}
+                ${countDisplay}
                 ${i.lifecycle ? `<span class="status-tag ${i.lifecycle==='הועבר'?'tag-moved':i.lifecycle==='נקצר'?'tag-harvested':'tag-dead'}">${i.lifecycle}</span>` : ''}
+                ${i.img ? `<br><img src="${i.img}" class="img-preview" onclick="openImageFullscreen('${i.img}')" style="cursor:pointer;">` : ''}
                 <div class="status-btn-group">
-                    ${i.type === 'seed' ? `<button class="status-btn" onclick="setLifecycle(${i.id}, 'הועבר')">הועבר 💧</button>` : ''}
-                    ${i.type === 'hydro' ? `<button class="status-btn" onclick="setLifecycle(${i.id}, 'נקצר')">נקצר ✂️</button>` : ''}
-                    ${i.type !== 'water' ? `<button class="status-btn" onclick="setLifecycle(${i.id}, 'הושמד')">הושמד 💀</button>` : ''}
+                    ${i.type === 'seed' && !i.lifecycle ? `<button class="status-btn" ${i.availableForTransfer === false ? 'disabled' : ''} onclick="setLifecycle(${i.id}, 'הועבר')">הועבר 💧</button>` : ''}
+                    ${i.type === 'hydro' && !i.lifecycle ? `<button class="status-btn" onclick="setLifecycle(${i.id}, 'נקצר')">נקצר ✂️</button>` : ''}
+                    ${i.type !== 'water' && !i.lifecycle ? `<button class="status-btn" onclick="setLifecycle(${i.id}, 'הושמד')">הושמד 💀</button>` : ''}
                 </div>
-            </div>`).join('') || "אין תוצאות";
+            </div>`;
+        }).join('') || "אין תוצאות";
+        
         const groups = {};
-        db.filter(i => i.type !== 'water').forEach(i => { if(!groups[i.plant]) groups[i.plant] = []; groups[i.plant].push(i); });
+        db.filter(i => i.type !== 'water').forEach(i => { 
+            if(!groups[i.plant]) groups[i.plant] = []; 
+            groups[i.plant].push(i); 
+        });
+        
         document.getElementById('reportList').innerHTML = Object.entries(groups).map(([name, events]) => `
-            <div class="card"><h3>${name}</h3>${events.map(e => `<div style="border-bottom:1px solid #eee; padding:5px 0;"><b>${e.type==='seed'?'🌱':'💧'}</b> ${new Date(e.date).toLocaleDateString('he-IL')} | ${e.loc} ${e.lifecycle ? `[${e.lifecycle}]` : ''}</div>`).join('')}</div>`).join('');
+            <div class="card"><h3>${name}</h3>${events.map(e => {
+                let sourceInfo = '';
+                if(e.type === 'hydro' && e.rawLoc.sourceStr) {
+                    sourceInfo = ` (מ: ${e.rawLoc.sourceStr})`;
+                }
+                return `<div style="border-bottom:1px solid #eee; padding:5px 0;"><b>${e.type==='seed'?'🌱':'💧'}</b> ${new Date(e.date).toLocaleDateString('he-IL')} | ${e.loc}${sourceInfo} ${e.lifecycle ? `[${e.lifecycle}]` : ''}</div>`;
+            }).join('')}</div>`).join('');
     }
 
-    function del(id) { if(confirm('למחוק?')) { db = db.filter(i => i.id !== id); localStorage.setItem('growData', JSON.stringify(db)); refreshAll(); } }
-function exportCSV() {
-    if (db.length === 0) return alert("אין נתונים לייצוא");
-    let csv = "\uFEFFסוג,צמח,תאריך,מיקום,סטטוס,הערות\n";
-    db.forEach(i => {
-        const row = [
-            i.type === 'seed' ? 'זריעה' : (i.type === 'hydro' ? 'הידרו' : 'מדדים'),
-            i.plant,
-            new Date(i.date).toLocaleDateString('he-IL'),
-            (i.loc || '').replace(/,/g, ';'),
-            i.lifecycle || 'פעיל',
-            (i.notes || '').replace(/\n/g, ' ').replace(/,/g, ';')
-        ];
-        csv += row.join(",") + "\n";
-    });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `GrowLog_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`;
-    link.click();
-}
+    function openImageFullscreen(imgSrc) {
+        const modal = document.createElement('div');
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.8)';
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+        modal.style.zIndex = '1000';
+        modal.onclick = () => modal.remove();
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.style.maxWidth = '90%';
+        img.style.maxHeight = '90%';
+        modal.appendChild(img);
+        document.body.appendChild(modal);
+    }
 
+    function del(id) { 
+        if(confirm('למחוק רשומה זו?')) { 
+            db = db.filter(i => i.id !== id); 
+            localStorage.setItem('growData', JSON.stringify(db)); 
+            refreshAll(); 
+            updateCharts(); 
+        } 
+    }
+
+    function confirmDeleteAll() {
+        if(!confirm('אתה בטוח שברצונך למחוק את כל ההיסטוריה? הפעולה לא ניתנת לשחזור!')) return;
+        if(!confirm('זה האזהרה האחרונה! מחיקה סופית של כל הנתונים והתמונות!')) return;
+        
+        db = [];
+        localStorage.setItem('growData', JSON.stringify(db));
+        refreshAll();
+        updateCharts();
+        alert('כל ההיסטוריה נמחקה בהצלחה');
+    }
+    
+    function exportCSV() {
+        if (db.length === 0) return alert("אין נתונים לייצוא");
+        let csv = "\uFEFFסוג,צמח,תאריך,מחזור,מגש,שורה,עמודה,גומה מי,גומה עד,צד,שורה הידרו,חור הידרו,תת-מצע,סטטוס חיים,הערות,ימי צפי הצצה,ימי הצצה בפועל,סטטוס הצצה,מקור השתיל,PH,EC,טמפרטורה,DO\n";
+        
+        db.forEach(i => {
+            let row = [
+                i.type === 'seed' ? 'זריעה' : (i.type === 'hydro' ? 'הידרו' : 'מדדים'),
+                i.plant || '',
+                i.date ? new Date(i.date).toLocaleDateString('he-IL') : '',
+                i.type === 'seed' && i.rawLoc ? i.rawLoc.cycle : '',
+                i.type === 'seed' && i.rawLoc ? i.rawLoc.tray : '',
+                i.type === 'seed' && i.rawLoc ? i.rawLoc.row : '',
+                i.type === 'seed' && i.rawLoc ? i.rawLoc.col : '',
+                i.type === 'seed' && i.rawLoc ? i.rawLoc.holeFrom : (i.type === 'hydro' && i.rawLoc ? i.rawLoc.hole : ''),
+                i.type === 'seed' && i.rawLoc ? i.rawLoc.holeTo : '',
+                i.type === 'hydro' && i.rawLoc ? i.rawLoc.side : '',
+                i.type === 'hydro' && i.rawLoc ? i.rawLoc.row : '',
+                i.type === 'hydro' && i.rawLoc ? i.rawLoc.hole : '',
+                i.type === 'seed' && i.substrate ? i.substrate : '',
+                i.lifecycle || 'פעיל',
+                (i.notes || '').replace(/\n/g, ' ').replace(/,/g, ';'),
+                i.germ ? i.germ.target : '',
+                i.germ ? i.germ.diff : '',
+                i.germ ? i.germ.status : '',
+                i.type === 'hydro' && i.rawLoc ? i.rawLoc.sourceStr || '' : '',
+                i.wPH || '',
+                i.wEC || '',
+                i.wTemp || '',
+                i.wDO || ''
+            ];
+            csv += row.map(cell => `"${cell}"`).join(',') + "\n";
+        });
+        
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `GrowLog_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`;
+        link.click();
+    }
+
+    async function exportWithImages() {
+        if (db.length === 0) return alert("אין נתונים לייצוא");
+        
+        const zip = new JSZip();
+        let csvContent = "\uFEFFסוג,צמח,תאריך,מחזור,מגש,שורה,עמודה,גומה מי,גומה עד,צד,שורה הידרו,חור הידרו,תת-מצע,סטטוס חיים,הערות,ימי צפי הצצה,ימי הצצה בפועל,סטטוס הצצה,מקור השתיל,PH,EC,טמפרטורה,DO,שם קובץ תמונה\n";
+        
+        let imageIndex = 0;
+        db.forEach((i, idx) => {
+            let imageName = '';
+            if(i.img) {
+                imageName = `img_${idx}.jpg`;
+                const base64 = i.img.split(',')[1];
+                zip.file(`images/${imageName}`, base64, { base64: true });
+                imageIndex++;
+            }
+            
+            let row = [
+                i.type === 'seed' ? 'זריעה' : (i.type === 'hydro' ? 'הידרו' : 'מדדים'),
+                i.plant || '',
+                i.date ? new Date(i.date).toLocaleDateString('he-IL') : '',
+                i.type === 'seed' && i.rawLoc ? i.rawLoc.cycle : '',
+                i.type === 'seed' && i.rawLoc ? i.rawLoc.tray : '',
+                i.type === 'seed' && i.rawLoc ? i.rawLoc.row : '',
+                i.type === 'seed' && i.rawLoc ? i.rawLoc.col : '',
+                i.type === 'seed' && i.rawLoc ? i.rawLoc.holeFrom : (i.type === 'hydro' && i.rawLoc ? i.rawLoc.hole : ''),
+                i.type === 'seed' && i.rawLoc ? i.rawLoc.holeTo : '',
+                i.type === 'hydro' && i.rawLoc ? i.rawLoc.side : '',
+                i.type === 'hydro' && i.rawLoc ? i.rawLoc.row : '',
+                i.type === 'hydro' && i.rawLoc ? i.rawLoc.hole : '',
+                i.type === 'seed' && i.substrate ? i.substrate : '',
+                i.lifecycle || 'פעיל',
+                (i.notes || '').replace(/\n/g, ' ').replace(/,/g, ';'),
+                i.germ ? i.germ.target : '',
+                i.germ ? i.germ.diff : '',
+                i.germ ? i.germ.status : '',
+                i.type === 'hydro' && i.rawLoc ? i.rawLoc.sourceStr || '' : '',
+                i.wPH || '',
+                i.wEC || '',
+                i.wTemp || '',
+                i.wDO || '',
+                imageName
+            ];
+            csvContent += row.map(cell => `"${cell}"`).join(',') + "\n";
+        });
+        
+        zip.file('GrowLog.csv', csvContent);
+        
+        const content = await zip.generateAsync({ type: 'blob' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(content);
+        link.download = `GrowLog_WithImages_${new Date().toLocaleDateString().replace(/\//g, '-')}.zip`;
+        link.click();
+    }
 </script>
 </body>
 </html>

@@ -10,21 +10,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
 
 
-<script>
-const firebaseConfig = {
-    apiKey: "AIzaSyDJrcY7iVG1iyyx2e6lnFiAa8OIcbDTs",
-    authDomain: "garden-crop-monitoring.firebaseapp.com",
-    projectId: "garden-crop-monitoring",
-    storageBucket: "garden-crop-monitoring.firebasestorage.app",
-    messagingSenderId: "667577763472",
-    appId: "1:667577763472:web:524f42fb26444adac6ba15"
-};
-firebase.initializeApp(firebaseConfig);
-console.log('✅ Firebase initialized');
-</script>
-
-    <style>
-
 
     <style>
         :root { --primary: #2e7d32; --secondary: #0288d1; --accent: #546e7a; --bg: #f0f2f5; --card: #ffffff; --error: #d32f2f; --success: #388e3c; --neutral: #757575; }
@@ -1032,18 +1017,32 @@ function saveData(type) {
         }
 
         localStorage.setItem('growData', JSON.stringify(db));
+        
+        // ✨ הוסף זה:
+        if (firebase.auth().currentUser) {
+            const lastEntry = db[0];
+            const dataToSync = { ...lastEntry };
+            delete dataToSync.img;
+            
+            firebaseDB.collection('users/' + firebase.auth().currentUser.uid + '/growData')
+                .doc(String(lastEntry.id))
+                .set(dataToSync, { merge: true })
+                .catch(e => console.error('Upload error:', e));
+        }
+        
         alert('נשמר!');
         clearSeedForm();
         activeImg = '';
         refreshAll();
         updateCharts();
         return;
+
     }
 
     let entry = editId ? db.find(i => i.id === editId) : { id: Date.now(), lifecycle: null };
     entry.type = type;
 
-    if (type === 'hydro') {
+                                                                                             if (type === 'hydro') {
         entry.plant = document.getElementById('hPlant').value;
         entry.date  = document.getElementById('hDate').value;
         const sourceId  = document.getElementById('hSource').dataset.seedId;
@@ -1091,14 +1090,27 @@ function saveData(type) {
 
     if (!entry.plant) return alert('הזן שם צמח');
     if (!editId) db.unshift(entry);
-    localStorage.setItem('growData', JSON.stringify(db));
-    alert('נשמר!');
-    if (type === 'hydro') clearHydroForm();
-    if (type === 'water') clearWaterForm();
-    activeImg = '';
-    refreshAll();
-    updateCharts();
-}
+          localStorage.setItem('growData', JSON.stringify(db));
+            
+            // ✨ הוסף את זה:
+            if (firebase.auth().currentUser) {
+                const lastEntry = db[0];
+                const dataToSync = { ...lastEntry };
+                delete dataToSync.img;
+                
+                firebaseDB.collection('users/' + firebase.auth().currentUser.uid + '/growData')
+                    .doc(String(lastEntry.id))
+                    .set(dataToSync, { merge: true })
+                    .catch(e => console.error('Upload error:', e));
+            }
+            
+            alert('נשמר!');
+            clearSeedForm();
+            activeImg = '';
+            refreshAll();
+            updateCharts();
+            return;
+        }
 
 
 // ─── מחזור חיים ────────────────────────────────────────────────────────────
@@ -1440,11 +1452,12 @@ async function syncToFirebase() {
             const dataToSync = { ...entry, img: undefined };
             
             await firebaseDB
-                .collection('growData')
+                .collection('users/' + firebase.auth().currentUser.uid + '/growData')  // ✨ החלף את השורה הזו
                 .doc(String(entry.id))
                 .set(dataToSync, { merge: true })
                 .catch(e => console.warn(`Sync entry ${entry.id}:`, e));
         }
+
         
         lastSyncTime = Date.now();
         updateSyncBadge('✅ סנכרון עדכני');
@@ -1459,8 +1472,9 @@ async function syncFromFirebase() {
     if (!firebaseReady || !firebase.auth().currentUser) return;
     
     try {
-        const snapshot = await firebaseDB.collection('growData').get();
+        const snapshot = await firebaseDB.collection('users/' + firebase.auth().currentUser.uid + '/growData').get();  // ✨ החלף את השורה הזו
         const cloudData = {};
+
         
         snapshot.forEach(doc => {
             cloudData[doc.id] = doc.data();
@@ -1523,8 +1537,34 @@ window.addEventListener('load', () => {
         } else {
             syncToFirebase();
         }
+        
+        // ✨ הוסף את זה:
+        const uid = firebase.auth().currentUser?.uid;
+        if (uid) {
+            firebaseDB.collection('users/' + uid + '/growData')
+                .onSnapshot(snapshot => {
+                    snapshot.docChanges().forEach(change => {
+                        if (change.type === 'added' || change.type === 'modified') {
+                            const doc = change.doc.data();
+                            const localIndex = db.findIndex(e => String(e.id) === change.doc.id);
+                            
+                            if (localIndex === -1) {
+                                db.unshift(doc);
+                            } else {
+                                db[localIndex] = { ...db[localIndex], ...doc };
+                            }
+                        }
+                    });
+                    
+                    localStorage.setItem('growData', JSON.stringify(db));
+                    refreshAll();
+                    updateCharts();
+                }, error => console.error('Listener error:', error));
+        }
+        
     }, 1000);
 });
+
 
 </script>
 </body>

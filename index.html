@@ -1414,8 +1414,11 @@ function showSeason(seasonId, btn) {
     renderSeason(seasonId);
 }
 
+<script>
+// ... (כל הקוד הישן של הפונקציות - refreshAll, saveData וכו')
+
 // ════════════════════════════════════════════════════════════════
-// 🔥 FIREBASE SYNC
+// 🔥 FIREBASE INITIALIZATION  ← **התחל מפה**
 // ════════════════════════════════════════════════════════════════
 
 const firebaseConfig = {
@@ -1431,74 +1434,288 @@ firebase.initializeApp(firebaseConfig);
 const firebaseDB = firebase.firestore();
 
 let firebaseReady = false;
+let syncInProgress = false;
 let lastSyncTime = 0;
-const SYNC_INTERVAL = 5000;
+const SYNC_INTERVAL = 3000; // 3 שניות
 
-firebase.auth().signInAnonymously().catch(error => {
-    console.warn('Firebase anon login:', error);
+// ────────────────────────────────────────────────────────────────
+// 🔐 התחברות אנונימית + אתחול Sync
+// ────────────────────────────────────────────────────────────────
+
+firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+        console.log('✅ Firebase authenticated - UID:', user.uid);
+        firebaseReady = true;
+        updateSyncBadge('🔄 סנכרון...');
+        
+        // טען מהענן בהתחלה
+        syncFromFirebase().then(() => {
+            // התחל sync אוטומטי
+            startAutoSync();
+        });
+        
+        // הקשב לשינויים בזמן אמת
+        setupRealtimeListener();
+        
+    } else {
+        console.log('⏳ Waiting for Firebase auth...');
+        updateSyncBadge('⏳ מחכה להתחברות');
+    }
 });
 
-setInterval(syncToFirebase, SYNC_INTERVAL);
+// ────────────────────────────────────────────────────────────────
+// 💾 שמירה ל-Firebase
+// ────────────────────────────────────────────────────────────────
 
 async function syncToFirebase() {
-    if (!firebaseReady || !firebase.auth().currentUser) return;
+    const user = firebase.auth().currentUser;
     
+    if (!user || !firebaseReady) {
+        console.warn('⚠️ Not ready for sync');
+        return;
+    }
+
+    if (syncInProgress) return;
+    syncInProgress = true;
+
     try {
         const currentData = JSON.parse(localStorage.getItem('growData')) || [];
         
-        for (const entry of currentData) {
-            if (!entry.id) continue;
-            
-            const dataToSync = { ...entry, img: undefined };
-            
-            await firebaseDB
-                .collection('users/' + firebase.auth().currentUser.uid + '/growData')  // ✨ החלף את השורה הזו
-                .doc(String(entry.id))
-                .set(dataToSync, { merge: true })
-                .catch(e => console.warn(`Sync entry ${entry.id}:`, e));
+        if (currentData.length === 0) {
+            console.log('📭 No data to sync');
+            updateSyncBadge('📭 אין נתונים');
+            syncInProgress = false;
+            return;
         }
 
-        
+        console.log(`🔄 Syncing ${currentData.length} items to Firebase...`);
+        updateSyncBadge('🔄 סנכרון בהתקדמות...');
+
+        let successCount = 0;
+
+        for (const entry of currentData) {
+            if (!entry.id) continue;
+
+            try {
+                // הסר תמונות - כדי לחסוך מקום
+                const dataToSync = { ...entry };
+                delete dataToSync.img;
+
+                // 📍 **PATH תקין**: users/{uid}/growData/{id}
+                await firebaseDB
+                    .collection('users')
+                    .doc(user.uid)
+                    .collection('growData')
+                    .doc(String(entry.id))
+                    .set(dataToSync, { merge: true });
+
+                successCount++;
+
+            } catch (err) {
+                console.error(`❌ Error syncing ${entry.id}:`, err.message);
+            }
+        }
+
+        console.log(`✅ Successfully synced ${successCount}/${currentData.length} items`);
         lastSyncTime = Date.now();
-        updateSyncBadge('✅ סנכרון עדכני');
-        
+        updateSyncBadge(`✅ ${successCount} נתונים סנכרונו`);
+
     } catch (error) {
-        console.error('Sync error:', error);
-        updateSyncBadge('❌ שגיאת סנכרון');
+        console.error('💥 Sync error:', error.message);
+        updateSyncBadge('❌ שגיאה בסנכרון');
+    } finally {
+        syncInProgress = false;
     }
 }
 
-async function syncFromFirebase() {
-    if (!firebaseReady || !firebase.auth().currentUser) return;
-    
-    try {
-        const snapshot = await firebaseDB.collection('users/' + firebase.auth().currentUser.uid + '/growData').get();  // ✨ החלף את השורה הזו
-        const cloudData = {};
+// ────────────────────────────────────────────────────────────────
+// 📥 טעינה מ-Firebase
+// ────────────────────────────────────────────────────────────────
 
-        
+async function syncFromFirebase() {
+    const user = firebase.auth().currentUser;
+    
+    if (!user) {
+        console.warn('⚠️ No user for cloud load');
+        return;
+    }
+
+    try {
+        console.log('📥 Loading from Firebase...');
+        updateSyncBadge('📥 טוען מהענן...');
+
+        // 📍 **PATH תקין**: users/{uid}/growData
+        const snapshot = await firebaseDB
+            .collection('users')
+            .doc(user.uid)
+            .collection('growData')
+            .get();
+
+        const cloudData = {};
         snapshot.forEach(doc => {
             cloudData[doc.id] = doc.data();
         });
-        
+
+        console.log(`☁️ Found ${snapshot.size} items in cloud`);
+
+        // Merge logic
         const localData = JSON.parse(localStorage.getItem('growData')) || [];
         const localMap = Object.fromEntries(localData.map(e => [String(e.id), e]));
-        
-        const merged = Object.values({ ...localMap, ...cloudData });
-        
+
+        const merged = [];
+        const seenIds = new Set();
+
+        // תחילה - כל הנתונים של הענן
+        Object.entries(cloudData).forEach(([id, cloudItem]) => {
+            seenIds.add(id);
+            const localItem = localMap[id];
+            
+            if (localItem) {
+                // בחר הנדיבה חדשה יותר (לפי תאריך)
+                const cloudDate = new Date(cloudItem.date || 0).getTime();
+                const localDate = new Date(localItem.date || 0).getTime();
+                
+                if (cloudDate >= localDate) {
+                    merged.push(cloudItem);
+                    console.log(`☁️ Using cloud version of ${id}`);
+                } else {
+                    merged.push(localItem);
+                    console.log(`💾 Using local version of ${id}`);
+                }
+            } else {
+                // יש רק בענן
+                merged.push(cloudItem);
+                console.log(`✨ Added from cloud: ${id}`);
+            }
+        });
+
+        // אחר כך - נתונים שיש רק באזור המקומי
+        localData.forEach(item => {
+            if (!seenIds.has(String(item.id))) {
+                merged.push(item);
+                console.log(`💾 Kept local-only item: ${item.id}`);
+            }
+        });
+
+        // מיין לפי תאריך (חדש קודם)
+        merged.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
         localStorage.setItem('growData', JSON.stringify(merged));
         db = merged;
+
+        console.log(`✅ Merged to ${merged.length} total items`);
         refreshAll();
         updateCharts();
-        updateSyncBadge('✅ סנכרון עדכני');
-        
+        updateSyncBadge(`✅ ${merged.length} נתונים טעונים`);
+
     } catch (error) {
-        console.error('Load from cloud:', error);
-        updateSyncBadge('⚠️ הטעינה מהענן נכשלה');
+        console.error('💥 Cloud load error:', error.message);
+        updateSyncBadge('❌ כישלון בטעינה מהענן');
     }
 }
 
+// ────────────────────────────────────────────────────────────────
+// 🔄 Sync אוטומטי כל 3 שניות
+// ────────────────────────────────────────────────────────────────
+
+let syncIntervalId = null;
+
+function startAutoSync() {
+    console.log('▶️ Starting auto-sync (every 3s)');
+    
+    // Sync מיד
+    syncToFirebase();
+    
+    // חזור כל 3 שניות
+    if (syncIntervalId) clearInterval(syncIntervalId);
+    syncIntervalId = setInterval(() => {
+        const now = Date.now();
+        if (now - lastSyncTime > SYNC_INTERVAL && firebaseReady) {
+            syncToFirebase();
+        }
+    }, SYNC_INTERVAL);
+}
+
+// ────────────────────────────────────────────────────────────────
+// 📡 Real-time Listener
+// ────────────────────────────────────────────────────────────────
+
+function setupRealtimeListener() {
+    const user = firebase.auth().currentUser;
+    
+    if (!user) {
+        console.warn('⚠️ No user for listener');
+        return;
+    }
+
+    console.log('👂 Setting up realtime listener...');
+
+    // 📍 **PATH תקין**: users/{uid}/growData
+    firebaseDB
+        .collection('users')
+        .doc(user.uid)
+        .collection('growData')
+        .onSnapshot(
+            snapshot => {
+                console.log(`📡 Realtime update received: ${snapshot.size} items total`);
+                
+                let needsRefresh = false;
+
+                snapshot.docChanges().forEach(change => {
+                    const cloudData = change.doc.data();
+                    const docId = change.doc.id;
+                    const localIndex = db.findIndex(e => String(e.id) === docId);
+
+                    if (change.type === 'added') {
+                        if (localIndex === -1) {
+                            console.log(`✨ Real-time ADD: ${docId}`);
+                            db.unshift(cloudData);
+                            needsRefresh = true;
+                        }
+                    } else if (change.type === 'modified') {
+                        if (localIndex === -1) {
+                            console.log(`✨ Real-time ADD (was modified): ${docId}`);
+                            db.unshift(cloudData);
+                        } else {
+                            const cloudDate = new Date(cloudData.date || 0).getTime();
+                            const localDate = new Date(db[localIndex].date || 0).getTime();
+                            
+                            if (cloudDate > localDate) {
+                                console.log(`🔄 Real-time UPDATE: ${docId}`);
+                                db[localIndex] = cloudData;
+                                needsRefresh = true;
+                            }
+                        }
+                    } else if (change.type === 'removed') {
+                        if (localIndex !== -1) {
+                            console.log(`🗑️ Real-time REMOVE: ${docId}`);
+                            db.splice(localIndex, 1);
+                            needsRefresh = true;
+                        }
+                    }
+                });
+
+                if (needsRefresh) {
+                    localStorage.setItem('growData', JSON.stringify(db));
+                    refreshAll();
+                    updateCharts();
+                    console.log(`✅ UI refreshed after realtime update`);
+                }
+            },
+            error => {
+                console.error('💥 Listener error:', error.message);
+                updateSyncBadge('❌ בעיה בעדכוני זמן אמת');
+            }
+        );
+}
+
+// ────────────────────────────────────────────────────────────────
+// 🎨 סטטוס בדג"ח
+// ────────────────────────────────────────────────────────────────
+
 function updateSyncBadge(msg) {
     let badge = document.getElementById('syncBadge');
+    
     if (!badge) {
         badge = document.createElement('div');
         badge.id = 'syncBadge';
@@ -1514,56 +1731,33 @@ function updateSyncBadge(msg) {
             font-weight: bold;
             z-index: 9999;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            direction: rtl;
         `;
         document.body.appendChild(badge);
     }
+    
     badge.textContent = msg;
-    if (msg.includes('❌') || msg.includes('⚠️')) {
+    
+    // צבעים לפי סטטוס
+    if (msg.includes('❌')) {
         badge.style.background = '#f44336';
-    } else {
+    } else if (msg.includes('⚠️')) {
+        badge.style.background = '#ff9800';
+    } else if (msg.includes('🔄') || msg.includes('📥')) {
+        badge.style.background = '#ff9800';
+    } else if (msg.includes('✅')) {
         badge.style.background = '#4caf50';
+    } else {
+        badge.style.background = '#2196f3';
     }
+    
+    console.log(`[SYNC-BADGE] ${msg}`);
 }
 
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        firebaseReady = true;
-        updateSyncBadge('🔄 אתחול...');
-        
-        if (confirm('טען נתונים מהענן?')) {
-            syncFromFirebase().then(() => {
-                syncToFirebase();
-            });
-        } else {
-            syncToFirebase();
-        }
-        
-        // ✨ הוסף את זה:
-        const uid = firebase.auth().currentUser?.uid;
-        if (uid) {
-            firebaseDB.collection('users/' + uid + '/growData')
-                .onSnapshot(snapshot => {
-                    snapshot.docChanges().forEach(change => {
-                        if (change.type === 'added' || change.type === 'modified') {
-                            const doc = change.doc.data();
-                            const localIndex = db.findIndex(e => String(e.id) === change.doc.id);
-                            
-                            if (localIndex === -1) {
-                                db.unshift(doc);
-                            } else {
-                                db[localIndex] = { ...db[localIndex], ...doc };
-                            }
-                        }
-                    });
-                    
-                    localStorage.setItem('growData', JSON.stringify(db));
-                    refreshAll();
-                    updateCharts();
-                }, error => console.error('Listener error:', error));
-        }
-        
-    }, 1000);
-});
+</script>
+</body>
+</html>
+
 
 
 </script>

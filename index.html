@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GrowManager PRO - Plant Lifecycle</title>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
+
     <style>
         :root { --primary: #2e7d32; --secondary: #0288d1; --accent: #546e7a; --bg: #f0f2f5; --card: #ffffff; --error: #d32f2f; --success: #388e3c; --neutral: #757575; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 10px; margin: 0; direction: rtl; }
@@ -1379,6 +1383,131 @@ function showSeason(seasonId, btn) {
     if (btn) btn.classList.add('active-season');
     renderSeason(seasonId);
 }
+
+// ════════════════════════════════════════════════════════════════
+// 🔥 FIREBASE SYNC
+// ════════════════════════════════════════════════════════════════
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDJrcY7iVG1iyyx2e6lnFiAa8OIcbDTs",
+    authDomain: "garden-crop-monitoring.firebaseapp.com",
+    projectId: "garden-crop-monitoring",
+    storageBucket: "garden-crop-monitoring.firebasestorage.app",
+    messagingSenderId: "667577763472",
+    appId: "1:667577763472:web:524f42fb26444adac6ba15"
+};
+
+firebase.initializeApp(firebaseConfig);
+const firebaseDB = firebase.firestore();
+
+let firebaseReady = false;
+let lastSyncTime = 0;
+const SYNC_INTERVAL = 5000;
+
+firebase.auth().signInAnonymously().catch(error => {
+    console.warn('Firebase anon login:', error);
+});
+
+setInterval(syncToFirebase, SYNC_INTERVAL);
+
+async function syncToFirebase() {
+    if (!firebaseReady || !firebase.auth().currentUser) return;
+    
+    try {
+        const currentData = JSON.parse(localStorage.getItem('growData')) || [];
+        
+        for (const entry of currentData) {
+            if (!entry.id) continue;
+            
+            const dataToSync = { ...entry, img: undefined };
+            
+            await firebaseDB
+                .collection('growData')
+                .doc(String(entry.id))
+                .set(dataToSync, { merge: true })
+                .catch(e => console.warn(`Sync entry ${entry.id}:`, e));
+        }
+        
+        lastSyncTime = Date.now();
+        updateSyncBadge('✅ סנכרון עדכני');
+        
+    } catch (error) {
+        console.error('Sync error:', error);
+        updateSyncBadge('❌ שגיאת סנכרון');
+    }
+}
+
+async function syncFromFirebase() {
+    if (!firebaseReady || !firebase.auth().currentUser) return;
+    
+    try {
+        const snapshot = await firebaseDB.collection('growData').get();
+        const cloudData = {};
+        
+        snapshot.forEach(doc => {
+            cloudData[doc.id] = doc.data();
+        });
+        
+        const localData = JSON.parse(localStorage.getItem('growData')) || [];
+        const localMap = Object.fromEntries(localData.map(e => [String(e.id), e]));
+        
+        const merged = Object.values({ ...localMap, ...cloudData });
+        
+        localStorage.setItem('growData', JSON.stringify(merged));
+        db = merged;
+        refreshAll();
+        updateCharts();
+        updateSyncBadge('✅ סנכרון עדכני');
+        
+    } catch (error) {
+        console.error('Load from cloud:', error);
+        updateSyncBadge('⚠️ הטעינה מהענן נכשלה');
+    }
+}
+
+function updateSyncBadge(msg) {
+    let badge = document.getElementById('syncBadge');
+    if (!badge) {
+        badge = document.createElement('div');
+        badge.id = 'syncBadge';
+        badge.style.cssText = `
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #4caf50;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 9999;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        `;
+        document.body.appendChild(badge);
+    }
+    badge.textContent = msg;
+    if (msg.includes('❌') || msg.includes('⚠️')) {
+        badge.style.background = '#f44336';
+    } else {
+        badge.style.background = '#4caf50';
+    }
+}
+
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        firebaseReady = true;
+        updateSyncBadge('🔄 אתחול...');
+        
+        if (confirm('טען נתונים מהענן?')) {
+            syncFromFirebase().then(() => {
+                syncToFirebase();
+            });
+        } else {
+            syncToFirebase();
+        }
+    }, 1000);
+});
+
 </script>
 </body>
 </html>

@@ -347,18 +347,58 @@ firestore.settings({
 
 let currentUser = null;
 let unsubscribeSnapshot = null;
+// ==================== EMAIL AUTH ====================
+function showLoginUI() {
+    const email = prompt('📧 הכנס אימייל:');
+    if (!email) return;
+    
+    const password = prompt('🔑 הכנס סיסמה (לפחות 6 תווים):');
+    if (!password || password.length < 6) {
+        alert('❌ סיסמה חייבת להיות לפחות 6 תווים');
+        return;
+    }
+    
+    // Try to sign in first, if fails - create account
+    auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+            console.log('✅ התחברת בהצלחה');
+            currentUser = auth.currentUser;
+            document.getElementById('userEmail').textContent = email;
+            initFirebaseSync();
+        })
+        .catch(err => {
+            if (err.code === 'auth/user-not-found') {
+                // Create new account
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(() => {
+                        console.log('✅ חשבון חדש נוצר בהצלחה');
+                        currentUser = auth.currentUser;
+                        document.getElementById('userEmail').textContent = email;
+                        initFirebaseSync();
+                    })
+                    .catch(createErr => {
+                        console.error('❌ שגיאה ביצירת חשבון:', createErr);
+                        alert('❌ ' + createErr.message);
+                    });
+            } else {
+                console.error('❌ שגיאת התחברות:', err);
+                alert('❌ ' + err.message);
+            }
+        });
+}
 
-// Anonymous Auth
-auth.signInAnonymously()
-    .then(() => {
-        console.log('✅ Firebase Auth Success');
-        currentUser = auth.currentUser;
+// Check if user is already logged in
+auth.onAuthStateChanged(user => {
+    if (user) {
+        console.log('✅ משתמש מחובר:', user.email);
+        currentUser = user;
+        document.getElementById('userEmail').textContent = user.email || 'משתמש';
         initFirebaseSync();
-    })
-    .catch(err => {
-        console.error('❌ Firebase Auth Error:', err);
-        updateSyncBadge('error', 'שגיאת התחברות');
-    });
+    } else {
+        console.log('⚠️ אין משתמש מחובר');
+        showLoginUI();
+    }
+});
 
 // ==================== SYNC FUNCTIONS ====================
 function updateSyncBadge(status, message = '') {
@@ -464,6 +504,18 @@ async function syncFromFirebase() {
 }
 
 function initFirebaseSync() {
+    if (!currentUser) {
+        console.error('❌ אין משתמש מחובר - לא ניתן לסנכרן');
+        return;
+    }
+    
+    console.log('🔄 מאתחל סנכרון עבור:', currentUser.email);
+    
+    // Initial sync from cloud
+    syncFromFirebase();
+    // ... שאר הקוד הקיים ...
+}
+
     // Initial sync from cloud
     syncFromFirebase();
 
@@ -1309,6 +1361,28 @@ function showSeason(seasonId, btn) {
     if (btn) btn.classList.add('active-season');
     renderSeason(seasonId);
 }
+// ==================== LOGOUT ====================
+function logout() {
+    if (confirm('🚪 להתנתק מהמערכת?')) {
+        if (unsubscribeSnapshot) unsubscribeSnapshot();
+        
+        auth.signOut()
+            .then(() => {
+                console.log('✅ התנתקת בהצלחה');
+                currentUser = null;
+                db = [];
+                localStorage.removeItem('growData');
+                refreshAll();
+                updateCharts();
+                location.reload();
+            })
+            .catch(err => {
+                console.error('❌ שגיאת התנתקות:', err);
+                alert('❌ ' + err.message);
+            });
+    }
+}
+
 </script>
 </body>
 </html>

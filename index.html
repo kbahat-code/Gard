@@ -6,52 +6,259 @@
     <title>GrowManager PRO</title>
     
     <style>
-        :root { --primary: #2e7d32; --secondary: #0288d1; --accent: #546e7a; --bg: #f0f2f5; --card: #ffffff; --error: #d32f2f; --success: #388e3c; --neutral: #757575; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 10px; margin: 0; direction: rtl; }
-        .container { max-width: 650px; margin: auto; }
-        .nav-bar { display: flex; background: var(--card); border-radius: 15px; margin-bottom: 20px; padding: 5px; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow-x: auto; }
-        .nav-item { flex: 1; min-width: 80px; padding: 12px 5px; text-align: center; cursor: pointer; font-weight: bold; font-size: 12px; border-radius: 10px; color: #666; transition: 0.3s; }
-        .nav-item.active { background: var(--primary); color: white; }
-        .panel { display: none; }
-        .panel.active { display: block; }
-        .card { background: var(--card); padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h2 { margin: 0 0 15px 0; font-size: 1.2rem; color: var(--primary); border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; }
-        h3 { margin: 10px 0; font-size: 1rem; color: var(--primary); }
-        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 11px; color: #777; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; margin-bottom: 10px; font-size: 15px; background: #fafafa; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-        .selector { display: flex; gap: 5px; margin-bottom: 10px; }
-        .opt { flex: 1; padding: 8px; background: #f8f8f8; border: 2px solid #eee; border-radius: 8px; text-align: center; cursor: pointer; font-size: 12px; transition: all 0.2s; }
-        .opt:hover { background: #e8f5e9; }
-        .opt.active-opt { border-color: var(--primary); background: #e8f5e9; font-weight: bold; }
-        .limits-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; background: #f9f9f9; padding: 10px 5px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #eee; }
-        .limits-grid input { padding: 5px; margin-bottom: 0; font-size: 9px; text-align: center; }
-        .main-btn { width: 100%; padding: 15px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; }
-        .main-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .entry { padding: 15px; border-radius: 12px; margin-bottom: 10px; position: relative; background: white; border-right: 6px solid #ccc; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .cam-box { background: #f0f0f0; border: 2px dashed #ccc; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; margin-bottom: 10px; }
-        .hidden { display: none; }
-        .search-box { background: #f1f8e9; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #c8e6c9; }
-        .img-preview { max-width: 100%; max-height: 150px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
-        .plant-dropdown { position: relative; }
-        .plant-options { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ddd; border-radius: 10px; max-height: 200px; overflow-y: auto; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .plant-options.show { display: block; }
-        .plant-option { padding: 10px; cursor: pointer; border-bottom: 1px solid #eee; }
-        .plant-option:hover { background: #f5f5f5; }
-        .tips-box { background: #fff3e0; border-right: 4px solid #ff9800; padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 12px; }
-        .danger-btn { width: 100%; padding: 15px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; background: var(--error); margin-top: 20px; }
-        .info-box { background: #e3f2fd; border-right: 4px solid var(--secondary); padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 12px; color: #1565c0; }
-        .season-btn { flex: 1; min-width: 100px; padding: 12px; border: none; border-radius: 10px; background: #e8f5e9; color: var(--primary); cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.3s; }
-        .season-btn:hover { background: #c8e6c9; }
-        .season-btn.active-season { background: var(--primary); color: white; }
+        :root {
+            --primary: #2e7d32;
+            --secondary: #0288d1;
+            --accent: #546e7a;
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --error: #d32f2f;
+            --success: #388e3c;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            padding: 10px;
+            margin: 0;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 650px;
+            margin: auto;
+        }
+        
+        .nav-bar {
+            display: flex;
+            background: var(--card);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            padding: 5px;
+            gap: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        .nav-item {
+            flex: 1;
+            min-width: 80px;
+            padding: 12px 5px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            border-radius: 10px;
+            color: #666;
+            transition: 0.3s;
+        }
+        
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .panel {
+            display: none;
+        }
+        
+        .panel.active {
+            display: block;
+        }
+        
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            margin: 0 0 15px 0;
+            font-size: 1.2rem;
+            color: var(--primary);
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            margin: 10px 0;
+            font-size: 1rem;
+            color: var(--primary);
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 11px;
+            color: #777;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            font-size: 15px;
+            background: #fafafa;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+        
+        .selector {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .opt {
+            flex: 1;
+            padding: 8px;
+            background: #f8f8f8;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .opt:hover {
+            background: #e8f5e9;
+        }
+        
+        .opt.active-opt {
+            border-color: var(--primary);
+            background: #e8f5e9;
+            font-weight: bold;
+        }
+        
+        .main-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .cam-box {
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .img-preview {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-right: 4px solid var(--secondary);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: #1565c0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .btn-del {
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .badge-seed {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+        
+        .badge-hydro {
+            background: #b3e5fc;
+            color: #0277bd;
+        }
+        
+        .badge-water {
+            background: #f8bbd0;
+            color: #c2185b;
+        }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2.2.1"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
@@ -69,103 +276,278 @@
         <div class="nav-item" data-panel="dataPanel">📊 מדדים</div>
         <div class="nav-item" data-panel="historyPanel">🔍 חיפוש</div>
         <div class="nav-item" data-panel="reportPanel">🗂️ כרטיסיות</div>
-        <div class="nav-item" data-panel="seasonsPanel">🌿 צמחים</div>
     </div>
-
     <div id="seedPanel" class="panel active">
         <div class="card">
             <h2>🌱 יומן זריעה</h2>
+            
             <label>סוג מצע:</label>
             <div class="selector">
                 <div class="opt active-opt" data-substrate="מגשי פלסטיק">מגשי פלסטיק</div>
                 <div class="opt" data-substrate="צמר סלעים">צמר סלעים</div>
                 <div class="opt" data-substrate="עציצי פלסטיק">עציצי פלסטיק</div>
             </div>
+            
             <div class="grid-4">
-                <div><label>מחזור</label><input type="text" id="sCycle" value="1"></div>
-                <div><label id="lblTray">מגש</label><input type="text" id="sTray" value="1"></div>
-                <div><label id="lblRow">שורה</label><input type="text" id="sRow"></div>
-                <div><label id="lblCol">עמודה</label><input type="text" id="sCol"></div>
+                <div>
+                    <label>מחזור</label>
+                    <input type="text" id="sCycle" value="1">
+                </div>
+                <div>
+                    <label id="lblTray">מגש</label>
+                    <input type="text" id="sTray" value="1">
+                </div>
+                <div id="rowWrapper">
+                    <label id="lblRow">שורה</label>
+                    <input type="text" id="sRow">
+                </div>
+                <div id="colWrapper">
+                    <label id="lblCol">עמודה</label>
+                    <input type="text" id="sCol">
+                </div>
             </div>
+            
             <div class="grid-2">
-                <div><label>גומה מ-</label><input type="text" id="sHoleFrom"></div>
-                <div><label>גומה עד-</label><input type="text" id="sHoleTo"></div>
+                <div>
+                    <label>גומה מ-</label>
+                    <input type="number" id="sHoleFrom" value="1">
+                </div>
+                <div>
+                    <label>גומה עד-</label>
+                    <input type="number" id="sHoleTo" value="1">
+                </div>
             </div>
+            
             <div id="plantCountDisplay" class="info-box" style="display:none;"></div>
+            
+            <label>קטגוריה:</label>
             <div class="selector">
                 <div class="opt active-opt" data-cat="veg">ירקות</div>
                 <div class="opt" data-cat="flo">פרחים</div>
             </div>
+            
             <label>שם הצמח:</label>
             <select id="sPlantVeg"></select>
             <select id="sPlantFlo" class="hidden"></select>
+            
             <div class="grid-3">
-                <div><label>תאריך זריעה:</label><input type="date" id="sDate"></div>
-                <div><label>ימי הצצה:</label><input type="number" id="sGermTarget" readonly></div>
-                <div><label>נביטה בפועל:</label><input type="date" id="sGermActual"></div>
+                <div>
+                    <label>תאריך זריעה:</label>
+                    <input type="date" id="sDate">
+                </div>
+                <div>
+                    <label>ימי הצצה:</label>
+                    <input type="number" id="sGermTarget" readonly>
+                </div>
+                <div>
+                    <label>נביטה צפויה:</label>
+                    <input type="text" id="sGerm" readonly>
+                </div>
             </div>
-            <div id="tipsArea"></div>
-            <div class="cam-box" onclick="document.getElementById('sFile').click()">📸 לחץ לצילום</div>
+            
+            <div id="tipsArea" class="info-box" style="display:none;"></div>
+            
+            <div class="cam-box" onclick="document.getElementById('sFile').click()">
+                📸 לחץ לצילום
+            </div>
             <input type="file" id="sFile" accept="image/*" capture="environment" class="hidden">
             <img id="sPreview" class="img-preview" style="display:none;">
+            
+            <label>הערות:</label>
             <textarea id="sNotes" placeholder="הערות..."></textarea>
-            <button id="btnSaveSeed" class="main-btn" style="background:var(--primary)">שמור זריעה</button>
+            
+            <button id="btnSaveSeed" class="main-btn" style="background:var(--primary)">
+                💾 שמור זריעה
+            </button>
         </div>
     </div>
-
     <div id="hydroPanel" class="panel">
         <div class="card">
-            <h2>💧 שתילה במערכת</h2>
+            <h2>💧 שתילה במערכת הידרו</h2>
+            
+            <label>צד:</label>
             <div class="selector">
                 <div class="opt active-opt" data-side="1">צד 1</div>
                 <div class="opt" data-side="2">צד 2</div>
             </div>
+            
             <div class="grid-2">
-                <div><label>שורה:</label><input type="number" id="hRow"></div>
-                <div><label>חור:</label><input type="number" id="hHole"></div>
+                <div>
+                    <label>שורה:</label>
+                    <input type="number" id="hRow">
+                </div>
+                <div>
+                    <label>חור:</label>
+                    <input type="number" id="hHole">
+                </div>
             </div>
+            
             <label>שם הצמח:</label>
             <input type="text" id="hPlant" placeholder="חפש צמח...">
+            
             <label>מקור השתיל:</label>
             <input type="text" id="hSource" placeholder="בחר מקור...">
+            
+            <label>תאריך שתילה:</label>
             <input type="date" id="hDate">
+            
+            <label>הערות:</label>
             <textarea id="hNotes" placeholder="הערות..."></textarea>
-            <button id="btnSaveHydro" class="main-btn" style="background:var(--secondary)">שמור שתילה</button>
+            
+            <button id="btnSaveHydro" class="main-btn" style="background:var(--secondary)">
+                💾 שמור שתילה
+            </button>
         </div>
     </div>
 
     <div id="dataPanel" class="panel">
         <div class="card">
             <h2>📊 מדדים וגבולות</h2>
-            <div class="limits-grid">
-                <div><label>Min pH</label><input type="number" step="0.1" id="mPhMin" value="5.5"></div>
-                <div><label>Max pH</label><input type="number" step="0.1" id="mPhMax" value="6.5"></div>
-                <div><label>Min EC</label><input type="number" step="0.1" id="mEcMin" value="1.2"></div>
-                <div><label>Max EC</label><input type="number" step="0.1" id="mEcMax" value="2.2"></div>
-                <div><label>Min T°</label><input type="number" id="mTmMin" value="18"></div>
-                <div><label>Max T°</label><input type="number" id="mTmMax" value="26"></div>
-                <div><label>Min DO</label><input type="number" id="mDoMin" value="5"></div>
-                <div><label>Max DO</label><input type="number" id="mDoMax" value="10"></div>
+            
+            <h3>⚙️ הגדרת גבולות</h3>
+            <div class="grid-2">
+                <div>
+                    <label>Min pH</label>
+                    <input type="number" step="0.1" id="mPhMin" value="5.5">
+                </div>
+                <div>
+                    <label>Max pH</label>
+                    <input type="number" step="0.1" id="mPhMax" value="6.5">
+                </div>
+                <div>
+                    <label>Min EC</label>
+                    <input type="number" step="0.1" id="mEcMin" value="1.2">
+                </div>
+                <div>
+                    <label>Max EC</label>
+                    <input type="number" step="0.1" id="mEcMax" value="2.2">
+                </div>
+                <div>
+                    <label>Min T°</label>
+                    <input type="number" id="mTmMin" value="18">
+                </div>
+                <div>
+                    <label>Max T°</label>
+                    <input type="number" id="mTmMax" value="26">
+                </div>
+                <div>
+                    <label>Min DO</label>
+                    <input type="number" id="mDoMin" value="5">
+                </div>
+                <div>
+                    <label>Max DO</label>
+                    <input type="number" id="mDoMax" value="10">
+                </div>
             </div>
-            <label>תאריך מדידה:</label><input type="date" id="wDate">
+            
+            <h3>📝 מדידה חדשה</h3>
+            <label>תאריך מדידה:</label>
+            <input type="date" id="wDate">
+            
             <div class="grid-2">
                 <input type="number" step="0.1" id="wPH" placeholder="pH">
-                <input type="number" step="0.1" id="wEC" placeholder="EC">
-                <input type="number" id="wTemp" placeholder="טמפ'">
-                <input type="number" step="0.1" id="wDO" placeholder="DO">
+                <input type="number" step="0.1" id="wEC" placeholder="EC (mS/cm)">
+                <input type="number" id="wTemp" placeholder="טמפ' (°C)">
+                <input type="number" step="0.1" id="wDO" placeholder="DO (mg/L)">
             </div>
-            <button id="btnSaveWater" class="main-btn" style="background:var(--accent)">שמור מדדים</button>
+            
+            <div id="wWarn" class="info-box" style="display:none;background:#fff3e0;border-right-color:#ff9800;"></div>
+            
+            <button id="btnSaveWater" class="main-btn" style="background:var(--accent)">
+                💾 שמור מדדים
+            </button>
         </div>
-        <div class="card"><h3>📈 גרף pH</h3><canvas id="phChart" width="400" height="200"></canvas></div>
-        <div class="card"><h3>📈 גרף EC</h3><canvas id="ecChart" width="400" height="200"></canvas></div>
-        <div class="card"><h3>📈 גרף טמפרטורה</h3><canvas id="tempChart" width="400" height="200"></canvas></div>
-        <div class="card"><h3>📈 גרף DO</h3><canvas id="doChart" width="400" height="200"></canvas></div>
+        
+        <div class="card">
+            <h3>📈 גרף pH</h3>
+            <canvas id="chartPH" height="200"></canvas>
+        </div>
+        
+        <div class="card">
+            <h3>📈 גרף EC</h3>
+            <canvas id="chartEC" height="200"></canvas>
+        </div>
+        
+        <div class="card">
+            <h3>📈 גרף טמפרטורה</h3>
+            <canvas id="chartTemp" height="200"></canvas>
+        </div>
+        
+        <div class="card">
+            <h3>📈 גרף DO</h3>
+            <canvas id="chartDO" height="200"></canvas>
+        </div>
     </div>
-
     <div id="historyPanel" class="panel">
         <div class="card">
             <h2>🔍 חיפוש מתקדם</h2>
-            <div id="historyList"></div>
+            
+            <label>חיפוש חופשי:</label>
+            <input type="text" id="searchInput" placeholder="הקלד לחיפוש..." oninput="searchTable()">
+            
+            <h3>🔎 סינון</h3>
+            <div class="grid-2">
+                <div>
+                    <label>צמח:</label>
+                    <select id="fPlant" onchange="applyFilters()">
+                        <option value="">הכל</option>
+                    </select>
+                </div>
+                <div>
+                    <label>מחזור:</label>
+                    <select id="fCycle" onchange="applyFilters()">
+                        <option value="">הכל</option>
+                    </select>
+                </div>
+                <div>
+                    <label>מגש:</label>
+                    <select id="fTray" onchange="applyFilters()">
+                        <option value="">הכל</option>
+                    </select>
+                </div>
+                <div>
+                    <label>סוג:</label>
+                    <select id="fType" onchange="applyFilters()">
+                        <option value="">הכל</option>
+                        <option value="seed">זריעה</option>
+                        <option value="hydro">שתילה</option>
+                        <option value="water">מדדי מים</option>
+                    </select>
+                </div>
+                <div>
+                    <label>מתאריך:</label>
+                    <input type="date" id="fDateFrom" onchange="applyFilters()">
+                </div>
+                <div>
+                    <label>עד תאריך:</label>
+                    <input type="date" id="fDateTo" onchange="applyFilters()">
+                </div>
+            </div>
+            
+            <button onclick="resetFilters()" class="main-btn" style="background:var(--accent);margin-top:10px;">
+                🔄 אפס סינון
+            </button>
+            
+            <div style="overflow-x:auto;margin-top:20px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>תאריך</th>
+                            <th>סוג</th>
+                            <th>צמח</th>
+                            <th>מחזור</th>
+                            <th>מגש</th>
+                            <th>מיקום</th>
+                            <th>נביטה</th>
+                            <th>מדדי מים</th>
+                            <th>תמונה</th>
+                            <th>הערות</th>
+                            <th>פעולות</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logBody"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -173,27 +555,16 @@
         <div class="card">
             <h2>🗂️ כרטיסיות צמחים</h2>
             <div id="reportList"></div>
-            <button onclick="exportCSV()" class="main-btn" style="background:var(--secondary); margin-top:20px;">📊 ייצוא CSV</button>
-        </div>
-    </div>
-
-    <div id="seasonsPanel" class="panel">
-        <div class="card">
-            <h2>🌿 צמחים ועונות</h2>
-            <div class="selector">
-                <div class="season-btn active-season" data-season="autumn">🍂 סתיו</div>
-                <div class="season-btn" data-season="winter">❄️ חורף</div>
-                <div class="season-btn" data-season="spring">🌸 אביב</div>
-                <div class="season-btn" data-season="summer">☀️ קיץ</div>
-            </div>
-            <div id="seasonContent"></div>
+            
+            <button onclick="exportData()" class="main-btn" style="background:var(--secondary);margin-top:20px;">
+                📊 ייצוא נתונים
+            </button>
         </div>
     </div>
 </div>
-
 <script>
 // ═══════════════════════════════════════════════════════════════
-// 🔥 FIREBASE CONFIG
+// 🔥 FIREBASE CONFIG & INITIALIZATION
 // ═══════════════════════════════════════════════════════════════
 const firebaseConfig = {
     apiKey: "AIzaSyDXJrcY7IVG1Yiyvx2e6lnFiAa8OIcbDTs",
@@ -209,32 +580,52 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
+// ═══════════════════════════════════════════════════════════════
+// 🌐 GLOBAL VARIABLES
+// ═══════════════════════════════════════════════════════════════
 let currentUser = null;
 let unsubscribeSnapshot = null;
 let db = [];
-let activeImg = "", currentCat = 'veg', currentSide = 1, currentSubstrate = 'מגשי פלסטיק';
+let activeImg = "";
+let currentCat = 'veg';
+let currentSide = 1;
+let currentSubstrate = 'מגשי פלסטיק';
 let charts = { ph: null, ec: null, temp: null, do: null };
 
+// ═══════════════════════════════════════════════════════════════
+// 🌱 PLANT DATA
+// ═══════════════════════════════════════════════════════════════
 const plants = {
     veg: [
         {n:"חסה", d:5, tips:{זריעה:["זריעה רדודה 0.5 ס\"מ", "טמפ' 15-20°C"], גידול:["אור 14-16 שעות"]}},
         {n:"עגבניה", d:7, tips:{זריעה:["זריעה 0.5-1 ס\"מ", "טמפ' 20-25°C"], גידול:["אור 16+ שעות"]}},
-        {n:"בזיליקום", d:7, tips:{זריעה:["זריעה רדודה", "טמפ' 20-25°C"], גידול:["קטיפת קצוות"]}}
+        {n:"מלפפון", d:6, tips:{זריעה:["זריעה 1 ס\"מ", "טמפ' 20-25°C"], גידול:["תמיכה נדרשת"]}},
+        {n:"בזיליקום", d:7, tips:{זריעה:["זריעה רדודה", "טמפ' 20-25°C"], גידול:["קטיפת קצוות"]}},
+        {n:"פלפל", d:10, tips:{זריעה:["זריעה 0.5 ס\"מ", "טמפ' 25-30°C"], גידול:["חום גבוה"]}},
+        {n:"תרד", d:7, tips:{זריעה:["זריעה 1-2 ס\"מ", "טמפ' 15-20°C"], גידול:["צל חלקי"]}}
     ],
     flo: [
-        {n:"חמניה", d:10, tips:{זריעה:["זריעה 1-2 ס\"מ", "טמפ' 20-25°C"], גידול:["אור מלא"]}}
+        {n:"חמניה", d:10, tips:{זריעה:["זריעה 1-2 ס\"מ", "טמפ' 20-25°C"], גידול:["אור מלא"]}},
+        {n:"לבנדר", d:14, tips:{זריעה:["זריעה רדודה", "טמפ' 18-22°C"], גידול:["ניקוז טוב"]}},
+        {n:"גרניום", d:7, tips:{זריעה:["זריעה רדודה", "טמפ' 20-24°C"], גידול:["אור מלא"]}}
     ]
 };
+
 // ═══════════════════════════════════════════════════════════════
-// 🔐 AUTH & SYNC
+// 🔐 AUTHENTICATION FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
 function showLoginUI() {
     const email = prompt('📧 הכנס אימייל:');
-    if (!email) return;
+    if (!email) {
+        alert('❌ חובה להזין אימייל');
+        setTimeout(showLoginUI, 500);
+        return;
+    }
     
     const password = prompt('🔑 הכנס סיסמה (6+ תווים):');
     if (!password || password.length < 6) {
         alert('❌ סיסמה חייבת להיות 6+ תווים');
+        setTimeout(showLoginUI, 500);
         return;
     }
     
@@ -242,160 +633,35 @@ function showLoginUI() {
         .then(() => {
             currentUser = auth.currentUser;
             document.getElementById('userEmail').textContent = email;
+            updateSyncBadge('success', 'התחברת בהצלחה');
             initFirebaseSync();
         })
         .catch(err => {
             if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
-                if (confirm('❌ משתמש לא קיים. ליצור חשבון?')) {
+                if (confirm('❌ משתמש לא קיים. ליצור חשבון חדש?')) {
                     auth.createUserWithEmailAndPassword(email, password)
                         .then(() => {
                             currentUser = auth.currentUser;
                             document.getElementById('userEmail').textContent = email;
+                            updateSyncBadge('success', 'חשבון נוצר בהצלחה');
                             initFirebaseSync();
                         })
-                        .catch(e => alert('❌ ' + e.message));
+                        .catch(e => {
+                            alert('❌ שגיאה ביצירת חשבון: ' + e.message);
+                            setTimeout(showLoginUI, 500);
+                        });
+                } else {
+                    setTimeout(showLoginUI, 500);
                 }
             } else {
-                alert('❌ ' + err.message);
+                alert('❌ שגיאת התחברות: ' + err.message);
+                setTimeout(showLoginUI, 500);
             }
         });
-}
-
-auth.onAuthStateChanged(user => {
-    if (user) {
-        currentUser = user;
-        document.getElementById('userEmail').textContent = user.email || 'משתמש';
-        initFirebaseSync();
-    } else {
-        showLoginUI();
-    }
-});
-
-function updateSyncBadge(status, message = '') {
-    const badge = document.getElementById('syncBadge');
-    if (!badge) return;
-    
-    const icons = { syncing: '🔄', success: '✅', error: '❌', offline: '📡' };
-    badge.textContent = icons[status] || '💾';
-    badge.title = message || status;
-    
-    if (status === 'success') {
-        setTimeout(() => {
-            badge.textContent = '💾';
-            badge.title = 'מוכן';
-        }, 2000);
-    }
-}
-
-async function syncToFirebase() {
-    if (!currentUser) return;
-
-    try {
-        updateSyncBadge('syncing', 'מסנכרן...');
-        
-        const batch = firestore.batch();
-        const userRef = firestore.collection('users').doc(currentUser.uid).collection('growData');
-        
-        const existingDocs = await userRef.get();
-        existingDocs.forEach(doc => batch.delete(doc.ref));
-        
-        db.forEach(item => {
-            const docRef = userRef.doc(String(item.id));
-            const dataToSync = { ...item };
-            delete dataToSync.img;
-            batch.set(docRef, {
-                ...dataToSync,
-                lastModified: firebase.firestore.FieldValue.serverTimestamp()
-            });
-        });
-        
-        await batch.commit();
-        console.log(`✅ Synced ${db.length} items`);
-        updateSyncBadge('success', `${db.length} פריטים נשמרו`);
-        
-    } catch (error) {
-        console.error('❌ Sync Error:', error);
-        updateSyncBadge('error', error.message);
-    }
-}
-
-async function syncFromFirebase() {
-    if (!currentUser) return;
-
-    try {
-        const snapshot = await firestore
-            .collection('users')
-            .doc(currentUser.uid)
-            .collection('growData')
-            .get();
-
-        if (snapshot.empty) {
-            console.log('📭 No cloud data');
-            return;
-        }
-
-        const cloudData = snapshot.docs.map(doc => doc.data());
-        const merged = [...db];
-        
-        cloudData.forEach(cloudItem => {
-            const localIndex = merged.findIndex(i => i.id === cloudItem.id);
-            if (localIndex === -1) {
-                merged.push(cloudItem);
-            } else {
-                const localDate = new Date(merged[localIndex].date || 0).getTime();
-                const cloudDate = new Date(cloudItem.date || 0).getTime();
-                if (cloudDate > localDate) {
-                    merged[localIndex] = cloudItem;
-                }
-            }
-        });
-
-        db = merged;
-        localStorage.setItem('growData', JSON.stringify(db));
-        refreshAll();
-        updateCharts();
-        
-    } catch (error) {
-        console.error('❌ Fetch Error:', error);
-        updateSyncBadge('error', 'שגיאת קריאה');
-    }
-}
-
-function initFirebaseSync() {
-    if (!currentUser) return;
-    
-    syncFromFirebase();
-
-    const userRef = firestore
-        .collection('users')
-        .doc(currentUser.uid)
-        .collection('growData');
-
-    unsubscribeSnapshot = userRef.onSnapshot(snapshot => {
-        if (snapshot.metadata.hasPendingWrites) return;
-        console.log('🔔 Remote change detected');
-        syncFromFirebase();
-    }, error => {
-        console.error('❌ Snapshot error:', error);
-        updateSyncBadge('error', 'שגיאת מעקב');
-    });
-
-    setInterval(() => {
-        if (navigator.onLine) {
-            syncToFirebase();
-        } else {
-            updateSyncBadge('offline', 'אין אינטרנט');
-        }
-    }, 30000);
-}
-
-function saveAndSync() {
-    localStorage.setItem('growData', JSON.stringify(db));
-    syncToFirebase();
 }
 
 function logout() {
-    if (confirm('🚪 להתנתק?')) {
+    if (confirm('🚪 להתנתק מהמערכת?')) {
         if (unsubscribeSnapshot) unsubscribeSnapshot();
         
         auth.signOut()
@@ -405,125 +671,203 @@ function logout() {
                 localStorage.removeItem('growData');
                 location.reload();
             })
-            .catch(err => alert('❌ ' + err.message));
+            .catch(err => alert('❌ שגיאה בהתנתקות: ' + err.message));
     }
 }
 
-// ═══════════════════════════════════════════════════════════════
-// 🎯 EVENT LISTENERS
-// ═══════════════════════════════════════════════════════════════
-function attachEventListeners() {
-    // Navigation
-    document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const panelId = this.getAttribute('data-panel');
-            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-            document.getElementById(panelId).classList.add('active');
-            this.classList.add('active');
-        });
-    });
+auth.onAuthStateChanged(user => {
+    if (user) {
+        currentUser = user;
+        console.log('✅ User authenticated:', user.email);
+        document.getElementById('userEmail').textContent = user.email || 'משתמש';
+        initFirebaseSync();
+    } else {
+        console.log('❌ No user authenticated');
+        showLoginUI();
+    }
+});
 
-    // Substrate selection
-    document.querySelectorAll('[data-substrate]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            currentSubstrate = this.getAttribute('data-substrate');
-            document.querySelectorAll('[data-substrate]').forEach(b => b.classList.remove('active-opt'));
-            this.classList.add('active-opt');
+// ═══════════════════════════════════════════════════════════════
+// 💾 SYNC BADGE HELPER
+// ═══════════════════════════════════════════════════════════════
+function updateSyncBadge(status, message = '') {
+    const badge = document.getElementById('syncBadge');
+    if (!badge) return;
+    
+    const icons = {
+        syncing: '🔄 מסנכרן',
+        success: '✅ סונכרן',
+        error: '❌ שגיאה',
+        offline: '📡 לא מקוון',
+        ready: '💾 מוכן'
+    };
+    
+    badge.textContent = icons[status] || icons.ready;
+    badge.title = message || status;
+    
+    if (status === 'success') {
+        setTimeout(() => {
+            badge.textContent = icons.ready;
+            badge.title = 'מוכן';
+        }, 2000);
+    }
+}
+// ═══════════════════════════════════════════════════════════════
+// 🔄 FIREBASE SYNC FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
+async function syncToFirebase() {
+    if (!currentUser) {
+        console.log('⚠️ No user - skipping sync');
+        return;
+    }
+
+    try {
+        updateSyncBadge('syncing', 'מסנכרן לענן...');
+        
+        const batch = firestore.batch();
+        const userRef = firestore.collection('users').doc(currentUser.uid).collection('growData');
+        
+        // Delete existing docs
+        const existingDocs = await userRef.get();
+        existingDocs.forEach(doc => batch.delete(doc.ref));
+        
+        // Add current data
+        db.forEach(item => {
+            const docRef = userRef.doc(String(item.id));
+            const dataToSync = { ...item };
+            delete dataToSync.img; // Exclude images from cloud sync
             
-            if (currentSubstrate === 'עציצי פלסטיק') {
-                document.getElementById('lblTray').textContent = 'עציץ';
-                document.getElementById('lblRow').parentElement.style.display = 'none';
-                document.getElementById('lblCol').parentElement.style.display = 'none';
+            batch.set(docRef, {
+                ...dataToSync,
+                lastModified: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        });
+        
+        await batch.commit();
+        console.log(`✅ Synced ${db.length} items to cloud`);
+        updateSyncBadge('success', `${db.length} פריטים נשמרו`);
+        
+    } catch (error) {
+        console.error('❌ Sync Error:', error);
+        updateSyncBadge('error', error.message);
+    }
+}
+
+async function syncFromFirebase() {
+    if (!currentUser) {
+        console.log('⚠️ No user - skipping fetch');
+        return;
+    }
+
+    try {
+        const snapshot = await firestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .collection('growData')
+            .get();
+
+        if (snapshot.empty) {
+            console.log('📭 No cloud data found');
+            return;
+        }
+
+        const cloudData = snapshot.docs.map(doc => doc.data());
+        
+        // Merge with local data
+        const merged = [...db];
+        
+        cloudData.forEach(cloudItem => {
+            const localIndex = merged.findIndex(i => i.id === cloudItem.id);
+            
+            if (localIndex === -1) {
+                // New item from cloud
+                merged.push(cloudItem);
             } else {
-                document.getElementById('lblTray').textContent = 'מגש';
-                document.getElementById('lblRow').parentElement.style.display = 'block';
-                document.getElementById('lblCol').parentElement.style.display = 'block';
+                // Merge based on timestamp
+                const localDate = new Date(merged[localIndex].date || 0).getTime();
+                const cloudDate = new Date(cloudItem.date || 0).getTime();
+                
+                if (cloudDate > localDate) {
+                    // Keep image from local if exists
+                    const localImg = merged[localIndex].img;
+                    merged[localIndex] = cloudItem;
+                    if (localImg) merged[localIndex].img = localImg;
+                }
             }
         });
-    });
 
-    // Category selection
-    document.querySelectorAll('[data-cat]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            currentCat = this.getAttribute('data-cat');
-            document.querySelectorAll('[data-cat]').forEach(b => b.classList.remove('active-opt'));
-            this.classList.add('active-opt');
-            
-            document.getElementById('sPlantVeg').style.display = currentCat === 'veg' ? 'block' : 'none';
-            document.getElementById('sPlantFlo').style.display = currentCat === 'flo' ? 'block' : 'none';
-            updateGerm();
-        });
-    });
-
-    // Side selection
-    document.querySelectorAll('[data-side]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            currentSide = parseInt(this.getAttribute('data-side'));
-            document.querySelectorAll('[data-side]').forEach(b => b.classList.remove('active-opt'));
-            this.classList.add('active-opt');
-        });
-    });
-
-    // Season selection
-    document.querySelectorAll('[data-season]').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const season = this.getAttribute('data-season');
-            document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active-season'));
-            this.classList.add('active-season');
-            renderSeason(season);
-        });
-    });
-
-    // Save buttons
-    document.getElementById('btnSaveSeed').addEventListener('click', () => saveData('seed'));
-    document.getElementById('btnSaveHydro').addEventListener('click', () => saveData('hydro'));
-    document.getElementById('btnSaveWater').addEventListener('click', () => saveData('water'));
-
-    // Plant selection
-    const vegSelect = document.getElementById('sPlantVeg');
-    const floSelect = document.getElementById('sPlantFlo');
-    if (vegSelect) vegSelect.addEventListener('change', updateGerm);
-    if (floSelect) floSelect.addEventListener('change', updateGerm);
-
-    // Image upload
-    const fileInput = document.getElementById('sFile');
-    if (fileInput) {
-        fileInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    activeImg = e.target.result;
-                    const preview = document.getElementById('sPreview');
-                    if (preview) {
-                        preview.src = e.target.result;
-                        preview.style.display = 'block';
-                    }
-                };
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
+        db = merged;
+        localStorage.setItem('growData', JSON.stringify(db));
+        refreshAll();
+        updateCharts();
+        
+        console.log(`✅ Fetched ${cloudData.length} items from cloud`);
+        
+    } catch (error) {
+        console.error('❌ Fetch Error:', error);
+        updateSyncBadge('error', 'שגיאת קריאה מהענן');
     }
-
-    // Limits inputs
-    ['mPhMin', 'mPhMax', 'mEcMin', 'mEcMax', 'mTmMin', 'mTmMax', 'mDoMin', 'mDoMax'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('input', saveLimits);
-    });
-
-    // Water inputs
-    ['wPH', 'wEC', 'wTemp', 'wDO'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('input', checkLim);
-    });
 }
 
+function initFirebaseSync() {
+    if (!currentUser) return;
+    
+    console.log('🔄 Initializing Firebase sync...');
+    
+    // Initial fetch
+    syncFromFirebase();
+
+    // Real-time listener
+    const userRef = firestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('growData');
+
+    unsubscribeSnapshot = userRef.onSnapshot(snapshot => {
+        if (snapshot.metadata.hasPendingWrites) return; // Skip local writes
+        
+        console.log('🔔 Remote change detected');
+        syncFromFirebase();
+    }, error => {
+        console.error('❌ Snapshot error:', error);
+        updateSyncBadge('error', 'שגיאת מעקב');
+    });
+
+    // Auto-sync every 30 seconds
+    setInterval(() => {
+        if (navigator.onLine && currentUser) {
+            syncToFirebase();
+        } else {
+            updateSyncBadge('offline', 'אין חיבור לאינטרנט');
+        }
+    }, 30000);
+}
+
+function saveAndSync() {
+    localStorage.setItem('growData', JSON.stringify(db));
+    syncToFirebase();
+}
+
+function loadFromLocal() {
+    const stored = localStorage.getItem('growData');
+    if (stored) {
+        try {
+            db = JSON.parse(stored);
+            console.log(`📦 Loaded ${db.length} items from localStorage`);
+        } catch (e) {
+            console.error('❌ Error loading from localStorage:', e);
+            db = [];
+        }
+    } else {
+        db = [];
+    }
+}
 // ═══════════════════════════════════════════════════════════════
-// 💾 SAVE DATA
+// 💾 DATA ENTRY FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
 function saveData(type) {
     if (!currentUser) {
-        alert('❌ יש להתחבר');
+        alert('❌ יש להתחבר למערכת');
         return;
     }
 
@@ -541,7 +885,12 @@ function saveData(type) {
         const notes = document.getElementById('sNotes').value;
 
         if (!plant || !dateSeed || !tray || holeFrom === 0 || holeTo === 0) {
-            alert('❌ נא למלא שדות חובה');
+            alert('❌ נא למלא את כל השדות החובה');
+            return;
+        }
+
+        if (holeFrom > holeTo) {
+            alert('❌ גומה התחלה חייבת להיות קטנה או שווה לגומה סיום');
             return;
         }
 
@@ -550,6 +899,7 @@ function saveData(type) {
         const germDate = new Date(dateSeed);
         germDate.setDate(germDate.getDate() + germDays);
 
+        let saved = 0;
         for (let hole = holeFrom; hole <= holeTo; hole++) {
             const newId = db.length ? Math.max(...db.map(i => i.id)) + 1 : 1;
             const batchId = `${cycle}-${tray}-${row || '0'}-${col || '0'}-${hole}`;
@@ -561,7 +911,7 @@ function saveData(type) {
                 plant,
                 date: dateSeed,
                 substrate: currentSubstrate,
-                location: { cycle, tray, row, col, hole },
+                location: { cycle, tray, row: row || '', col: col || '', hole },
                 batchId,
                 germDays,
                 germDate: germDate.toISOString().split('T')[0],
@@ -569,12 +919,16 @@ function saveData(type) {
                 img: activeImg || '',
                 timestamp: Date.now()
             });
+            saved++;
         }
 
         activeImg = '';
+        document.getElementById('sPreview').style.display = 'none';
+        document.getElementById('sNotes').value = '';
+        
         saveAndSync();
         refreshAll();
-        alert(`✅ ${holeTo - holeFrom + 1} צמחים נשמרו`);
+        alert(`✅ ${saved} צמחים נשמרו בהצלחה`);
 
     } else if (type === 'hydro') {
         const plant = document.getElementById('hPlant').value;
@@ -585,7 +939,7 @@ function saveData(type) {
         const notes = document.getElementById('hNotes').value;
 
         if (!plant || !dateH || !row || !hole) {
-            alert('❌ נא למלא שדות חובה');
+            alert('❌ נא למלא את כל השדות החובה');
             return;
         }
 
@@ -601,9 +955,15 @@ function saveData(type) {
             timestamp: Date.now()
         });
 
+        document.getElementById('hPlant').value = '';
+        document.getElementById('hSource').value = '';
+        document.getElementById('hRow').value = '';
+        document.getElementById('hHole').value = '';
+        document.getElementById('hNotes').value = '';
+
         saveAndSync();
         refreshAll();
-        alert('✅ שתילה נשמרה');
+        alert('✅ שתילה נשמרה בהצלחה');
 
     } else if (type === 'water') {
         const dateW = document.getElementById('wDate').value;
@@ -613,7 +973,12 @@ function saveData(type) {
         const dox = parseFloat(document.getElementById('wDO').value || 0);
 
         if (!dateW) {
-            alert('❌ נא למלא תאריך');
+            alert('❌ נא למלא תאריך מדידה');
+            return;
+        }
+
+        if (ph === 0 && ec === 0 && temp === 0 && dox === 0) {
+            alert('❌ נא למלא לפחות ערך אחד');
             return;
         }
 
@@ -629,14 +994,29 @@ function saveData(type) {
             timestamp: Date.now()
         });
 
+        document.getElementById('wPH').value = '';
+        document.getElementById('wEC').value = '';
+        document.getElementById('wTemp').value = '';
+        document.getElementById('wDO').value = '';
+
         saveAndSync();
         refreshAll();
         updateCharts();
-        alert('✅ מדדים נשמרו');
+        alert('✅ מדדים נשמרו בהצלחה');
     }
 }
+
+function deleteItem(id) {
+    if (!confirm('❌ האם למחוק רשומה זו?')) return;
+    
+    db = db.filter(i => i.id !== id);
+    saveAndSync();
+    refreshAll();
+    updateCharts();
+    alert('✅ רשומה נמחקה');
+}
 // ═══════════════════════════════════════════════════════════════
-// 🌱 UI HELPERS
+// 🎨 UI HELPER FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
 function updateGerm() {
     const plant = currentCat === 'veg' 
@@ -646,13 +1026,30 @@ function updateGerm() {
     const plantData = plants[currentCat].find(p => p.n === plant);
     const germDays = plantData ? plantData.d : 0;
     
+    const germTargetInput = document.getElementById('sGermTarget');
+    const germInput = document.getElementById('sGerm');
     const dateInput = document.getElementById('sDate');
-    const germSpan = document.getElementById('sGerm');
+    const tipsArea = document.getElementById('tipsArea');
     
-    if (dateInput && dateInput.value && germSpan) {
+    if (germTargetInput) germTargetInput.value = germDays;
+    
+    if (dateInput && dateInput.value && germInput) {
         const seedDate = new Date(dateInput.value);
         seedDate.setDate(seedDate.getDate() + germDays);
-        germSpan.textContent = seedDate.toLocaleDateString('he-IL');
+        germInput.value = seedDate.toLocaleDateString('he-IL');
+    }
+    
+    // Show tips
+    if (plantData && plantData.tips && tipsArea) {
+        let tipsHTML = '<strong>💡 טיפים:</strong><br>';
+        if (plantData.tips.זריעה) {
+            tipsHTML += '<strong>זריעה:</strong> ' + plantData.tips.זריעה.join(', ') + '<br>';
+        }
+        if (plantData.tips.גידול) {
+            tipsHTML += '<strong>גידול:</strong> ' + plantData.tips.גידול.join(', ');
+        }
+        tipsArea.innerHTML = tipsHTML;
+        tipsArea.style.display = 'block';
     }
 }
 
@@ -660,20 +1057,27 @@ function saveLimits() {
     const limits = {
         phMin: parseFloat(document.getElementById('mPhMin').value || 5.5),
         phMax: parseFloat(document.getElementById('mPhMax').value || 6.5),
-        ecMin: parseFloat(document.getElementById('mEcMin').value || 1.5),
-        ecMax: parseFloat(document.getElementById('mEcMax').value || 2.5),
+        ecMin: parseFloat(document.getElementById('mEcMin').value || 1.2),
+        ecMax: parseFloat(document.getElementById('mEcMax').value || 2.2),
         tmMin: parseFloat(document.getElementById('mTmMin').value || 18),
-        tmMax: parseFloat(document.getElementById('mTmMax').value || 24),
-        doMin: parseFloat(document.getElementById('mDoMin').value || 6),
-        doMax: parseFloat(document.getElementById('mDoMax').value || 8)
+        tmMax: parseFloat(document.getElementById('mTmMax').value || 26),
+        doMin: parseFloat(document.getElementById('mDoMin').value || 5),
+        doMax: parseFloat(document.getElementById('mDoMax').value || 10)
     };
     
     localStorage.setItem('growLimits', JSON.stringify(limits));
     updateCharts();
+    console.log('✅ Limits saved:', limits);
 }
 
 function checkLim() {
-    const limits = JSON.parse(localStorage.getItem('growLimits')) || {};
+    const limits = JSON.parse(localStorage.getItem('growLimits')) || {
+        phMin: 5.5, phMax: 6.5,
+        ecMin: 1.2, ecMax: 2.2,
+        tmMin: 18, tmMax: 26,
+        doMin: 5, doMax: 10
+    };
+    
     const ph = parseFloat(document.getElementById('wPH').value || 0);
     const ec = parseFloat(document.getElementById('wEC').value || 0);
     const temp = parseFloat(document.getElementById('wTemp').value || 0);
@@ -681,23 +1085,23 @@ function checkLim() {
     
     let warnings = [];
     
-    if (ph < (limits.phMin || 5.5) || ph > (limits.phMax || 6.5)) {
-        warnings.push(`pH: ${ph} (${limits.phMin}-${limits.phMax})`);
+    if (ph > 0 && (ph < limits.phMin || ph > limits.phMax)) {
+        warnings.push(`⚠️ pH: ${ph} (תקין: ${limits.phMin}-${limits.phMax})`);
     }
-    if (ec < (limits.ecMin || 1.5) || ec > (limits.ecMax || 2.5)) {
-        warnings.push(`EC: ${ec} (${limits.ecMin}-${limits.ecMax})`);
+    if (ec > 0 && (ec < limits.ecMin || ec > limits.ecMax)) {
+        warnings.push(`⚠️ EC: ${ec} (תקין: ${limits.ecMin}-${limits.ecMax})`);
     }
-    if (temp < (limits.tmMin || 18) || temp > (limits.tmMax || 24)) {
-        warnings.push(`Temp: ${temp} (${limits.tmMin}-${limits.tmMax})`);
+    if (temp > 0 && (temp < limits.tmMin || temp > limits.tmMax)) {
+        warnings.push(`⚠️ טמפ': ${temp} (תקין: ${limits.tmMin}-${limits.tmMax})`);
     }
-    if (dox < (limits.doMin || 6) || dox > (limits.doMax || 8)) {
-        warnings.push(`DO: ${dox} (${limits.doMin}-${limits.doMax})`);
+    if (dox > 0 && (dox < limits.doMin || dox > limits.doMax)) {
+        warnings.push(`⚠️ DO: ${dox} (תקין: ${limits.doMin}-${limits.doMax})`);
     }
     
     const warnDiv = document.getElementById('wWarn');
     if (warnDiv) {
         if (warnings.length > 0) {
-            warnDiv.textContent = '⚠️ ' + warnings.join(', ');
+            warnDiv.innerHTML = warnings.join('<br>');
             warnDiv.style.display = 'block';
         } else {
             warnDiv.style.display = 'none';
@@ -708,6 +1112,7 @@ function checkLim() {
 function refreshAll() {
     renderTable();
     populateFilters();
+    renderReportList();
 }
 
 function renderTable() {
@@ -715,6 +1120,11 @@ function renderTable() {
     if (!tbody) return;
     
     tbody.innerHTML = '';
+    
+    if (db.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:#999;">אין נתונים להצגה</td></tr>';
+        return;
+    }
     
     db.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(item => {
         const tr = document.createElement('tr');
@@ -729,10 +1139,7 @@ function renderTable() {
                 <td>${item.location?.row || '-'}/${item.location?.col || '-'}/${item.location?.hole || '-'}</td>
                 <td>${item.germDate ? new Date(item.germDate).toLocaleDateString('he-IL') : '-'}</td>
                 <td>-</td>
-                <td>-</td>
-                <td>
-                    ${item.img ? `<img src="${item.img}" class="thumb" onclick="showFullImg('${item.img}')">` : '-'}
-                </td>
+                <td>${item.img ? `<img src="${item.img}" class="thumb" onclick="showFullImg('${item.img}')">` : '-'}</td>
                 <td>${item.notes || '-'}</td>
                 <td><button class="btn-del" onclick="deleteItem(${item.id})">🗑️</button></td>
             `;
@@ -741,12 +1148,11 @@ function renderTable() {
                 <td>${new Date(item.date).toLocaleDateString('he-IL')}</td>
                 <td><span class="badge badge-hydro">שתילה</span></td>
                 <td>${item.plant || '-'}</td>
-                <td>${item.source || '-'}</td>
-                <td>-</td>
-                <td>צד ${item.hydroLoc?.side || '-'} שורה ${item.hydroLoc?.row || '-'} חור ${item.hydroLoc?.hole || '-'}</td>
                 <td>-</td>
                 <td>-</td>
+                <td>צד ${item.hydroLoc?.side || '-'}, שורה ${item.hydroLoc?.row || '-'}, חור ${item.hydroLoc?.hole || '-'}</td>
                 <td>-</td>
+                <td>מקור: ${item.source || '-'}</td>
                 <td>-</td>
                 <td>${item.notes || '-'}</td>
                 <td><button class="btn-del" onclick="deleteItem(${item.id})">🗑️</button></td>
@@ -754,14 +1160,13 @@ function renderTable() {
         } else if (item.type === 'water') {
             tr.innerHTML = `
                 <td>${new Date(item.date).toLocaleDateString('he-IL')}</td>
-                <td><span class="badge badge-water">מים</span></td>
+                <td><span class="badge badge-water">מדדים</span></td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
-                <td>pH:${item.ph || '-'} EC:${item.ec || '-'}</td>
-                <td>T:${item.temp || '-'} DO:${item.do || '-'}</td>
+                <td>pH: ${item.ph || '-'}, EC: ${item.ec || '-'}, T: ${item.temp || '-'}°C, DO: ${item.do || '-'}</td>
                 <td>-</td>
                 <td>-</td>
                 <td><button class="btn-del" onclick="deleteItem(${item.id})">🗑️</button></td>
@@ -772,18 +1177,50 @@ function renderTable() {
     });
 }
 
-function deleteItem(id) {
-    if (!confirm('❌ למחוק רשומה זו?')) return;
+function renderReportList() {
+    const reportDiv = document.getElementById('reportList');
+    if (!reportDiv) return;
     
-    db = db.filter(i => i.id !== id);
-    saveAndSync();
-    refreshAll();
-    updateCharts();
+    const plantGroups = {};
+    
+    db.filter(i => i.type === 'seed').forEach(item => {
+        const key = `${item.plant}_${item.location?.cycle}_${item.location?.tray}`;
+        if (!plantGroups[key]) {
+            plantGroups[key] = {
+                plant: item.plant,
+                cycle: item.location?.cycle,
+                tray: item.location?.tray,
+                count: 0,
+                dates: []
+            };
+        }
+        plantGroups[key].count++;
+        plantGroups[key].dates.push(item.date);
+    });
+    
+    if (Object.keys(plantGroups).length === 0) {
+        reportDiv.innerHTML = '<p style="text-align:center;color:#999;">אין כרטיסיות להצגה</p>';
+        return;
+    }
+    
+    reportDiv.innerHTML = '';
+    
+    Object.values(plantGroups).forEach(group => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <h3>🌱 ${group.plant}</h3>
+            <p><strong>מחזור:</strong> ${group.cycle} | <strong>מגש:</strong> ${group.tray}</p>
+            <p><strong>כמות:</strong> ${group.count} צמחים</p>
+            <p><strong>תאריך זריעה:</strong> ${new Date(Math.min(...group.dates.map(d => new Date(d)))).toLocaleDateString('he-IL')}</p>
+        `;
+        reportDiv.appendChild(card);
+    });
 }
 
 function showFullImg(src) {
     const modal = document.createElement('div');
-    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:pointer;';
     
     const img = document.createElement('img');
     img.src = src;
@@ -801,82 +1238,60 @@ function showFullImg(src) {
 function updateCharts() {
     const waterData = db.filter(i => i.type === 'water').sort((a, b) => new Date(a.date) - new Date(b.date));
     
-    if (waterData.length === 0) return;
+    if (waterData.length === 0) {
+        console.log('📊 No water data for charts');
+        return;
+    }
     
     const limits = JSON.parse(localStorage.getItem('growLimits')) || {
         phMin: 5.5, phMax: 6.5,
-        ecMin: 1.5, ecMax: 2.5,
-        tmMin: 18, tmMax: 24,
-        doMin: 6, doMax: 8
+        ecMin: 1.2, ecMax: 2.2,
+        tmMin: 18, tmMax: 26,
+        doMin: 5, doMax: 10
     };
     
     const dates = waterData.map(d => new Date(d.date).toLocaleDateString('he-IL'));
     
     // pH Chart
-    createChart('chartPH', {
-        labels: dates,
-        datasets: [{
-            label: 'pH',
-            data: waterData.map(d => d.ph || 0),
-            borderColor: '#4CAF50',
-            backgroundColor: 'rgba(76, 175, 80, 0.1)',
-            tension: 0.4
-        }]
-    }, limits.phMin, limits.phMax);
+    createChart('chartPH', 'pH', dates, waterData.map(d => d.ph || 0), '#4CAF50', limits.phMin, limits.phMax);
     
     // EC Chart
-    createChart('chartEC', {
-        labels: dates,
-        datasets: [{
-            label: 'EC (mS/cm)',
-            data: waterData.map(d => d.ec || 0),
-            borderColor: '#2196F3',
-            backgroundColor: 'rgba(33, 150, 243, 0.1)',
-            tension: 0.4
-        }]
-    }, limits.ecMin, limits.ecMax);
+    createChart('chartEC', 'EC (mS/cm)', dates, waterData.map(d => d.ec || 0), '#2196F3', limits.ecMin, limits.ecMax);
     
-    // Temp Chart
-    createChart('chartTemp', {
-        labels: dates,
-        datasets: [{
-            label: 'Temp (°C)',
-            data: waterData.map(d => d.temp || 0),
-            borderColor: '#FF9800',
-            backgroundColor: 'rgba(255, 152, 0, 0.1)',
-            tension: 0.4
-        }]
-    }, limits.tmMin, limits.tmMax);
+    // Temperature Chart
+    createChart('chartTemp', 'טמפרטורה (°C)', dates, waterData.map(d => d.temp || 0), '#FF9800', limits.tmMin, limits.tmMax);
     
     // DO Chart
-    createChart('chartDO', {
-        labels: dates,
-        datasets: [{
-            label: 'DO (mg/L)',
-            data: waterData.map(d => d.do || 0),
-            borderColor: '#9C27B0',
-            backgroundColor: 'rgba(156, 39, 176, 0.1)',
-            tension: 0.4
-        }]
-    }, limits.doMin, limits.doMax);
+    createChart('chartDO', 'DO (mg/L)', dates, waterData.map(d => d.do || 0), '#9C27B0', limits.doMin, limits.doMax);
 }
 
-function createChart(canvasId, data, min, max) {
+function createChart(canvasId, label, labels, data, color, min, max) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
     
+    // Destroy existing chart
     if (window[canvasId + 'Instance']) {
         window[canvasId + 'Instance'].destroy();
     }
     
     window[canvasId + 'Instance'] = new Chart(ctx, {
         type: 'line',
-        data: data,
+        data: {
+            labels: labels,
+            datasets: [{
+                label: label,
+                data: data,
+                borderColor: color,
+                backgroundColor: color.replace(')', ', 0.1)').replace('rgb', 'rgba'),
+                tension: 0.4,
+                fill: true
+            }]
+        },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
             plugins: {
                 legend: { display: true },
                 annotation: {
@@ -889,7 +1304,7 @@ function createChart(canvasId, data, min, max) {
                             borderWidth: 2,
                             borderDash: [5, 5],
                             label: {
-                                content: 'Min',
+                                content: `Min: ${min}`,
                                 enabled: true,
                                 position: 'start'
                             }
@@ -902,7 +1317,7 @@ function createChart(canvasId, data, min, max) {
                             borderWidth: 2,
                             borderDash: [5, 5],
                             label: {
-                                content: 'Max',
+                                content: `Max: ${max}`,
                                 enabled: true,
                                 position: 'end'
                             }
@@ -920,92 +1335,6 @@ function createChart(canvasId, data, min, max) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// 📤 EXPORT
-// ═══════════════════════════════════════════════════════════════
-async function exportData() {
-    if (db.length === 0) {
-        alert('❌ אין נתונים לייצוא');
-        return;
-    }
-    
-    const hasImages = db.some(i => i.img);
-    
-    if (hasImages) {
-        if (confirm('📦 לייצא עם תמונות (ZIP)?')) {
-            await exportZIP();
-        } else {
-            exportCSV();
-        }
-    } else {
-        exportCSV();
-    }
-}
-
-function exportCSV() {
-    let csv = 'תאריך,סוג,צמח,מחזור,מגש,שורה/עמודה/חור,תאריך נביטה,מיקום הידרו,מדדי מים,הערות\n';
-    
-    db.forEach(item => {
-        const date = new Date(item.date).toLocaleDateString('he-IL');
-        const type = item.type === 'seed' ? 'זריעה' : item.type === 'hydro' ? 'שתילה' : 'מים';
-        const plant = item.plant || '-';
-        const cycle = item.location?.cycle || '-';
-        const tray = item.location?.tray || '-';
-        const loc = item.location ? `${item.location.row || '-'}/${item.location.col || '-'}/${item.location.hole || '-'}` : '-';
-        const germ = item.germDate ? new Date(item.germDate).toLocaleDateString('he-IL') : '-';
-        const hydro = item.hydroLoc ? `צד ${item.hydroLoc.side} שורה ${item.hydroLoc.row} חור ${item.hydroLoc.hole}` : '-';
-        const water = item.type === 'water' ? `pH:${item.ph} EC:${item.ec} T:${item.temp} DO:${item.do}` : '-';
-        const notes = item.notes || '-';
-        
-        csv += `${date},${type},${plant},${cycle},${tray},${loc},${germ},${hydro},${water},${notes}\n`;
-    });
-    
-    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `growmanager_${new Date().toISOString().split('T')[0]}.csv`;
-    link.click();
-    
-    alert('✅ CSV נשמר');
-}
-
-async function exportZIP() {
-    const zip = new JSZip();
-    const imgFolder = zip.folder('images');
-    
-    let csv = 'תאריך,סוג,צמח,מחזור,מגש,שורה/עמודה/חור,תאריך נביטה,מיקום הידרו,מדדי מים,תמונה,הערות\n';
-    
-    db.forEach((item, index) => {
-        const date = new Date(item.date).toLocaleDateString('he-IL');
-        const type = item.type === 'seed' ? 'זריעה' : item.type === 'hydro' ? 'שתילה' : 'מים';
-        const plant = item.plant || '-';
-        const cycle = item.location?.cycle || '-';
-        const tray = item.location?.tray || '-';
-        const loc = item.location ? `${item.location.row || '-'}/${item.location.col || '-'}/${item.location.hole || '-'}` : '-';
-        const germ = item.germDate ? new Date(item.germDate).toLocaleDateString('he-IL') : '-';
-        const hydro = item.hydroLoc ? `צד ${item.hydroLoc.side} שורה ${item.hydroLoc.row} חור ${item.hydroLoc.hole}` : '-';
-        const water = item.type === 'water' ? `pH:${item.ph} EC:${item.ec} T:${item.temp} DO:${item.do}` : '-';
-        const notes = item.notes || '-';
-        
-        let imgRef = '-';
-        if (item.img) {
-            const imgName = `img_${item.id}_${index}.jpg`;
-            imgFolder.file(imgName, item.img.split(',')[1], { base64: true });
-            imgRef = `images/${imgName}`;
-        }
-        
-        csv += `${date},${type},${plant},${cycle},${tray},${loc},${germ},${hydro},${water},${imgRef},${notes}\n`;
-    });
-    
-    zip.file('data.csv', '\uFEFF' + csv);
-    
-    const blob = await zip.generateAsync({ type: 'blob' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `growmanager_${new Date().toISOString().split('T')[0]}.zip`;
-    link.click();
-    
-    alert('✅ ZIP נשמר עם תמונות');
-}// ═══════════════════════════════════════════════════════════════
 // 🔍 SEARCH & FILTERS
 // ═══════════════════════════════════════════════════════════════
 function populateFilters() {
@@ -1052,6 +1381,8 @@ function applyFilters() {
     
     rows.forEach(row => {
         const cells = row.cells;
+        if (!cells || cells.length < 2) return;
+        
         const rowDate = cells[0]?.textContent || '';
         const rowType = cells[1]?.textContent?.trim() || '';
         const rowPlant = cells[2]?.textContent || '';
@@ -1065,7 +1396,7 @@ function applyFilters() {
         if (tray && !rowTray.includes(tray)) show = false;
         
         if (type) {
-            const typeMap = { seed: 'זריעה', hydro: 'שתילה', water: 'מים' };
+            const typeMap = { seed: 'זריעה', hydro: 'שתילה', water: 'מדדים' };
             if (!rowType.includes(typeMap[type])) show = false;
         }
         
@@ -1091,7 +1422,7 @@ function applyFilters() {
 }
 
 function resetFilters() {
-    ['fPlant', 'fCycle', 'fTray', 'fType', 'fDateFrom', 'fDateTo'].forEach(id => {
+    ['fPlant', 'fCycle', 'fTray', 'fType', 'fDateFrom', 'fDateTo', 'searchInput'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
@@ -1115,135 +1446,205 @@ function searchTable() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// 🧭 NAVIGATION
+// 📤 EXPORT FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
-function showPanel(panelName) {
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    
-    const panel = document.querySelector(`[data-panel="${panelName}"]`);
-    if (panel) {
-        panel.classList.add('active');
-    }
-    
-    document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-    
-    const navBtn = document.querySelector(`nav button[data-panel="${panelName}"]`);
-    if (navBtn) {
-        navBtn.classList.add('active');
-    }
-    
-    if (panelName === 'stats') {
-        updateCharts();
-    }
-}
-
-function selectSub(substrate) {
-    currentSubstrate = substrate;
-    
-    document.querySelectorAll('[data-substrate]').forEach(btn => btn.classList.remove('active'));
-    
-    const btn = document.querySelector(`[data-substrate="${substrate}"]`);
-    if (btn) {
-        btn.classList.add('active');
-    }
-    
-    const trayInputs = document.getElementById('sTray');
-    const rowLabel = document.querySelector('label[for="sRow"]');
-    const colLabel = document.querySelector('label[for="sCol"]');
-    
-    if (substrate === 'pots') {
-        if (trayInputs) trayInputs.style.display = 'none';
-        if (rowLabel) rowLabel.textContent = 'שורה במגש';
-        if (colLabel) colLabel.textContent = 'עמודה במגש';
-    } else {
-        if (trayInputs) trayInputs.style.display = 'flex';
-        if (rowLabel) rowLabel.textContent = 'שורה';
-        if (colLabel) colLabel.textContent = 'עמודה';
-    }
-}
-
-function selectCat(cat) {
-    currentCat = cat;
-    
-    document.querySelectorAll('[data-cat]').forEach(btn => btn.classList.remove('active'));
-    
-    const btn = document.querySelector(`[data-cat="${cat}"]`);
-    if (btn) {
-        btn.classList.add('active');
-    }
-    
-    document.querySelectorAll('.plant-select').forEach(sel => sel.style.display = 'none');
-    
-    const plantSelect = document.getElementById(cat === 'veg' ? 'sPlantVeg' : 'sPlantFlo');
-    if (plantSelect) {
-        plantSelect.style.display = 'block';
-    }
-    
-    updateGerm();
-}
-
-function selectSide(side) {
-    currentSide = side;
-    
-    document.querySelectorAll('[data-side]').forEach(btn => btn.classList.remove('active'));
-    
-    const btn = document.querySelector(`[data-side="${side}"]`);
-    if (btn) {
-        btn.classList.add('active');
-    }
-}
-
-function selectSeason(season) {
-    document.querySelectorAll('[data-season]').forEach(btn => btn.classList.remove('active'));
-    
-    const btn = document.querySelector(`[data-season="${season}"]`);
-    if (btn) {
-        btn.classList.add('active');
-    }
-    
-    document.querySelectorAll('.season-content').forEach(content => {
-        content.style.display = 'none';
-    });
-    
-    const content = document.getElementById(season + 'Content');
-    if (content) {
-        content.style.display = 'block';
-    }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// 🔧 CALIBRATION ALERTS
-// ═══════════════════════════════════════════════════════════════
-function checkCalibration() {
-    const lastCal = localStorage.getItem('lastCalibration');
-    const alertDiv = document.getElementById('calAlert');
-    
-    if (!alertDiv) return;
-    
-    if (!lastCal) {
-        alertDiv.textContent = '⚠️ לא בוצע כיול. לחץ כאן לכיול.';
-        alertDiv.style.display = 'block';
-        alertDiv.onclick = () => {
-            alert('📋 בצע כיול ידני של pH, EC, DO לפי הוראות היצרן');
-            localStorage.setItem('lastCalibration', new Date().toISOString());
-            checkCalibration();
-        };
+async function exportData() {
+    if (db.length === 0) {
+        alert('❌ אין נתונים לייצוא');
         return;
     }
     
-    const daysSince = Math.floor((Date.now() - new Date(lastCal)) / (1000 * 60 * 60 * 24));
+    const hasImages = db.some(i => i.img);
     
-    if (daysSince >= 7) {
-        alertDiv.textContent = `⚠️ עברו ${daysSince} ימים מהכיול האחרון. לחץ כאן לכיול.`;
-        alertDiv.style.display = 'block';
-        alertDiv.onclick = () => {
-            alert('📋 בצע כיול ידני של pH, EC, DO לפי הוראות היצרן');
-            localStorage.setItem('lastCalibration', new Date().toISOString());
-            checkCalibration();
-        };
+    if (hasImages) {
+        if (confirm('📦 האם לייצא עם תמונות (קובץ ZIP)?')) {
+            await exportZIP();
+        } else {
+            exportCSV();
+        }
     } else {
-        alertDiv.style.display = 'none';
+        exportCSV();
     }
+}
+
+function exportCSV() {
+    let csv = 'תאריך,סוג,צמח,מחזור,מגש,מיקום,תאריך נביטה,מיקום הידרו,מדדי מים,הערות\n';
+    
+    db.forEach(item => {
+        const date = new Date(item.date).toLocaleDateString('he-IL');
+        const type = item.type === 'seed' ? 'זריעה' : item.type === 'hydro' ? 'שתילה' : 'מדדים';
+        const plant = item.plant || '-';
+        const cycle = item.location?.cycle || '-';
+        const tray = item.location?.tray || '-';
+        const loc = item.location ? `${item.location.row || '-'}/${item.location.col || '-'}/${item.location.hole || '-'}` : '-';
+        const germ = item.germDate ? new Date(item.germDate).toLocaleDateString('he-IL') : '-';
+        const hydro = item.hydroLoc ? `צד ${item.hydroLoc.side} שורה ${item.hydroLoc.row} חור ${item.hydroLoc.hole}` : '-';
+        const water = item.type === 'water' ? `pH:${item.ph} EC:${item.ec} T:${item.temp} DO:${item.do}` : '-';
+        const notes = (item.notes || '-').replace(/,/g, ';');
+        
+        csv += `${date},${type},${plant},${cycle},${tray},${loc},${germ},${hydro},${water},${notes}\n`;
+    });
+    
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `growmanager_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    
+    alert('✅ קובץ CSV נשמר בהצלחה');
+}
+
+async function exportZIP() {
+    const zip = new JSZip();
+    const imgFolder = zip.folder('images');
+    
+    let csv = 'תאריך,סוג,צמח,מחזור,מגש,מיקום,תאריך נביטה,מיקום הידרו,מדדי מים,תמונה,הערות\n';
+    
+    db.forEach((item, index) => {
+        const date = new Date(item.date).toLocaleDateString('he-IL');
+        const type = item.type === 'seed' ? 'זריעה' : item.type === 'hydro' ? 'שתילה' : 'מדדים';
+        const plant = item.plant || '-';
+        const cycle = item.location?.cycle || '-';
+        const tray = item.location?.tray || '-';
+        const loc = item.location ? `${item.location.row || '-'}/${item.location.col || '-'}/${item.location.hole || '-'}` : '-';
+        const germ = item.germDate ? new Date(item.germDate).toLocaleDateString('he-IL') : '-';
+        const hydro = item.hydroLoc ? `צד ${item.hydroLoc.side} שורה ${item.hydroLoc.row} חור ${item.hydroLoc.hole}` : '-';
+        const water = item.type === 'water' ? `pH:${item.ph} EC:${item.ec} T:${item.temp} DO:${item.do}` : '-';
+        const notes = (item.notes || '-').replace(/,/g, ';');
+        
+        let imgRef = '-';
+        if (item.img) {
+            const imgName = `img_${item.id}_${index}.jpg`;
+            imgFolder.file(imgName, item.img.split(',')[1], { base64: true });
+            imgRef = `images/${imgName}`;
+        }
+        
+        csv += `${date},${type},${plant},${cycle},${tray},${loc},${germ},${hydro},${water},${imgRef},${notes}\n`;
+    });
+    
+    zip.file('data.csv', '\uFEFF' + csv);
+    
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `growmanager_${new Date().toISOString().split('T')[0]}.zip`;
+    link.click();
+    
+    alert('✅ קובץ ZIP נשמר עם תמונות');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎯 EVENT LISTENERS
+// ═══════════════════════════════════════════════════════════════
+function attachEventListeners() {
+    // Navigation
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const panelId = this.getAttribute('data-panel');
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            document.getElementById(panelId).classList.add('active');
+            this.classList.add('active');
+            
+            if (panelId === 'dataPanel') updateCharts();
+            if (panelId === 'reportPanel') renderReportList();
+        });
+    });
+
+    // Substrate selection
+    document.querySelectorAll('[data-substrate]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            currentSubstrate = this.getAttribute('data-substrate');
+            document.querySelectorAll('[data-substrate]').forEach(b => b.classList.remove('active-opt'));
+            this.classList.add('active-opt');
+            
+            const rowWrapper = document.getElementById('rowWrapper');
+            const colWrapper = document.getElementById('colWrapper');
+            
+            if (currentSubstrate === 'עציצי פלסטיק') {
+                if (rowWrapper) rowWrapper.style.display = 'none';
+                if (colWrapper) colWrapper.style.display = 'none';
+                document.getElementById('lblTray').textContent = 'עציץ';
+            } else {
+                if (rowWrapper) rowWrapper.style.display = 'block';
+                if (colWrapper) colWrapper.style.display = 'block';
+                document.getElementById('lblTray').textContent = 'מגש';
+            }
+        });
+    });
+
+    // Category selection
+    document.querySelectorAll('[data-cat]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            currentCat = this.getAttribute('data-cat');
+            document.querySelectorAll('[data-cat]').forEach(b => b.classList.remove('active-opt'));
+            this.classList.add('active-opt');
+            
+            document.getElementById('sPlantVeg').classList.toggle('hidden', currentCat !== 'veg');
+            document.getElementById('sPlantFlo').classList.toggle('hidden', currentCat !== 'flo');
+            updateGerm();
+        });
+    });
+
+    // Side selection
+    document.querySelectorAll('[data-side]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            currentSide = parseInt(this.getAttribute('data-side'));
+            document.querySelectorAll('[data-side]').forEach(b => b.classList.remove('active-opt'));
+            this.classList.add('active-opt');
+        });
+    });
+
+    // Save buttons
+    document.getElementById('btnSaveSeed').addEventListener('click', () => saveData('seed'));
+    document.getElementById('btnSaveHydro').addEventListener('click', () => saveData('hydro'));
+    document.getElementById('btnSaveWater').addEventListener('click', () => saveData('water'));
+
+    // Plant selection change
+    document.getElementById('sPlantVeg').addEventListener('change', updateGerm);
+    document.getElementById('sPlantFlo').addEventListener('change', updateGerm);
+    document.getElementById('sDate').addEventListener('change', updateGerm);
+
+    // Image upload
+    document.getElementById('sFile').addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                activeImg = e.target.result;
+                const preview = document.getElementById('sPreview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+
+    // Limits inputs
+    ['mPhMin', 'mPhMax', 'mEcMin', 'mEcMax', 'mTmMin', 'mTmMax', 'mDoMin', 'mDoMax'].forEach(id => {
+        document.getElementById(id).addEventListener('input', saveLimits);
+    });
+
+    // Water inputs with limit checking
+    ['wPH', 'wEC', 'wTemp', 'wDO'].forEach(id => {
+        document.getElementById(id).addEventListener('input', checkLim);
+    });
+
+    // Hole range calculation
+    ['sHoleFrom', 'sHoleTo'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+            const from = parseInt(document.getElementById('sHoleFrom').value || 0);
+            const to = parseInt(document.getElementById('sHoleTo').value || 0);
+            const display = document.getElementById('plantCountDisplay');
+            
+            if (from > 0 && to >= from) {
+                const count = to - from + 1;
+                display.textContent = `📊 סה"כ ${count} צמחים`;
+                display.style.display = 'block';
+            } else {
+                display.style.display = 'none';
+            }
+        });
+    });
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1255,86 +1656,68 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load data from localStorage
     loadFromLocal();
     
-    // Initialize Firebase Auth state listener
-    firebase.auth().onAuthStateChanged(user => {
-        currentUser = user;
-        
-        if (user) {
-            console.log('✅ User authenticated:', user.email);
-            updateSyncBadge('✅');
-            initFirebaseSync();
-        } else {
-            console.log('❌ No user authenticated');
-            updateSyncBadge('📡');
-        }
-    });
-    
-    // Attach all event listeners
+    // Attach event listeners
     attachEventListeners();
     
     // Populate plant dropdowns
     const vegSelect = document.getElementById('sPlantVeg');
     const floSelect = document.getElementById('sPlantFlo');
     
-    if (vegSelect) {
-        plants.veg.forEach(p => {
-            const opt = document.createElement('option');
-            opt.value = p.n;
-            opt.textContent = p.n;
-            vegSelect.appendChild(opt);
-        });
+    plants.veg.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.n;
+        opt.textContent = p.n;
+        vegSelect.appendChild(opt);
+    });
+    
+    plants.flo.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.n;
+        opt.textContent = p.n;
+        floSelect.appendChild(opt);
+    });
+    
+    // Set today's date as default
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('sDate').value = today;
+    document.getElementById('hDate').value = today;
+    document.getElementById('wDate').value = today;
+    
+    // Load saved limits
+    const savedLimits = localStorage.getItem('growLimits');
+    if (savedLimits) {
+        const limits = JSON.parse(savedLimits);
+        document.getElementById('mPhMin').value = limits.phMin;
+        document.getElementById('mPhMax').value = limits.phMax;
+        document.getElementById('mEcMin').value = limits.ecMin;
+        document.getElementById('mEcMax').value = limits.ecMax;
+        document.getElementById('mTmMin').value = limits.tmMin;
+        document.getElementById('mTmMax').value = limits.tmMax;
+        document.getElementById('mDoMin').value = limits.doMin;
+        document.getElementById('mDoMax').value = limits.doMax;
     }
     
-    if (floSelect) {
-        plants.flo.forEach(p => {
-            const opt = document.createElement('option');
-            opt.value = p.n;
-            opt.textContent = p.n;
-            floSelect.appendChild(opt);
-        });
-    }
-    
-    // Initial UI setup
-    selectSub('trays');
-    selectCat('veg');
-    selectSide('A');
-    selectSeason('winter');
-    
-    // Render table and filters
+    // Initial render
     refreshAll();
-    
-    // Check calibration status
-    checkCalibration();
-    
-    // Show home panel by default
-    showPanel('home');
+    updateGerm();
     
     console.log('✅ GrowManager PRO Ready');
 });
 
 // ═══════════════════════════════════════════════════════════════
-// 🌐 WINDOW GLOBAL FUNCTIONS (for onclick attributes)
+// 🌐 WINDOW SCOPE (for onclick attributes)
 // ═══════════════════════════════════════════════════════════════
-window.showPanel = showPanel;
-window.selectSub = selectSub;
-window.selectCat = selectCat;
-window.selectSide = selectSide;
-window.selectSeason = selectSeason;
-window.saveSeed = saveSeed;
-window.saveHydro = saveHydro;
-window.saveWater = saveWater;
-window.saveLimits = saveLimits;
-window.exportData = exportData;
-window.deleteEntry = deleteEntry;
+window.logout = logout;
+window.saveData = saveData;
+window.deleteItem = deleteItem;
+window.showFullImg = showFullImg;
 window.searchTable = searchTable;
 window.applyFilters = applyFilters;
 window.resetFilters = resetFilters;
-window.showFullImg = showFullImg;
-window.authSignup = authSignup;
-window.authLogin = authLogin;
-window.authLogout = authLogout;
+window.exportData = exportData;
 
-// ═══════════════════════════════════════════════════════════════
-// 🔚 END OF GROWMANAGER PRO - PART 4/4
-// ═══════════════════════════════════════════════════════════════
-console.log('📦 Part 4/4 Loaded - GrowManager PRO Complete! 🌱✅');
+console.log('📦 GrowManager PRO - ALL 8 PARTS LOADED! 🌱✅');
+</script>
+
+</body>
+</html>

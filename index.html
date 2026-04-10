@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GrowManager PRO - Plant Lifecycle</title>
 
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
 
     <style>
@@ -779,12 +778,12 @@ function compressImg(input) {
         const img = new Image();
         img.onload = () => {
             const canvas = document.createElement('canvas');
-            const MAX = 400;
+            const MAX = 300;
             const scale = Math.min(1, MAX / img.width);
             canvas.width = img.width * scale;
             canvas.height = img.height * scale;
             canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-            activeImg = canvas.toDataURL('image/jpeg', 0.7);
+            activeImg = canvas.toDataURL('image/jpeg', 0.6);
             document.getElementById('sPreview').src = activeImg;
             document.getElementById('sPreview').style.display = 'block';
         };
@@ -1088,29 +1087,27 @@ function saveData(type) {
 
     }
 
+
     if (!entry.plant) return alert('הזן שם צמח');
     if (!editId) db.unshift(entry);
-          localStorage.setItem('growData', JSON.stringify(db));
-            
-            // ✨ הוסף את זה:
-            if (firebase.auth().currentUser) {
-                const lastEntry = db[0];
-                const dataToSync = { ...lastEntry };
-                delete dataToSync.img;
-                
-                firebaseDB.collection('users/' + firebase.auth().currentUser.uid + '/growData')
-                    .doc(String(lastEntry.id))
-                    .set(dataToSync, { merge: true })
-                    .catch(e => console.error('Upload error:', e));
-            }
-            
-            alert('נשמר!');
-            clearSeedForm();
-            activeImg = '';
-            refreshAll();
-            updateCharts();
-            return;
-        }
+    
+    localStorage.setItem('growData', JSON.stringify(db));
+    
+    // ✅ סנכרון לענן
+    if (firebaseReady && firebase.auth().currentUser) {
+        syncToFirebase();
+    }
+    
+    alert('נשמר בהצלחה! ✅');
+    
+    if (type === 'seed') clearSeedForm();
+    else if (type === 'hydro') clearHydroForm();
+    else clearWaterForm();
+    
+    activeImg = '';
+    refreshAll();
+    updateCharts();
+}
 
 
 // ─── מחזור חיים ────────────────────────────────────────────────────────────
@@ -1422,8 +1419,10 @@ function showSeason(seasonId, btn) {
 // ════════════════════════════════════════════════════════════════
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDJrcY7iVG1iyyx2e6lnFiAa8OIcbDTs",
+const firebaseConfig = {
+    apiKey: "AIzaSyDJrcY7iVG1iyyx2e6lnFiAa8OIcbDTso",  // ← הוספתי "o" בסוף
     authDomain: "garden-crop-monitoring.firebaseapp.com",
+
     projectId: "garden-crop-monitoring",
     storageBucket: "garden-crop-monitoring.appspot.com",
     messagingSenderId: "667577763472",
@@ -1441,6 +1440,9 @@ const SYNC_INTERVAL = 3000; // 3 שניות
 // ────────────────────────────────────────────────────────────────
 // 🔐 התחברות אנונימית + אתחול Sync
 // ────────────────────────────────────────────────────────────────
+firebase.auth().signInAnonymously()
+    .then(() => console.log('🔐 התחברות בוצעה'))
+    .catch(err => console.error('❌ שגיאת התחברות:', err));
 
 firebase.auth().onAuthStateChanged(user => {
     if (user) {

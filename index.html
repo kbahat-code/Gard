@@ -164,6 +164,25 @@
             font-size: 16px;
         }
         
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            font-size: 13px;
+            margin: 3px;
+        }
+        
+        .btn-destroy {
+            background: var(--error);
+        }
+        
+        .btn-transfer {
+            background: var(--secondary);
+        }
+        
         .cam-box {
             background: #f0f0f0;
             border: 2px dashed #ccc;
@@ -262,7 +281,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
-
 <div id="syncBadge" style="position:fixed;top:10px;right:10px;background:#4CAF50;color:#fff;padding:8px 15px;border-radius:20px;font-size:14px;z-index:9999;">💾 מוכן</div>
 <div style="position:fixed;top:10px;left:10px;z-index:9999;display:flex;gap:10px;align-items:center;">
     <span id="userEmail" style="background:#2196F3;color:#fff;padding:8px 15px;border-radius:20px;font-size:14px;">טוען...</span>
@@ -277,6 +295,7 @@
         <div class="nav-item" data-panel="historyPanel">🔍 חיפוש</div>
         <div class="nav-item" data-panel="reportPanel">🗂️ כרטיסיות</div>
     </div>
+    
     <div id="seedPanel" class="panel active">
         <div class="card">
             <h2>🌱 יומן זריעה</h2>
@@ -288,7 +307,7 @@
                 <div class="opt" data-substrate="עציצי פלסטיק">עציצי פלסטיק</div>
             </div>
             
-            <div class="grid-4">
+            <div class="grid-2">
                 <div>
                     <label>מחזור</label>
                     <input type="text" id="sCycle" value="1">
@@ -297,23 +316,15 @@
                     <label id="lblTray">מגש</label>
                     <input type="text" id="sTray" value="1">
                 </div>
-                <div id="rowWrapper">
-                    <label id="lblRow">שורה</label>
-                    <input type="text" id="sRow">
-                </div>
-                <div id="colWrapper">
-                    <label id="lblCol">עמודה</label>
-                    <input type="text" id="sCol">
-                </div>
             </div>
             
             <div class="grid-2">
                 <div>
-                    <label>גומה מ-</label>
+                    <label>מגומה</label>
                     <input type="number" id="sHoleFrom" value="1">
                 </div>
                 <div>
-                    <label>גומה עד-</label>
+                    <label>עד גומה</label>
                     <input type="number" id="sHoleTo" value="1">
                 </div>
             </div>
@@ -361,6 +372,7 @@
             </button>
         </div>
     </div>
+    
     <div id="hydroPanel" class="panel">
         <div class="card">
             <h2>💧 שתילה במערכת הידרו</h2>
@@ -386,7 +398,7 @@
             <input type="text" id="hPlant" placeholder="חפש צמח...">
             
             <label>מקור השתיל:</label>
-            <input type="text" id="hSource" placeholder="בחר מקור...">
+            <input type="text" id="hSource" placeholder="מחזור-מגש-גומה או חיצוני/ייחור">
             
             <label>תאריך שתילה:</label>
             <input type="date" id="hDate">
@@ -562,6 +574,7 @@
         </div>
     </div>
 </div>
+
 <script>
 // ═══════════════════════════════════════════════════════════════
 // 🔥 FIREBASE CONFIG & INITIALIZATION
@@ -878,13 +891,11 @@ function saveData(type) {
         const dateSeed = document.getElementById('sDate').value;
         const cycle = document.getElementById('sCycle').value;
         const tray = document.getElementById('sTray').value;
-        const row = document.getElementById('sRow').value;
-        const col = document.getElementById('sCol').value;
         const holeFrom = parseInt(document.getElementById('sHoleFrom').value || 0);
         const holeTo = parseInt(document.getElementById('sHoleTo').value || 0);
         const notes = document.getElementById('sNotes').value;
 
-        if (!plant || !dateSeed || !tray || holeFrom === 0 || holeTo === 0) {
+        if (!plant || !dateSeed || !cycle || !tray || holeFrom === 0 || holeTo === 0) {
             alert('❌ נא למלא את כל השדות החובה');
             return;
         }
@@ -902,7 +913,7 @@ function saveData(type) {
         let saved = 0;
         for (let hole = holeFrom; hole <= holeTo; hole++) {
             const newId = db.length ? Math.max(...db.map(i => i.id)) + 1 : 1;
-            const batchId = `${cycle}-${tray}-${row || '0'}-${col || '0'}-${hole}`;
+            const batchId = `${cycle}-${tray}-${hole}`;
             
             db.push({
                 id: newId,
@@ -911,13 +922,14 @@ function saveData(type) {
                 plant,
                 date: dateSeed,
                 substrate: currentSubstrate,
-                location: { cycle, tray, row: row || '', col: col || '', hole },
+                location: { cycle, tray, hole },
                 batchId,
                 germDays,
                 germDate: germDate.toISOString().split('T')[0],
                 notes,
                 img: activeImg || '',
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                status: 'active' // NEW: for tracking plant state
             });
             saved++;
         }
@@ -948,7 +960,7 @@ function saveData(type) {
             id: newId,
             type: 'hydro',
             plant,
-            source,
+            source: source || 'לא צוין',
             date: dateH,
             hydroLoc: { side: currentSide, row, hole },
             notes,
@@ -1006,8 +1018,49 @@ function saveData(type) {
     }
 }
 
+// NEW FUNCTIONS FOR PLANT ACTIONS
+function destroyPlant(id) {
+    if (!confirm('🗑️ האם לסמן צמח זה כ"הושמד"?')) return;
+    
+    const item = db.find(i => i.id === id);
+    if (item) {
+        item.status = 'destroyed';
+        item.destroyedDate = new Date().toISOString().split('T')[0];
+        saveAndSync();
+        refreshAll();
+        alert('✅ הצמח סומן כהושמד');
+    }
+}
+
+function transferToHydro(id) {
+    const item = db.find(i => i.id === id);
+    if (!item || item.type !== 'seed') {
+        alert('❌ לא נמצא פריט זריעה');
+        return;
+    }
+    
+    // Switch to hydro panel
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('hydroPanel').classList.add('active');
+    document.querySelector('[data-panel="hydroPanel"]').classList.add('active');
+    
+    // Pre-fill data
+    document.getElementById('hPlant').value = item.plant;
+    document.getElementById('hSource').value = item.batchId;
+    document.getElementById('hDate').value = new Date().toISOString().split('T')[0];
+    
+    // Mark as transferred
+    item.status = 'transferred';
+    item.transferredDate = new Date().toISOString().split('T')[0];
+    saveAndSync();
+    refreshAll();
+    
+    alert('✅ הצמח הועבר לממשק ההידרו. השלם את הפרטים ושמור.');
+}
+
 function deleteItem(id) {
-    if (!confirm('❌ האם למחוק רשומה זו?')) return;
+    if (!confirm('❌ האם למחוק רשומה זו לצמיתות?')) return;
     
     db = db.filter(i => i.id !== id);
     saveAndSync();
@@ -1130,18 +1183,28 @@ function renderTable() {
         const tr = document.createElement('tr');
         
         if (item.type === 'seed') {
+            const statusBadge = item.status === 'destroyed' ? '<span style="color:red;">🗑️ הושמד</span>' : 
+                               item.status === 'transferred' ? '<span style="color:blue;">➡️ הועבר</span>' : '';
+            
+            const actionButtons = item.status === 'active' ? 
+                `<button class="action-btn btn-destroy" onclick="destroyPlant(${item.id})">🗑️ הושמד</button>
+                 <button class="action-btn btn-transfer" onclick="transferToHydro(${item.id})">🌱 להידרו</button>` : '';
+            
             tr.innerHTML = `
                 <td>${new Date(item.date).toLocaleDateString('he-IL')}</td>
-                <td><span class="badge badge-seed">זריעה</span></td>
+                <td><span class="badge badge-seed">זריעה</span> ${statusBadge}</td>
                 <td>${item.plant || '-'}</td>
                 <td>${item.location?.cycle || '-'}</td>
                 <td>${item.location?.tray || '-'}</td>
-                <td>${item.location?.row || '-'}/${item.location?.col || '-'}/${item.location?.hole || '-'}</td>
+                <td>גומה ${item.location?.hole || '-'}</td>
                 <td>${item.germDate ? new Date(item.germDate).toLocaleDateString('he-IL') : '-'}</td>
                 <td>-</td>
                 <td>${item.img ? `<img src="${item.img}" class="thumb" onclick="showFullImg('${item.img}')">` : '-'}</td>
                 <td>${item.notes || '-'}</td>
-                <td><button class="btn-del" onclick="deleteItem(${item.id})">🗑️</button></td>
+                <td>
+                    ${actionButtons}
+                    <button class="btn-del" onclick="deleteItem(${item.id})">🗑️</button>
+                </td>
             `;
         } else if (item.type === 'hydro') {
             tr.innerHTML = `
@@ -1183,7 +1246,7 @@ function renderReportList() {
     
     const plantGroups = {};
     
-    db.filter(i => i.type === 'seed').forEach(item => {
+    db.filter(i => i.type === 'seed' && i.status === 'active').forEach(item => {
         const key = `${item.plant}_${item.location?.cycle}_${item.location?.tray}`;
         if (!plantGroups[key]) {
             plantGroups[key] = {
@@ -1211,7 +1274,7 @@ function renderReportList() {
         card.innerHTML = `
             <h3>🌱 ${group.plant}</h3>
             <p><strong>מחזור:</strong> ${group.cycle} | <strong>מגש:</strong> ${group.tray}</p>
-            <p><strong>כמות:</strong> ${group.count} צמחים</p>
+            <p><strong>כמות פעילה:</strong> ${group.count} צמחים</p>
             <p><strong>תאריך זריעה:</strong> ${new Date(Math.min(...group.dates.map(d => new Date(d)))).toLocaleDateString('he-IL')}</p>
         `;
         reportDiv.appendChild(card);
@@ -1444,7 +1507,6 @@ function searchTable() {
         row.style.display = text.includes(filter) ? '' : 'none';
     });
 }
-
 // ═══════════════════════════════════════════════════════════════
 // 📤 EXPORT FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
@@ -1468,7 +1530,7 @@ async function exportData() {
 }
 
 function exportCSV() {
-    let csv = 'תאריך,סוג,צמח,מחזור,מגש,מיקום,תאריך נביטה,מיקום הידרו,מדדי מים,הערות\n';
+    let csv = 'תאריך,סוג,צמח,מחזור,מגש,מיקום,תאריך נביטה,מיקום הידרו,מדדי מים,סטטוס,הערות\n';
     
     db.forEach(item => {
         const date = new Date(item.date).toLocaleDateString('he-IL');
@@ -1476,13 +1538,14 @@ function exportCSV() {
         const plant = item.plant || '-';
         const cycle = item.location?.cycle || '-';
         const tray = item.location?.tray || '-';
-        const loc = item.location ? `${item.location.row || '-'}/${item.location.col || '-'}/${item.location.hole || '-'}` : '-';
+        const loc = item.location ? `גומה ${item.location.hole || '-'}` : '-';
         const germ = item.germDate ? new Date(item.germDate).toLocaleDateString('he-IL') : '-';
         const hydro = item.hydroLoc ? `צד ${item.hydroLoc.side} שורה ${item.hydroLoc.row} חור ${item.hydroLoc.hole}` : '-';
         const water = item.type === 'water' ? `pH:${item.ph} EC:${item.ec} T:${item.temp} DO:${item.do}` : '-';
+        const status = item.status === 'destroyed' ? 'הושמד' : item.status === 'transferred' ? 'הועבר' : 'פעיל';
         const notes = (item.notes || '-').replace(/,/g, ';');
         
-        csv += `${date},${type},${plant},${cycle},${tray},${loc},${germ},${hydro},${water},${notes}\n`;
+        csv += `${date},${type},${plant},${cycle},${tray},${loc},${germ},${hydro},${water},${status},${notes}\n`;
     });
     
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -1498,7 +1561,7 @@ async function exportZIP() {
     const zip = new JSZip();
     const imgFolder = zip.folder('images');
     
-    let csv = 'תאריך,סוג,צמח,מחזור,מגש,מיקום,תאריך נביטה,מיקום הידרו,מדדי מים,תמונה,הערות\n';
+    let csv = 'תאריך,סוג,צמח,מחזור,מגש,מיקום,תאריך נביטה,מיקום הידרו,מדדי מים,סטטוס,תמונה,הערות\n';
     
     db.forEach((item, index) => {
         const date = new Date(item.date).toLocaleDateString('he-IL');
@@ -1506,10 +1569,11 @@ async function exportZIP() {
         const plant = item.plant || '-';
         const cycle = item.location?.cycle || '-';
         const tray = item.location?.tray || '-';
-        const loc = item.location ? `${item.location.row || '-'}/${item.location.col || '-'}/${item.location.hole || '-'}` : '-';
+        const loc = item.location ? `גומה ${item.location.hole || '-'}` : '-';
         const germ = item.germDate ? new Date(item.germDate).toLocaleDateString('he-IL') : '-';
         const hydro = item.hydroLoc ? `צד ${item.hydroLoc.side} שורה ${item.hydroLoc.row} חור ${item.hydroLoc.hole}` : '-';
         const water = item.type === 'water' ? `pH:${item.ph} EC:${item.ec} T:${item.temp} DO:${item.do}` : '-';
+        const status = item.status === 'destroyed' ? 'הושמד' : item.status === 'transferred' ? 'הועבר' : 'פעיל';
         const notes = (item.notes || '-').replace(/,/g, ';');
         
         let imgRef = '-';
@@ -1519,7 +1583,7 @@ async function exportZIP() {
             imgRef = `images/${imgName}`;
         }
         
-        csv += `${date},${type},${plant},${cycle},${tray},${loc},${germ},${hydro},${water},${imgRef},${notes}\n`;
+        csv += `${date},${type},${plant},${cycle},${tray},${loc},${germ},${hydro},${water},${status},${imgRef},${notes}\n`;
     });
     
     zip.file('data.csv', '\uFEFF' + csv);
@@ -1557,19 +1621,6 @@ function attachEventListeners() {
             currentSubstrate = this.getAttribute('data-substrate');
             document.querySelectorAll('[data-substrate]').forEach(b => b.classList.remove('active-opt'));
             this.classList.add('active-opt');
-            
-            const rowWrapper = document.getElementById('rowWrapper');
-            const colWrapper = document.getElementById('colWrapper');
-            
-            if (currentSubstrate === 'עציצי פלסטיק') {
-                if (rowWrapper) rowWrapper.style.display = 'none';
-                if (colWrapper) colWrapper.style.display = 'none';
-                document.getElementById('lblTray').textContent = 'עציץ';
-            } else {
-                if (rowWrapper) rowWrapper.style.display = 'block';
-                if (colWrapper) colWrapper.style.display = 'block';
-                document.getElementById('lblTray').textContent = 'מגש';
-            }
         });
     });
 
@@ -1710,6 +1761,8 @@ document.addEventListener('DOMContentLoaded', () => {
 window.logout = logout;
 window.saveData = saveData;
 window.deleteItem = deleteItem;
+window.destroyPlant = destroyPlant;
+window.transferToHydro = transferToHydro;
 window.showFullImg = showFullImg;
 window.searchTable = searchTable;
 window.applyFilters = applyFilters;

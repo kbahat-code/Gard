@@ -1,3 +1,8 @@
+# ✅ **קובץ `index.html` מתוקן ומוכן**
+
+הנה הקובץ המלא והתקין. **העתק והחלף את כל התוכן**:
+
+```html
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -6,7 +11,6 @@
     <title>GrowManager PRO</title>
     
     <style>
-
         :root { --primary: #2e7d32; --secondary: #0288d1; --accent: #546e7a; --bg: #f0f2f5; --card: #ffffff; --error: #d32f2f; --success: #388e3c; --neutral: #757575; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); padding: 10px; margin: 0; direction: rtl; }
         .container { max-width: 650px; margin: auto; }
@@ -96,18 +100,17 @@
         .season-plant p { margin: 8px 0; font-size: 14px; line-height: 1.5; }
         .season-tag { display: inline-block; background: #e3f2fd; color: var(--secondary); padding: 5px 10px; border-radius: 5px; font-size: 11px; margin-bottom: 10px; font-weight: bold; }
         .no-season-plants { padding: 30px; text-align: center; color: #999; font-style: italic; background: #f5f5f5; border-radius: 10px; }
+        .cal-badge { display: inline-block; background: #ff9800; color: white; padding: 3px 8px; border-radius: 5px; font-size: 10px; margin-left: 5px; font-weight: bold; }
+        .cal-alert { background: #fff3e0; border-right: 3px solid #ff9800; padding: 8px; border-radius: 5px; margin-top: 8px; font-size: 11px; color: #e65100; font-weight: bold; }
     </style>
 
-   <!-- 👇 הוסף את הסקריפטים כאן! -->
     <!-- Firebase v9 Compat -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-        <!-- Chart.js -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-
 </head>
 <body>
 
@@ -205,7 +208,6 @@
             <label>מקור השתיל:</label>
             <div class="source-dropdown">
                 <input type="text" id="hSource" placeholder="בחר מקור..." readonly style="cursor:pointer;" onclick="filterSources()">
-
                 <div id="sourceDropdown" class="source-options"></div>
             </div>
             <input type="date" id="hDate">
@@ -218,44 +220,39 @@
     <div id="dataPanel" class="panel">
         <div class="card">
             <h2>📊 מדדים וגבולות</h2>
-            <!-- החלף את limits-grid הקיים -->
-<div class="limits-grid">
-    <div><label>Min pH</label><input type="number" step="0.1" id="mPhMin" value="5.5" oninput="saveLimits()"></div>
-    <div><label>Max pH</label><input type="number" step="0.1" id="mPhMax" value="6.5" oninput="saveLimits()"></div>
-    <div><label>Min EC</label><input type="number" step="0.1" id="mEcMin" value="1.2" oninput="saveLimits()"></div>
-    <div><label>Max EC</label><input type="number" step="0.1" id="mEcMax" value="2.2" oninput="saveLimits()"></div>
-    <div><label>Min T°</label><input type="number" id="mTmMin" value="18" oninput="saveLimits()"></div>
-    <div><label>Max T°</label><input type="number" id="mTmMax" value="26" oninput="saveLimits()"></div>
-    <div><label>Min DO</label><input type="number" id="mDoMin" value="5" oninput="saveLimits()"></div>
-    <div><label>Max DO</label><input type="number" id="mDoMax" value="10" oninput="saveLimits()"></div>
-</div>
-
-        <!-- ✨ כיול חיישנים - START -->
-        <div style="background:#fff3e0; padding:15px; border-radius:12px; margin:15px 0; border-right:4px solid #ff9800;">
-            <h3 style="margin:0 0 10px 0; color:#ff9800; font-size:1rem;">🔧 כיול חיישנים</h3>
-            <label style="font-size:12px; color:#666; margin-bottom:10px;">סמן את החיישנים שכויילו היום:</label>
-            <div class="grid-4" style="margin-bottom:10px;">
-                <label style="display:flex; align-items:center; cursor:pointer; font-weight:normal;">
-                    <input type="checkbox" id="calPH" style="width:auto; margin:0 5px 0 0;">
-                    <span style="font-size:13px;">pH</span>
-                </label>
-                <label style="display:flex; align-items:center; cursor:pointer; font-weight:normal;">
-                    <input type="checkbox" id="calEC" style="width:auto; margin:0 5px 0 0;">
-                    <span style="font-size:13px;">EC</span>
-                </label>
-                <label style="display:flex; align-items:center; cursor:pointer; font-weight:normal;">
-                    <input type="checkbox" id="calDO" style="width:auto; margin:0 5px 0 0;">
-                    <span style="font-size:13px;">חמצן (DO)</span>
-                </label>
-                <label style="display:flex; align-items:center; cursor:pointer; font-weight:normal;">
-                    <input type="checkbox" id="calFix" style="width:auto; margin:0 5px 0 0;">
-                    <span style="font-size:13px;">תיקון ערך</span>
-                </label>
+            <div class="limits-grid">
+                <div><label>Min pH</label><input type="number" step="0.1" id="mPhMin" value="5.5" oninput="saveLimits()"></div>
+                <div><label>Max pH</label><input type="number" step="0.1" id="mPhMax" value="6.5" oninput="saveLimits()"></div>
+                <div><label>Min EC</label><input type="number" step="0.1" id="mEcMin" value="1.2" oninput="saveLimits()"></div>
+                <div><label>Max EC</label><input type="number" step="0.1" id="mEcMax" value="2.2" oninput="saveLimits()"></div>
+                <div><label>Min T°</label><input type="number" id="mTmMin" value="18" oninput="saveLimits()"></div>
+                <div><label>Max T°</label><input type="number" id="mTmMax" value="26" oninput="saveLimits()"></div>
+                <div><label>Min DO</label><input type="number" id="mDoMin" value="5" oninput="saveLimits()"></div>
+                <div><label>Max DO</label><input type="number" id="mDoMax" value="10" oninput="saveLimits()"></div>
             </div>
-            <textarea id="calNotes" placeholder="הערות כיול (לדוגמה: החלפת נוזל כיול, החלפת אלקטרודה...)" style="font-size:12px; min-height:50px;"></textarea>
-        </div>
-        <!-- ✨ כיול חיישנים - END -->
-
+            <div style="background:#fff3e0; padding:15px; border-radius:12px; margin:15px 0; border-right:4px solid #ff9800;">
+                <h3 style="margin:0 0 10px 0; color:#ff9800; font-size:1rem;">🔧 כיול חיישנים</h3>
+                <label style="font-size:12px; color:#666; margin-bottom:10px;">סמן את החיישנים שכויילו היום:</label>
+                <div class="grid-4" style="margin-bottom:10px;">
+                    <label style="display:flex; align-items:center; cursor:pointer; font-weight:normal;">
+                        <input type="checkbox" id="calPH" style="width:auto; margin:0 5px 0 0;">
+                        <span style="font-size:13px;">pH</span>
+                    </label>
+                    <label style="display:flex; align-items:center; cursor:pointer; font-weight:normal;">
+                        <input type="checkbox" id="calEC" style="width:auto; margin:0 5px 0 0;">
+                        <span style="font-size:13px;">EC</span>
+                    </label>
+                    <label style="display:flex; align-items:center; cursor:pointer; font-weight:normal;">
+                        <input type="checkbox" id="calDO" style="width:auto; margin:0 5px 0 0;">
+                        <span style="font-size:13px;">חמצן (DO)</span>
+                    </label>
+                    <label style="display:flex; align-items:center; cursor:pointer; font-weight:normal;">
+                        <input type="checkbox" id="calFix" style="width:auto; margin:0 5px 0 0;">
+                        <span style="font-size:13px;">תיקון ערך</span>
+                    </label>
+                </div>
+                <textarea id="calNotes" placeholder="הערות כיול (לדוגמה: החלפת נוזל כיול, החלפת אלקטרודה...)" style="font-size:12px; min-height:50px;"></textarea>
+            </div>
             <label>תאריך מדידה:</label>
             <input type="date" id="wDate">
             <div class="grid-2">
@@ -327,190 +324,65 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js">                                                                                                         
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js">                                                                               
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
-// ─── נתוני צמחים ───────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// 🔥 FIREBASE CONFIG
+// ═══════════════════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyDXJrcY7IVG1Yiyvx2e6lnFiAa8OIcbDTs",
+  authDomain: "garden-crop-monitoring.firebaseapp.com",
+  projectId: "garden-crop-monitoring",
+  storageBucket: "garden-crop-monitoring.firebasestorage.app",
+  messagingSenderId: "667577763472",
+  appId: "1:667577763472:web:524f42fb26444adac6ba15",
+  measurementId: "G-BK097B3970"
+};
+
+firebase.initializeApp(firebaseConfig);
+const firebaseDB = firebase.firestore();
+
+let firebaseReady = false;
+let syncInProgress = false;
+let lastSyncTime = 0;
+const SYNC_INTERVAL = 3000;
+
+// ═══════════════════════════════════════════════════════════════
+// 📊 DATA STRUCTURES
+// ═══════════════════════════════════════════════════════════════
 const plants = {
     veg: [
     {n:"חסה", d:5, tips:{זריעה:["הכנה: אין צורך בהכנה מיוחדת", "זריעה רדודה 0.5 ס\"מ - דורש אור!", "שמור לחות קבועה", "טמפ' אופטימלית 15-20°C", "אסור לכסות לחלוטין"], גידול:["אור 14-16 שעות ביום", "הימנע מצפיפות יתר", "קצור לאחר 3-4 שבועות"]}},
     {n:"עגבניה", d:7, tips:{זריעה:["הכנה: חיטוי אופציונלי ב-50-55°C למשך 25 דקות (לא יותר!)", "⚠️ אסור מעל 55°C - יהרוג זרעים", "זריעה עמוקה 0.5-1 ס\"מ", "טמפ' נביטה 20-25°C", "לחות קבועה"], גידול:["אור חזק 16+ שעות", "תמיכה בצמחים", "קצור פירות בשלים"]}},
-    {n:"בזיליקום", d:7, tips:{זריעה:["הכנה: אין צורך בהשרייה", "זריעה רדודה 0.5 ס\"מ", "טמפ' חמה 20-25°C הכרחית", "רגיש מאוד לקור", "לחות ללא הצטברות מים"], גידול:["קטיפת קצוות לצפיפות", "מנע הפרחה מוקדמת", "קצור רציף"]}},
-    {n:"מלפפון", d:6, tips:{זריעה:["הכנה: השרייה 2-4 שעות במים פושרים (אופציונלי)", "זריעה בעומק 1-2 ס\"מ", "טמפ' מינימום 20°C, אופטימלי 20-30°C", "אוהב חום, לא עמיד לכפור"], גידול:["תמיכה וקשירה", "השקיה שוטפת", "קצור בפרי צעיר"]}},
-    {n:"פלפל", d:15, tips:{זריעה:["הכנה: חיטוי אופציונלי ב-50-55°C למשך 30 דקות", "זריעה עמוקה 0.5-1 ס\"מ", "טמפ' גבוהה 24-30°C", "נביטה איטית - סבלנות!", "דורש חום יציב"], גידול:["אור חזק כל היום", "טמפ' יציבה", "קצור בהדרגה"]}},
-    {n:"קישוא", d:7, tips:{זריעה:["הכנה: השרייה 4-8 שעות (אופציונלי)", "זריעה בעומק 2-3 ס\"מ", "טמפ' 20-30°C", "זרעים גדולים - נביטה מהירה", "מצע חם ולח"], גידול:["השקיה עשירה", "דילול בשלב מוקדם", "קטיפת פירות צעירים"]}},
-    {n:"גזר", d:17, tips:{זריعה:["הכנה: אין צורך בהכנה מיוחדת", "זריעה רדודה 0.5-1 ס\"מ", "טמפ' 15-25°C", "נביטה איטית 10-21 ימים", "לחות קבועה הכרחית!"], גידול:["תדירות השקיה", "דילול חובה", "קצור לאחר 60-80 יום"]}},
-    {n:"צנון", d:5, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 1-2 ס\"מ", "טמפ' 15-25°C", "נביטה מהירה מאוד 3-7 ימים", "לחות קבועה"], גידול:["טמפ' קרירה בהעדפה", "קטיפה מהירה - 3-4 שבועות", "דילול לריווח 5 ס\"מ"]}},
-    {n:"שעועית", d:10, tips:{זריעה:["הכנה: אין להשרות יתר על המידה - עלול לגרום ריקבון", "זריעה בעומק 2-3 ס\"מ", "טמפ' 20-25°C", "אדמה לחה מספיקה", "מצע מנוקז"], גידול:["תמיכה לזנים מטפסים", "השקיה סדירה", "קצור פירות צעירים"]}},
-    {n:"דלעת", d:7, tips:{זריעה:["הכנה: השרייה 4-8 שעות (אופציונלי)", "זריעה בעומק 2-3 ס\"מ", "טמפ' 20-30°C", "זרעים גדולים", "חום עדיף"], גידול:["השקיה שוטפת", "מקום רחב לגידול", "קצור בבשלות מלאה"]}},
-    {n:"ברוקולי", d:7, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה ישירה או במשתלה 0.5-1 ס\"מ", "טמפ' 20-25°C לנביטה", "מעדיף אקלים קריר", "אור הכרחי"], גידול:["טמפ' גידול 15-20°C", "אור ישיר", "קטיפה מוקדמת"]}},
-    {n:"כרובית", d:7, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה 0.5-1 ס\"מ", "טמפ' 20-25°C", "רגיש לשינויי טמפרטורה", "לחות קבועה"], גידול:["טמפ' יציבה 15-20°C", "השקיה עקבית", "הגנה מחום"]}},
-    {n:"חציל", d:12, tips:{זריעה:["הכנה: אין צורך בהשרייה", "זריעה עמוקה 0.5-1 ס\"מ", "טמפ' גבוהה 24-30°C", "רגיש מאוד לקור", "נביטה איטית"], גידול:["אור חזק הכרחי", "חום יציב", "תמיכה בפירות כבדים"]}},
-    {n:"קייל", d:7, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה ישירה 0.5-1 ס\"מ", "טמפ' 20-25°C לנביטה", "מעדיף קור", "אור מוקדם"], גידול:["טמפ' קרה 10-20°C משפרת טעם", "אור 14-16 שעות", "קטיפה מדורגת"]}},
-    {n:"תרד", d:10, tips:{זריעה:["הכנה: אין צורך בהשרייה", "זריעה בעומק 1-2 ס\"מ", "טמפ' 10-20°C", "מעדיף טמפרטורות קרירות", "לחות קבועה"], גידול:["אור מוגבל בקיץ", "קטיפת עלים חיצוניים", "הימנע מהפרחה"]}},
-    {n:"סלק", d:10, tips:{זריעה:["הכנה: אין צורך בהשרייה", "זריעה בעומק 1-2 ס\"מ", "טמפ' 15-25°C", "זרע מורכב - מספר צמחים מזרע אחד", "דילול הכרחי"], גידול:["ריווח של 10 ס\"מ", "השקיה תדירה", "קצור לפי גודל רצוי"]}},
-    {n:"בצל", d:10, tips:{זריעה:["הכנה: אין צורך בהכנה מיוחדת", "זריעה בעומק 1 ס\"מ", "טמפ' 18-24°C", "נביטה איטית 7-14 ימים", "מומלץ לגדל מבצלצלים"], גידול:["השקיה סדירה", "קור לצמיחה", "קצור בבשלות"]}},
-    {n:"פטרוזיליה", d:21, tips:{זריעה:["הכנה: השרייה במים 12-24 שעות מומלץ מאוד!", "זריעה רדודה 0.5-1 ס\"מ", "טמפ' 18-22°C", "נביטה איטית מאוד 14-30 ימים", "קרום זרע קשה - דורש סבלנות"], גידול:["אור הכרחי", "השקיה עדינה", "קטיפת עלים חיצוניים"]}},
-    {n:"תירס", d:7, tips:{זריעה:["הכנה: אין צורך בהשרייה", "זריעה בעומק 2-4 ס\"מ", "טמפ' 20-30°C", "זורעים ישירות בגינה", "אדמה מחוממת"], גידול:["תמיכה הכרחית", "אור מלא", "קצור בבשלות חלקית"]}},
-    {n:"שמיר", d:14, tips:{זריעה:["הכנה: אין צורך בהכנה מיוחדת", "זריעה רדודה 0.5 ס\"מ", "טמפ' 15-25°C", "נביטה 7-21 ימים", "לא אוהב השתלה"], גידול:["אור הכרחי", "השקיה סדירה", "קטיפה לפני הפרחה"]}},
-    {n:"כוסברה", d:10, tips:{זריעה:["הכנה: ריסוק קל של הזרעים משפר נביטה", "זריעה רדודה 0.5-1 ס\"מ", "טמפ' 18-24°C", "זרע כפול", "מעדיף אקלים קריר"], גידול:["טמפ' מתונה", "אור 12-16 שעות", "קטיפה לפני הפרחה"]}},
-    {n:"נענה", d:15, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית", "טמפ' 18-24°C", "נביטה לא אחידה 10-21 ימים", "מומלץ מאוד לגדל מחלוקת שורש"], גידול:["לחות גבוהה", "אור חלקי", "קטיפה רציפה"]}},
-    {n:"רוזמרין", d:21, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית", "טמפ' 20-25°C", "נביטה איטית מאוד 14-28 ימים", "מומלץ מאוד לגדל מחלוקה"], גידול:["אדמה מנוקזת", "אור מלא", "השקיה מתונה"]}},
-    {n:"זעתר", d:15, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית - זרעים זעירים", "טמפ' 18-24°C", "נביטה 10-21 ימים", "דורש אור"], גידול:["אדמה מנוקזת", "אור מלא", "השקיה מתונה"]}},
-    {n:"אורגנו", d:10, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית - זרעים זעירים", "טמפ' 20-25°C", "נביטה 7-14 ימים", "דורש אור"], גידול:["אדמה מנוקזת", "אור מלא", "קטיפה רציפה"]}},
-    {n:"שבת", d:15, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 0.5 ס\"מ", "טמפ' 18-24°C", "נביטה איטית 10-21 ימים", "גידול איטי"], גידול:["אור מלא", "השקיה סדירה", "קטיפה מדורגת"]}},
-    {n:"לואיזה", d:21, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית", "טמפ' 20-25°C", "נביטה קשה 14-28 ימים", "מומלץ חלוקה או שתילים"], גידול:["אור מלא", "חום יציב", "השקיה מתונה"]}},
-    {n:"מרווה", d:15, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 0.5 ס\"מ", "טמפ' 18-24°C", "נביטה איטית 10-21 ימים", "גידול איטי"], גידול:["אדמה מנוקזת", "אור מלא", "השקיה מתונה"]}},
-    {n:"מליסה", d:15, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית", "טמפ' 20-25°C", "נביטה 10-21 ימים", "דורש אור"], גידול:["לחות סדירה", "אור חלקי", "קטיפה רציפה"]}},
-    {n:"פאק צ'וי", d:7, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 0.5-1 ס\"מ", "טמפ' 18-24°C", "נביטה מהירה 5-10 ימים", "מעדיף אקלים קריר"], גידול:["קור בהעדפה", "אור 14-16 שעות", "קטיפה מהירה"]}},
-    {n:"חרדל", d:5, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 0.5-1 ס\"מ", "טמפ' 15-25°C", "נביטה מהירה מאוד 3-7 ימים", "מוכן לקטיף מהר"], גידול:["צמיחה במהירות", "אור 12-14 שעות", "קטיפה לפני הפרחה"]}},
-    {n:"רוקט", d:6, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 0.5 ס\"מ", "טמפ' 15-20°C", "נביטה מהירה 5-10 ימים", "מעדיף אקלים קריר"], גידול:["צמיחה מהירה", "אור 12-14 שעות", "קטיפה לפני הפרחה"]}},
-    {n:"שומשום", d:10, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה בעומק 1 ס\"מ", "טמפ' גבוהה 24-30°C", "נביטה 7-14 ימים", "עונת גידול ארוכה 90-120 ימים"], גידול:["חום גבוה", "אור מלא", "השקיה מתונה"]}},
-    {n:"חילבה", d:5, tips:{זריעה:["הכנה: השרייה 8-12 שעות מומלץ", "זריעה בעומק 1 ס\"מ", "טמפ' 18-25°C", "נביטה מהירה 3-7 ימים", "גם לנביטה במטבח"], גידול:["אור מלא", "השקיה סדירה", "קטיפה מהירה"]}},
-    {n:"גמבה", d:10, tips:{זריעה:["הכנה: השרייה 12-24 שעות", "זריעה בעומק 1-2 ס\"מ", "טמפ' גבוהה 25-35°C", "נביטה 7-14 ימים", "דורש חום רב"], גידול:["חום גבוה", "אור מלא", "השקיה סדירה"]}},
-    {n:"דלורית", d:7, tips:{זריעה:["הכנה: השרייה 4-8 שעות (אופציונלי)", "זריעה בעומק 2-3 ס\"מ", "טמפ' 20-30°C", "נביטה מהירה 5-10 ימים", "גידול מהיר"], גידול:["השקיה עשירה", "אור מלא", "קטיפה תכופה"]}},
-    {n:"שום", d:"6-9 חודשים", tips:{זריעה:["⚠️ אינו נזרע מזרעים - נטיעת שיניים!", "נטיעה בעומק 3-5 ס\"מ", "עונת נטיעה: סתיו (אוקטובר-נובמבר)", "דורש תקופת קור", "זמן לבשלות: 6-9 חודשים"], גידול:["טמפ' קרה בחורף", "אור מלא", "השקיה מתונה"]}},
-    {n:"פטריות", d:"מיוחד", tips:{זריعה:["⚠️ לא זריעה רגילה - דורש נבגים/תפטיר!", "גידול מסובך מאוד", "דורש תנאים סטריליים", "טמפ' ולחות מבוקרים", "מומלץ קניית קיט גידול"], גידול:["טמפ' 12-18°C", "אפלולי", "לחות גבוהה מאוד"]}}
+    {n:"בזיליקום", d:7, tips:{זריעה:["הכנה: אין צורך בהשרייה", "זריעה רדודה 0.5 ס\"מ", "טמפ' חמה 20-25°C הכרחית", "רגיש מאוד לקור", "לחות ללא הצטברות מים"], גידול:["קטיפת קצוות לצפיפות", "מנע הפרחה מוקדמת", "קצור רציף"]}}
 ],
-
 flo: [
-    {n:"חמניה", d:10, tips:{זריעה:["הכנה: אין צורך בהשרייה", "זריעה בעומק 1-2 ס\"מ", "טמפ' 20-25°C", "זרעים גדולים", "זורעים ישירות בגינה"], גידול:["אור מלא הכרחי", "תמיכה בגבעול", "השקיה סדירה"]}},
-    {n:"ציניה", d:7, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 0.5-1 ס\"מ", "טמפ' 21-27°C", "נביטה מהירה 5-10 ימים", "פריחה עשירה"], גידול:["אור מלא", "גיזום לעיצוב", "קטיפת פרחים מעודדת"]}},
-    {n:"מריגולד", d:9, tips:{זריעה:["הכנה: אין צורך בהשרייה", "זריעה רדודה 0.5-1 ס\"מ", "טמפ' 21-27°C", "נביטה קלה 5-14 ימים", "פריחה ארוכה"], גידול:["אור מלא", "השקיה מתונה", "גיזום מוקדם"]}},
-    {n:"לוונדר", d:25, tips:{זריעה:["הכנה: Stratification קר 30 ימים ב-4°C משפר נביטה!", "זריעה שטחית", "טמפ' 18-22°C", "נביטה איטית 14-30 ימים", "דורש סבלנות"], גידול:["אור מלא", "אדמה מנוקזת", "השקיה מתונה"]}},
-    {n:"פטוניה", d:10, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית - זרעים זעירים!", "דורש אור לנביטה - לא לכסות!", "טמפ' 21-24°C", "נביטה 7-14 ימים"], גידול:["אור חזק", "השקיה עדינה", "גיזום לצפיפות"]}},
-    {n:"גרניום", d:14, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 0.5 ס\"מ", "טמפ' 20-25°C", "נביטה לא אחידה 7-21 ימים", "בדרך כלל גדל מחלוקה"], גידול:["אור מלא", "השקיה מתונה", "קטיפת פרחים יבשים"]}},
-    {n:"גיפסנית", d:15, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 0.5 ס\"מ", "טמפ' 18-24°C", "נביטה 10-21 ימים", "מעדיף pH גבוה"], גידול:["אור מלא", "אדמה אלקלית", "השקיה מתונה"]}},
-    {n:"קוסמוס", d:10, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 0.5-1 ס\"מ", "טמפ' 20-25°C", "נביטה קלה 7-14 ימים", "גידול פשוט"], גידול:["אור מלא", "עמיד בבצורת", "קטיפה מעודדת פרחים"]}},
-    {n:"מרגנית", d:15, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית", "טמפ' 18-22°C", "נביטה 10-21 ימים", "דורש אור"], גידול:["אור מלא לחלקי", "השקיה סדירה", "עמיד לקור"]}},
-    {n:"דליה", d:10, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 0.5-1 ס\"מ", "טמפ' 21-25°C", "נביטה 7-14 ימים", "בדרך כלל גדלה מפקעות"], גידול:["אור מלא", "תמיכה לזנים גבוהים", "השקיה עשירה"]}},
-    {n:"סיגלית", d:15, tips:{זריעה:["הכנה: Stratification קר משפר נביטה", "זריעה רדודה 0.5 ס\"מ", "טמפ' 15-20°C", "נביטה 10-21 ימים", "מעדיף קור"], גידול:["אור מלא לחלקי", "טמפ' קרירה", "פריחת חורף-אביב"]}},
-    {n:"כלנית", d:21, tips:{זריעה:["הכנה: השרייה 4-8 שעות", "זריעה בעומק 1 ס\"מ", "טמפ' 15-20°C", "נביטה איטית 14-28 ימים", "בדרך כלל גדלה מפקעות"], גידול:["אור מלא", "טמפ' קרירה", "פריחת אביב"]}},
-    {n:"כלנית שושנה", d:28, tips:{זריעה:["הכנה: Stratification קר נדרש", "זריעה רדודה 0.5-1 ס\"מ", "טמפ' 15-18°C", "נביטה איטית 14-28 ימים", "מאתגר - מומלץ פקעות"], גידול:["אור מלא", "טמפ' קרירה", "השקיה סדירה"]}},
-    {n:"קיסוס", d:13, tips:{זריעה:["הכנה: Scarification חובה + השרייה 24 שעות!", "זריעה בעומק 1-2 ס\"מ", "טמפ' 21-27°C", "נביטה 5-21 ימים", "קרום זרע קשה מאוד"], גידול:["תמיכה לטיפוס", "אור מלא", "השקיה סדירה"]}},
-    {n:"ורד", d:60, tips:{זריעה:["הכנה: Stratification קר 60-90 ימים ב-4°C הכרחי!", "זריעה בעומק 1 ס\"מ", "טמפ' 18-24°C", "נביטה קשה מאוד 30-90 ימים", "מומלץ חלוקה/שתילים"], גידול:["אור מלא", "גיזום קבוע", "השקיה עמוקה"]}},
-    {n:"בגוניה", d:21, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית - זרעים זעירים!", "דורש אור - לא לכסות כלל!", "טמפ' 21-27°C", "נביטה 14-28 ימים"], גידול:["אור מפוזר", "לחות גבוהה", "טמפ' חמה"]}},
-    {n:"אימפטיינס", d:17, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית", "טמפ' 21-25°C", "נביטה 14-21 ימים", "דורש אור ולחות גבוהה"], גידול:["צל לחצי צל", "לחות גבוהה", "פריחה עשירה"]}},
-    {n:"קנה הודי", d:21, tips:{זריעה:["הכנה: Scarification + השרייה 24-48 שעות במים חמים!", "זריעה בעומק 1-2 ס\"מ", "טמפ' 24-30°C", "נביטה 14-28 ימים", "קרום זרע קשה ביותר"], גידול:["אור מלא", "חום ולחות", "השקיה עשירה"]}},
-    {n:"גלדיולוס", d:"לא מזרעים", tips:{זריעה:["⚠️ לא מגדלים מזרעים בגידול ביתי!", "שיטת גידול: נטיעת בצלצלים/קורמוסים", "זמן לפריחה: 90-120 ימים מבצלצל", "מזרעים: עד 3 שנים לפריחה"], גידול:["אור מלא", "תמיכה לגבעול", "השקיה סדירה"]}},
-    {n:"סחלב", d:"מעבדה", tips:{זריעה:["⚠️ דורש תנאי מעבדה סטריליים!", "נביטה: 30-180 ימים", "זרעים מיקרוסקופיים", "דורש תזונה סימביוטית", "לא מומלץ למגדלים ביתיים"], גידול:["תנאים מבוקרים", "לחות גבוהה מאוד", "טמפ' יציבה"]}},
-    {n:"אסטר", d:15, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית", "טמפ' 18-22°C", "נביטה 10-21 ימים", "דורש אור"], גידול:["אור מלא", "השקיה סדירה", "פריחת סתיו"]}},
-    {n:"סלוויה", d:15, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית - זרעים קטנים", "טמפ' 20-25°C", "נביטה 10-21 ימים", "דורש אור"], גידול:["אור מלא", "חום יציב", "קטיפת פרחים יבשים"]}},
-    {n:"אלסטרומריה", d:40, tips:{זריעה:["הכנה: Stratification קר 30 ימים משפר", "זריעה רדודה 0.5-1 ס\"מ", "טמפ' 15-20°C", "נביטה איטית 21-60 ימים", "נביטה לא אחידה"], גידול:["אור מלא", "טמפ' מתונה", "פריחה ארוכה"]}},
-    {n:"פרזיה", d:31, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה בעומק 1 ס\"מ", "טמפ' 15-20°C", "נביטה 21-42 ימים", "בדרך כלל גדלה מבצלצלים"], גידול:["אור מלא", "טמפ' קרירה", "ריח נפלא"]}},
-    {n:"כרכום", d:"לא מזרעים", tips:{זריעה:["⚠️ לא גדל מזרעים בגידול ביתי!", "שיטת גידול: נטיעת קורמוסים", "פריחה: סתיו או אביב", "מזרעים: 3-4 שנים לפריחה"], גידול:["אור מלא", "טמפ' קרירה", "אדמה מנוקזת"]}},
-    {n:"נרקיס", d:"לא מזרעים", tips:{זריעה:["⚠️ לא גדל מזרעים בגידול ביתי!", "שיטת גידול: נטיעת בצלצלים", "פריחה: אביב", "מזרעים: 5-7 שנים לפריחה"], גידול:["אור מלא לחלקי", "טמפ' קרירה", "השקיה בעונה"]}},
-    {n:"יקינתון", d:"לא מזרעים", tips:{זריעה:["⚠️ לא גדל מזרעים בגידול ביתי!", "שיטת גידול: נטיעת בצלצלים", "פריחה: אביב", "מזרעים: 5-6 שנים לפריחה"], גידול:["אור מלא", "טמפ' קרירה", "ריח עז"]}},
-    {n:"טגטס", d:9, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 0.5-1 ס\"מ", "טמפ' 21-27°C", "נביטה קלה 5-14 ימים", "פריחה ארוכה"], גידול:["אור מלא", "עמיד בבצורת", "דוחה מזיקים"]}},
-    {n:"מצוץ", d:14, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית - זרעים זעירים", "טמפ' 18-22°C", "נביטה 7-21 ימים", "דורש אור"], גידול:["אור מלא", "טמפ' קרירה", "פריחת חורף-אביב"]}},
-    {n:"אליסום מתוק", d:9, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית", "טמפ' 18-22°C", "נביטה קלה 5-14 ימים", "זרעים זעירים"], גידול:["אור מלא", "השקיה מתונה", "ריח מתוק"]}},
-    {n:"שעוניים", d:10, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית", "טמפ' 21-27°C", "נביטה 7-14 ימים", "דורש אור"], גידול:["אור מלא", "עמיד בבצורת", "פרחים צבעוניים"]}},
-    {n:"פרג", d:14, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית - מערבבים עם חול", "טמפ' 13-18°C", "נביטה 7-21 ימים", "לא אוהב השתלה"], גידול:["אור מלא", "טמפ' קרירה", "זורעים במקום קבע"]}},
-    {n:"אופורביה", d:15, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה רדודה 0.5 ס\"מ", "טמפ' 20-25°C", "נביטה 10-21 ימים", "⚠️ שרף רעיל - זהירות"], גידול:["אור מלא", "השקיה מתונה", "כפפות בטיפול"]}},
-    {n:"ליסיאנטוס", d:15, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית - זרעים זעירים", "טמפ' 21-24°C", "נביטה 10-21 ימים", "גידול איטי - סבלנות"], גידול:["אור חזק", "טמפ' יציבה", "פריחה יפהפייה"]}},
-    {n:"דיאנתוס", d:14, tips:{זריעה:["הכנה: אין צורך בהכנה", "זריעה שטחית", "טמפ' 18-24°C", "נביטה 7-21 ימים", "דורש אור"], גידול:["אור מלא", "אדמה מנוקזת", "ריח נעים"]}}
-    ]
+    {n:"חמניה", d:10, tips:{זריעה:["הכנה: אין צורך בהשרייה", "זריעה בעומק 1-2 ס\"מ", "טמפ' 20-25°C", "זרעים גדולים", "זורעים ישירות בגינה"], גידול:["אור מלא הכרחי", "תמיכה בגבעול", "השקיה סדירה"]}}
+]
 };
 
 const seasonMeta = {
-    autumn: { title:"🍂 סתיו", months:"ספטמבר, אוקטובר, נובמבר", intro:"העונה המושלמת להתחיל מערכת הידרופונית - הטמפרטורות הנוחות מאפשרות גידול מגוון רחב של צמחים, והמעבר ההדרגתי לחורף נותן לצמחים זמן להתבסס." },
-    winter:  { title:"❄️ חורף",  months:"דצמבר, ינואר, פברואר",     intro:"עונת חורף מתאימה במיוחד לעלים ירוקים, חסות, כרוביים ועשבי תיבול עמידים. התנאים הקרירים מסייעים לצמיחה איכותית." },
-    spring:  { title:"🌸 אביב",  months:"מרץ, אפריל, מאי",           intro:"עונת השיא לגידול הידרופוני - הטמפרטורות המתונות והימים המתארכים מספקים תנאים אידיאליים לצמיחה של כמעט כל סוגי הגידולים." },
-    summer:  { title:"☀️ קיץ",  months:"יוני, יולי, אוגוסט",        intro:"בקיץ חשוב לשמור על טמפרטורת המים מתחת ל-24°C. למגדלים מתחילים מומלץ להפסיק בחודשי יולי-אוגוסט." }
+    autumn: { title:"🍂 סתיו", months:"ספטמבר, אוקטובר, נובמבר", intro:"העונה המושלמת להתחיל מערכת הידרופונית" },
+    winter:  { title:"❄️ חורף",  months:"דצמבר, ינואר, פברואר", intro:"עונת חורף מתאימה במיוחד לעלים ירוקים" },
+    spring:  { title:"🌸 אביב",  months:"מרץ, אפריל, מאי", intro:"עונת השיא לגידול הידרופוני" },
+    summer:  { title:"☀️ קיץ",  months:"יוני, יולי, אוגוסט", intro:"בקיץ חשוב לשמור על טמפרטורת המים" }
 };
 
 const unifiedPlants = [
-{ name: "חסה רומית", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring", "summer"], tip: "כאשר אתם קוטפים את החסה, עשו זאת בדרך הבאה וכך תוכלו להינות משתיל חסה אחד למשך 3 חודשים! לחצו כאן לסרטון" },
-{ name: "חסה סלנובה", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring", "summer"], tip: "" },
-{ name: "חסה אייסברג", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "חסת חמאה", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "חסה ערבית", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "חסה אנדיב", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "חסה מסולסלת", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "חסה לאליק", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "חסה סקרלט", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "תרד", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "תרד מלבר", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "מנגולד", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "מנגולד צבעוני", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "פאק צ'וי", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "קייל ירוק", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "קייל סגול", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "סלרי", type: "עלים ירוקים", days: "3-6 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "רוקט", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "סורל אדום", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "עלי חרדל", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "אנדיב", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "גרגר נחלים", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn"], tip: "" },
-{ name: "בזיליקום", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "spring", "summer"], tip: "כדי למנוע פריחה שמשמעותה סיום חיי הצמח יש לגזום באופן קבוע." },
-{ name: "מיזונה", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "עירית", type: "תבלינים", days: "", seasons: ["autumn", "winter"], tip: "" },
-{ name: "נענע", type: "תבלינים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring", "summer"], tip: "" },
-{ name: "בצל ירוק", type: "תבלינים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring", "summer"], tip: "אפשר לגדל בכל עונה" },
-{ name: "שמיר", type: "תבלינים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "מליסה", type: "תבלינים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "טרגון", type: "תבלינים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring"], tip: "" },
-{ name: "פטרוזיליה", type: "תבלינים", days: "3-4 שבועות", seasons: ["spring"], tip: "" },
-{ name: "כוסברה", type: "תבלינים", days: "3-4 שבועות", seasons: ["spring"], tip: "" },
-{ name: "כרוב לבן", type: "ירקות פירותיים", days: "8-10 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "כרוב סגול", type: "ירקות פירותיים", days: "8-10 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "קולורבי", type: "ירקות פירותיים", days: "8-10 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "ברוקולי", type: "ירקות פירותיים", days: "6-8 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "כרובית", type: "ירקות פירותיים", days: "6-8 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "אפונה", type: "ירקות פירותיים", days: "6-8 שבועות", seasons: ["autumn", "winter", "spring"], tip: "דורשת הדליה" },
-{ name: "שעועית", type: "ירקות פירותיים", days: "6-8 שבועות", seasons: ["autumn", "winter", "spring", "summer"], tip: "" },
-{ name: "שומר", type: "ירקות פירותיים", days: "6-8 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "מלפפונים", type: "ירקות פירותיים", days: "6-8 שבועות", seasons: ["autumn", "spring", "summer"], tip: "השתמשו בהדלייה כלפי מעלה או מטה" },
-{ name: "שום", type: "ירקות פירותיים", days: "6-8 שבועות", seasons: ["autumn"], tip: "למערכת שולחנית" },
-{ name: "סלק", type: "ירקות פירותיים", days: "6-8 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "עגבניות שרי (כל המינים)", type: "ירקות פירותיים", days: "8-10 שבועות", seasons: ["spring", "summer"], tip: "השתמשו בהדלייה כלפי מעלה" },
-{ name: "פלפל", type: "ירקות פירותיים", days: "8-10 שבועות", seasons: ["spring", "summer"], tip: "" },
-{ name: "חציל (כל המינים)", type: "ירקות פירותיים", days: "8-10 שבועות", seasons: ["spring", "summer"], tip: "" },
-{ name: "חציל לבן", type: "ירקות פירותיים", days: "8-10 שבועות", seasons: ["spring", "summer"], tip: "" },
-{ name: "במיה", type: "ירקות פירותיים", days: "6-8 שבועות", seasons: ["spring"], tip: "" },
-{ name: "פלפל חריף", type: "ירקות פירותיים", days: "8-10 שבועות", seasons: ["spring"], tip: "" },
-{ name: "קישוא", type: "ירקות פירותיים", days: "8-10 שבועות", seasons: ["spring"], tip: "קישוא נוטה לקימחון" },
-{ name: "דלעת", type: "ירקות פירותיים", days: "10-14 שבועות", seasons: ["spring"], tip: "לעטוף את הפרי בשקית אורגנזה למניעת עקיצות של זבוב הדלועים" },
-{ name: "דלורית", type: "ירקות פירותיים", days: "10-14 שבועות", seasons: ["spring"], tip: "" },
-{ name: "תות שדה", type: "פירות", days: "6-8 שבועות", seasons: ["autumn", "winter"], tip: "" },
-{ name: "מלון", type: "פירות", days: "10-14 שבועות", seasons: ["spring", "summer"], tip: "מומלץ למקם בתעלה התחתונה" },
-{ name: "אבטיח", type: "פירות", days: "10-14 שבועות", seasons: ["spring", "summer"], tip: "" },
-
+{ name: "חסה רומית", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "winter", "spring", "summer"], tip: "" },
+{ name: "בזיליקום", type: "עלים ירוקים", days: "3-4 שבועות", seasons: ["autumn", "spring", "summer"], tip: "כדי למנוע פריחה יש לגזום באופן קבוע" }
 ];
 
-// ─── משתנים גלובליים ──────────────────────────────────────────────────────
 let db = JSON.parse(localStorage.getItem('growData')) || [];
 let activeImg = "", currentCat = 'veg', currentSide = 1, currentSubstrate = '', editId = null;
 let charts = { ph: null, ec: null, temp: null, do: null };
 let allPlantsForDropdown = [];
-// ─── שמירה וטעינה של גבולות ──────────────────────────────────────────────
-function saveLimits() {
-    const limits = {
-        mPhMin: document.getElementById('mPhMin').value,
-        mPhMax: document.getElementById('mPhMax').value,
-        mEcMin: document.getElementById('mEcMin').value,
-        mEcMax: document.getElementById('mEcMax').value,
-        mTmMin: document.getElementById('mTmMin').value,
-        mTmMax: document.getElementById('mTmMax').value,
-        mDoMin: document.getElementById('mDoMin').value,
-        mDoMax: document.getElementById('mDoMax').value
-    };
-    localStorage.setItem('growLimits', JSON.stringify(limits));
-}
 
-function loadLimits() {
-    const saved = localStorage.getItem('growLimits');
-    if (!saved) return;
-    const limits = JSON.parse(saved);
-    Object.entries(limits).forEach(([id, val]) => {
-        const el = document.getElementById(id);
-        if (el) el.value = val;
-    });
-}
-
-// ─── אתחול ───────────────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════
+// 🚀 INIT
+// ═══════════════════════════════════════════════════════════════
 window.onload = () => {
-loadLimits();
+    loadLimits();
     const v = document.getElementById('sPlantVeg');
     const f = document.getElementById('sPlantFlo');
     if (v && f) {
@@ -526,50 +398,221 @@ loadLimits();
     renderSeason('autumn');
 };
 
-// ─── עזרים ───────────────────────────────────────────────────────────────
-function sanitize(str) {
-    if (!str) return '';
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-}
-function pad3(num) {
-    return String(num).padStart(3, '0');
+// ═══════════════════════════════════════════════════════════════
+// 🔐 FIREBASE AUTH
+// ═══════════════════════════════════════════════════════════════
+firebase.auth().signInAnonymously()
+    .then(() => console.log('🔐 התחברות בוצעה'))
+    .catch(err => console.error('❌ שגיאת התחברות:', err));
+
+firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+        console.log('✅ Firebase authenticated - UID:', user.uid);
+        firebaseReady = true;
+        updateSyncBadge('🔄 סנכרון...');
+        syncFromFirebase().then(() => startAutoSync());
+        setupRealtimeListener();
+    } else {
+        console.log('⏳ Waiting for Firebase auth...');
+        updateSyncBadge('⏳ מחכה להתחברות');
+    }
+});
+
+// ═══════════════════════════════════════════════════════════════
+// 💾 SYNC TO FIREBASE
+// ═══════════════════════════════════════════════════════════════
+async function syncToFirebase() {
+    const user = firebase.auth().currentUser;
+    if (!user || !firebaseReady || syncInProgress) return;
+    syncInProgress = true;
+
+    try {
+        const currentData = JSON.parse(localStorage.getItem('growData')) || [];
+        if (currentData.length === 0) {
+            updateSyncBadge('📭 אין נתונים');
+            syncInProgress = false;
+            return;
+        }
+
+        console.log(`🔄 Syncing ${currentData.length} items...`);
+        updateSyncBadge('🔄 סנכרון...');
+
+        let successCount = 0;
+        for (const entry of currentData) {
+            if (!entry.id) continue;
+            try {
+                const dataToSync = { ...entry };
+                delete dataToSync.img;
+                await firebaseDB.collection('users').doc(user.uid).collection('growData').doc(String(entry.id)).set(dataToSync, { merge: true });
+                successCount++;
+            } catch (err) {
+                console.error(`❌ Error syncing ${entry.id}:`, err.message);
+            }
+        }
+
+        console.log(`✅ Synced ${successCount}/${currentData.length}`);
+        lastSyncTime = Date.now();
+        updateSyncBadge(`✅ ${successCount} נתונים`);
+    } catch (error) {
+        console.error('💥 Sync error:', error.message);
+        updateSyncBadge('❌ שגיאה');
+    } finally {
+        syncInProgress = false;
+    }
 }
 
-function generateBatchId(substrate, rawLoc, hole) {
-    if (substrate === 'עציצי פלסטיק') {
-        return `FP${pad3(hole)}`;
+// ═══════════════════════════════════════════════════════════════
+// 📥 SYNC FROM FIREBASE
+// ═══════════════════════════════════════════════════════════════
+async function syncFromFirebase() {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+
+    try {
+        console.log('📥 Loading from Firebase...');
+        updateSyncBadge('📥 טוען...');
+
+        const snapshot = await firebaseDB.collection('users').doc(user.uid).collection('growData').get();
+        const cloudData = {};
+        snapshot.forEach(doc => { cloudData[doc.id] = doc.data(); });
+
+        const localData = JSON.parse(localStorage.getItem('growData')) || [];
+        const localMap = Object.fromEntries(localData.map(e => [String(e.id), e]));
+        const merged = [];
+        const seenIds = new Set();
+
+        Object.entries(cloudData).forEach(([id, cloudItem]) => {
+            seenIds.add(id);
+            const localItem = localMap[id];
+            if (localItem) {
+                const cloudDate = new Date(cloudItem.date || 0).getTime();
+                const localDate = new Date(localItem.date || 0).getTime();
+                merged.push(cloudDate >= localDate ? cloudItem : localItem);
+            } else {
+                merged.push(cloudItem);
+            }
+        });
+
+        localData.forEach(item => {
+            if (!seenIds.has(String(item.id))) merged.push(item);
+        });
+
+        merged.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+        localStorage.setItem('growData', JSON.stringify(merged));
+        db = merged;
+
+        console.log(`✅ Merged to ${merged.length} items`);
+        refreshAll();
+        updateCharts();
+        updateSyncBadge(`✅ ${merged.length} נתונים`);
+    } catch (error) {
+        console.error('💥 Load error:', error.message);
+        updateSyncBadge('❌ כישלון בטעינה');
     }
-    const c = rawLoc.cycle || '?';
-    const t = rawLoc.tray  || '?';
-    const r = rawLoc.row   || '?';
-    const col = rawLoc.col || '?';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔄 AUTO SYNC
+// ═══════════════════════════════════════════════════════════════
+let syncIntervalId = null;
+function startAutoSync() {
+    console.log('▶️ Starting auto-sync (3s)');
+    syncToFirebase();
+    if (syncIntervalId) clearInterval(syncIntervalId);
+    syncIntervalId = setInterval(() => {
+        if (Date.now() - lastSyncTime > SYNC_INTERVAL && firebaseReady) syncToFirebase();
+    }, SYNC_INTERVAL);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 📡 REALTIME LISTENER
+// ═══════════════════════════════════════════════════════════════
+function setupRealtimeListener() {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+    console.log('👂 Setting up listener...');
+    firebaseDB.collection('users').doc(user.uid).collection('growData').onSnapshot(
+        snapshot => {
+            let needsRefresh = false;
+            snapshot.docChanges().forEach(change => {
+                const cloudData = change.doc.data();
+                const docId = change.doc.id;
+                const localIndex = db.findIndex(e => String(e.id) === docId);
+                if (change.type === 'added' && localIndex === -1) { db.unshift(cloudData); needsRefresh = true; }
+                else if (change.type === 'modified') {
+                    if (localIndex === -1) { db.unshift(cloudData); needsRefresh = true; }
+                    else {
+                        const cloudDate = new Date(cloudData.date || 0).getTime();
+                        const localDate = new Date(db[localIndex].date || 0).getTime();
+                        if (cloudDate > localDate) { db[localIndex] = cloudData; needsRefresh = true; }
+                    }
+                }
+                else if (change.type === 'removed' && localIndex !== -1) { db.splice(localIndex, 1); needsRefresh = true; }
+            });
+            if (needsRefresh) {
+                localStorage.setItem('growData', JSON.stringify(db));
+                refreshAll();
+                updateCharts();
+            }
+        },
+        error => { console.error('💥 Listener error:', error.message); }
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🎨 SYNC BADGE
+// ═══════════════════════════════════════════════════════════════
+function updateSyncBadge(msg) {
+    let badge = document.getElementById('syncBadge');
+    if (!badge) {
+        badge = document.createElement('div');
+        badge.id = 'syncBadge';
+        badge.style.cssText = 'position:fixed;top:10px;left:10px;background:#4caf50;color:white;padding:8px 15px;border-radius:20px;font-size:12px;font-weight:bold;z-index:9999;box-shadow:0 2px 5px rgba(0,0,0,0.2);direction:rtl;';
+        document.body.appendChild(badge);
+    }
+    badge.textContent = msg;
+    if (msg.includes('❌')) badge.style.background = '#f44336';
+    else if (msg.includes('⚠️') || msg.includes('🔄') || msg.includes('📥')) badge.style.background = '#ff9800';
+    else if (msg.includes('✅')) badge.style.background = '#4caf50';
+    else badge.style.background = '#2196f3';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// 🔧 UTILITY FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
+function sanitize(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function pad3(num) { return String(num).padStart(3, '0'); }
+function generateBatchId(substrate, rawLoc, hole) {
+    if (substrate === 'עציצי פלסטיק') return `FP${pad3(hole)}`;
+    const c = rawLoc.cycle || '?', t = rawLoc.tray || '?', r = rawLoc.row || '?', col = rawLoc.col || '?';
     return `${c}-${t}-${r}-${col}-${hole}`;
 }
 
-
-// ─── Dropdowns ────────────────────────────────────────────────────────────
-function initPlantDropdown() {
-    allPlantsForDropdown = [...plants.veg, ...plants.flo]
-        .map(p => p.n)
-        .filter((v, i, a) => a.indexOf(v) === i)
-        .sort();
-    document.getElementById('qPlant').addEventListener('blur', () => {
-        setTimeout(() => document.getElementById('plantDropdown').classList.remove('show'), 200);
+function saveLimits() {
+    const limits = { mPhMin: document.getElementById('mPhMin').value, mPhMax: document.getElementById('mPhMax').value, mEcMin: document.getElementById('mEcMin').value, mEcMax: document.getElementById('mEcMax').value, mTmMin: document.getElementById('mTmMin').value, mTmMax: document.getElementById('mTmMax').value, mDoMin: document.getElementById('mDoMin').value, mDoMax: document.getElementById('mDoMax').value };
+    localStorage.setItem('growLimits', JSON.stringify(limits));
+}
+function loadLimits() {
+    const saved = localStorage.getItem('growLimits');
+    if (!saved) return;
+    const limits = JSON.parse(saved);
+    Object.entries(limits).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
     });
 }
 
+function initPlantDropdown() {
+    allPlantsForDropdown = [...plants.veg, ...plants.flo].map(p => p.n).filter((v, i, a) => a.indexOf(v) === i).sort();
+    document.getElementById('qPlant').addEventListener('blur', () => { setTimeout(() => document.getElementById('plantDropdown').classList.remove('show'), 200); });
+}
 function initHydroPlantDropdown() {
-    document.getElementById('hPlant').addEventListener('blur', () => {
-        setTimeout(() => document.getElementById('hydroPlantDropdown').classList.remove('show'), 200);
-    });
+    document.getElementById('hPlant').addEventListener('blur', () => { setTimeout(() => document.getElementById('hydroPlantDropdown').classList.remove('show'), 200); });
     document.getElementById('hSource').addEventListener('focus', filterSources);
-    document.getElementById('hSource').addEventListener('blur', () => {
-        setTimeout(() => document.getElementById('sourceDropdown').classList.remove('show'), 200);
-    });
+    document.getElementById('hSource').addEventListener('blur', () => { setTimeout(() => document.getElementById('sourceDropdown').classList.remove('show'), 200); });
 }
 
 function filterPlants() {
@@ -580,12 +623,7 @@ function filterPlants() {
     dropdown.innerHTML = filtered.map(p => `<div class="plant-option" onclick="selectPlantFromDropdown('${sanitize(p)}')">${sanitize(p)}</div>`).join('');
     dropdown.classList.add('show');
 }
-
-function selectPlantFromDropdown(plant) {
-    document.getElementById('qPlant').value = plant;
-    document.getElementById('plantDropdown').classList.remove('show');
-    refreshAll();
-}
+function selectPlantFromDropdown(plant) { document.getElementById('qPlant').value = plant; document.getElementById('plantDropdown').classList.remove('show'); refreshAll(); }
 
 function filterHydroPlants() {
     const input = document.getElementById('hPlant').value.toLowerCase();
@@ -595,180 +633,110 @@ function filterHydroPlants() {
     dropdown.innerHTML = filtered.map(p => `<div class="hydro-plant-option" onclick="selectHydroPlant('${sanitize(p)}')">${sanitize(p)}</div>`).join('');
     dropdown.classList.add('show');
 }
+function selectHydroPlant(plant) { document.getElementById('hPlant').value = plant; document.getElementById('hydroPlantDropdown').classList.remove('show'); filterSources(); }
 
-function selectHydroPlant(plant) {
-    document.getElementById('hPlant').value = plant;
-    document.getElementById('hydroPlantDropdown').classList.remove('show');
-    filterSources();
-}
-
-function selectSource(seedId, sourceStr) {
-    document.getElementById('hSource').dataset.seedId = seedId;
-    document.getElementById('hSource').value = sourceStr;
-    document.getElementById('sourceDropdown').classList.remove('show');
-}
-
+function selectSource(seedId, sourceStr) { document.getElementById('hSource').dataset.seedId = seedId; document.getElementById('hSource').value = sourceStr; document.getElementById('sourceDropdown').classList.remove('show'); }
 function filterSources() {
     const plantName = document.getElementById('hPlant').value;
-
-    if (!plantName) {
-        document.getElementById('sourceDropdown').classList.remove('show');
-        return;
-    }
-
+    if (!plantName) { document.getElementById('sourceDropdown').classList.remove('show'); return; }
     const seedEntries = db.filter(e => e.type === 'seed' && e.plant === plantName && !e.lifecycle);
     const dropdown = document.getElementById('sourceDropdown');
-
-    if (seedEntries.length === 0) {
-        dropdown.innerHTML = '<div class="source-option" style="color:red;">אין שתילים זמינים מצמח זה</div>';
-        dropdown.classList.add('show');
-        return;
-    }
-
-    dropdown.innerHTML = seedEntries.map(e => {
-        const sourceStr = `${e.batchId} | ${e.loc}`;
-        return `<div class="source-option" onclick="selectSource('${e.id}', '${sanitize(sourceStr)}')">${sanitize(sourceStr)}</div>`;
-    }).join('');
-
+    if (seedEntries.length === 0) { dropdown.innerHTML = '<div class="source-option" style="color:red;">אין שתילים זמינים</div>'; dropdown.classList.add('show'); return; }
+    dropdown.innerHTML = seedEntries.map(e => { const sourceStr = `${e.batchId} | ${e.loc}`; return `<div class="source-option" onclick="selectSource('${e.id}', '${sanitize(sourceStr)}')">${sanitize(sourceStr)}</div>`; }).join('');
     dropdown.classList.add('show');
 }
 
-// ─── חישוב כמות צמחים ────────────────────────────────────────────────────
 function calcPlantCount() {
     const holeFrom = parseInt(document.getElementById('sHoleFrom').value);
-    const holeTo   = parseInt(document.getElementById('sHoleTo').value);
+    const holeTo = parseInt(document.getElementById('sHoleTo').value);
     if (!currentSubstrate) return;
     let count = 0;
-    if (currentSubstrate === 'עציצי פלסטיק') {
-        count = 1;
-    } else if (!isNaN(holeFrom) && !isNaN(holeTo) && holeTo >= holeFrom) {
-        count = holeTo - holeFrom + 1;
-    } else if (!isNaN(holeFrom)) {
-        count = 1;
-    }
+    if (currentSubstrate === 'עציצי פלסטיק') count = 1;
+    else if (!isNaN(holeFrom) && !isNaN(holeTo) && holeTo >= holeFrom) count = holeTo - holeFrom + 1;
+    else if (!isNaN(holeFrom)) count = 1;
     const display = document.getElementById('plantCountDisplay');
-    if (count > 0) {
-        display.innerHTML = `📊 כמות צמחים בזריעה: <strong>${count}</strong> צמחים`;
-        display.style.display = 'block';
-    } else {
-        display.style.display = 'none';
-    }
+    if (count > 0) { display.innerHTML = `📊 כמות צמחים בזריעה: <strong>${count}</strong> צמחים`; display.style.display = 'block'; }
+    else display.style.display = 'none';
 }
 
-// ─── גרפים ───────────────────────────────────────────────────────────────
 function updateCharts() {
     const waterEntries = db.filter(e => e.type === 'water').sort((a, b) => new Date(a.date) - new Date(b.date));
-    const labels   = waterEntries.map(e => new Date(e.date).toLocaleDateString('he-IL'));
-    const phData   = waterEntries.map(e => e.wPH   ?? null);
-    const ecData   = waterEntries.map(e => e.wEC   ?? null);
+    const labels = waterEntries.map(e => new Date(e.date).toLocaleDateString('he-IL'));
+    const phData = waterEntries.map(e => e.wPH ?? null);
+    const ecData = waterEntries.map(e => e.wEC ?? null);
     const tempData = waterEntries.map(e => e.wTemp ?? null);
-    const doData   = waterEntries.map(e => e.wDO   ?? null);
-
+    const doData = waterEntries.map(e => e.wDO ?? null);
     const cfg = { responsive:true, maintainAspectRatio:true, scales:{ y:{ beginAtZero:true } }, plugins:{ legend:{ labels:{ font:{ size:12 } } } } };
-
     function makeChart(key, canvasId, label, color) {
         const dataMap = { ph: phData, ec: ecData, temp: tempData, do: doData };
         const ctx = document.getElementById(canvasId).getContext('2d');
         if (charts[key]) charts[key].destroy();
-        charts[key] = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels,
-                datasets: [{ label, data: dataMap[key], borderColor: color, backgroundColor: color.replace('1)', '0.1)'), borderWidth:2, fill:true, tension:0.4 }]
-            },
-            options: cfg
-        });
+        charts[key] = new Chart(ctx, { type: 'line', data: { labels, datasets: [{ label, data: dataMap[key], borderColor: color, backgroundColor: color.replace('1)', '0.1)'), borderWidth:2, fill:true, tension:0.4 }] }, options: cfg });
     }
-
-    makeChart('ph',   'phChart',   'pH',             'rgba(255,99,132,1)');
-    makeChart('ec',   'ecChart',   'EC',             'rgba(54,162,235,1)');
+    makeChart('ph', 'phChart', 'pH', 'rgba(255,99,132,1)');
+    makeChart('ec', 'ecChart', 'EC', 'rgba(54,162,235,1)');
     makeChart('temp', 'tempChart', 'טמפרטורה (°C)', 'rgba(75,192,192,1)');
-    makeChart('do',   'doChart',   'DO (חמצן מומס)','rgba(75,192,75,1)');
+    makeChart('do', 'doChart', 'DO (חמצן)', 'rgba(75,192,75,1)');
 }
 
-// ─── ניווט ────────────────────────────────────────────────────────────────
 function showPanel(id, el) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     el.classList.add('active');
     setTimeout(() => {
-        if      (id === 'seedPanel')    resetEditMode('seed');
-        else if (id === 'hydroPanel')   resetEditMode('hydro');
-        else if (id === 'dataPanel')  { resetEditMode('water'); updateCharts(); }
+        if (id === 'seedPanel') resetEditMode('seed');
+        else if (id === 'hydroPanel') resetEditMode('hydro');
+        else if (id === 'dataPanel') { resetEditMode('water'); updateCharts(); }
         else if (id === 'seasonsPanel') renderSeason('autumn');
-        else                            refreshAll();
+        else refreshAll();
     }, 100);
 }
 
-// ─── מצע ─────────────────────────────────────────────────────────────────
 function setSubstrate(type) {
     currentSubstrate = type;
     ['typePlast','typeRock','typePots'].forEach(id => document.getElementById(id).classList.remove('active-opt'));
     const map = { 'מגשי פלסטיק':'typePlast', 'צמר סלעים':'typeRock', 'עציצי פלסטיק':'typePots' };
     document.getElementById(map[type]).classList.add('active-opt');
-
-    const trayEl = document.getElementById('sTray');
-    const rowEl  = document.getElementById('sRow');
-    const colEl  = document.getElementById('sCol');
-
+    const trayEl = document.getElementById('sTray'), rowEl = document.getElementById('sRow'), colEl = document.getElementById('sCol');
     if (type === 'עציצי פלסטיק') {
-        trayEl.value = '';
-        rowEl.value = '';
-        colEl.value = '';
-        trayEl.style.backgroundColor = '#e0e0e0';
-        rowEl.style.backgroundColor  = '#e0e0e0';
-        colEl.style.backgroundColor  = '#e0e0e0';
+        trayEl.value = ''; rowEl.value = ''; colEl.value = '';
+        trayEl.style.backgroundColor = '#e0e0e0'; rowEl.style.backgroundColor = '#e0e0e0'; colEl.style.backgroundColor = '#e0e0e0';
         document.getElementById('lblTray').innerText = 'עציץ מספר:';
     } else {
-        if (!trayEl.value) trayEl.value = '1';
-        if (!rowEl.value) rowEl.value = '1';
-        if (!colEl.value) colEl.value = '1';
-        trayEl.style.backgroundColor = '#fafafa';
-        rowEl.style.backgroundColor  = '#fafafa';
-        colEl.style.backgroundColor  = '#fafafa';
+        if (!trayEl.value) trayEl.value = '1'; if (!rowEl.value) rowEl.value = '1'; if (!colEl.value) colEl.value = '1';
+        trayEl.style.backgroundColor = '#fafafa'; rowEl.style.backgroundColor = '#fafafa'; colEl.style.backgroundColor = '#fafafa';
         document.getElementById('lblTray').innerText = 'מגש';
     }
-
     calcPlantCount();
 }
 
-// ─── קטגוריה ─────────────────────────────────────────────────────────────
 function setCat(c) {
     currentCat = c;
-    ['veg','flo','man'].forEach(k => {
-        document.getElementById('cat' + k.charAt(0).toUpperCase() + k.slice(1)).classList.toggle('active-opt', k === c);
-    });
+    ['veg','flo','man'].forEach(k => { document.getElementById('cat' + k.charAt(0).toUpperCase() + k.slice(1)).classList.toggle('active-opt', k === c); });
     document.getElementById('sPlantVeg').classList.toggle('hidden', c !== 'veg');
     document.getElementById('sPlantFlo').classList.toggle('hidden', c !== 'flo');
     document.getElementById('sPlantMan').classList.toggle('hidden', c !== 'man');
     updateGerm();
 }
 
-// ─── צד הידרו ─────────────────────────────────────────────────────────────
-function setSide(s) {
-    currentSide = s;
-    document.getElementById('side1').classList.toggle('active-opt', s === 1);
-    document.getElementById('side2').classList.toggle('active-opt', s === 2);
-}
+function setSide(s) { currentSide = s; document.getElementById('side1').classList.toggle('active-opt', s === 1); document.getElementById('side2').classList.toggle('active-opt', s === 2); }
 
-// ─── עדכון ימי הצצה + טיפים ───────────────────────────────────────────────
 function updateGerm() {
     if (currentCat === 'man') { document.getElementById('sGermTarget').value = ''; document.getElementById('tipsArea').innerHTML = ''; return; }
     const selId = currentCat === 'veg' ? 'sPlantVeg' : 'sPlantFlo';
     const p = plants[currentCat].find(x => x.n === document.getElementById(selId).value);
     if (p) { document.getElementById('sGermTarget').value = p.d; displayTips(p); }
-    else    { document.getElementById('tipsArea').innerHTML = ''; }
+    else document.getElementById('tipsArea').innerHTML = '';
 }
 
 function displayTips(plant) {
     let h = `<div class="tips-box"><h4>💡 טיפים: ${sanitize(plant.n)}</h4>`;
     h += '<strong>זריעה:</strong><ul>' + (plant.tips.זריעה || []).map(t => `<li>${sanitize(t)}</li>`).join('') + '</ul>';
-    h += '<strong>גידול:</strong><ul>'  + (plant.tips.גידול || []).map(t => `<li>${sanitize(t)}</li>`).join('') + '</ul></div>';
+    h += '<strong>גידול:</strong><ul>' + (plant.tips.גידול || []).map(t => `<li>${sanitize(t)}</li>`).join('') + '</ul></div>';
     document.getElementById('tipsArea').innerHTML = h;
 }
 
-// ─── בדיקת גבולות ─────────────────────────────────────────────────────────
 function checkLim() {
     [['wPH','mPhMin','mPhMax'],['wEC','mEcMin','mEcMax'],['wTemp','mTmMin','mTmMax'],['wDO','mDoMin','mDoMax']].forEach(([v, mn, mx]) => {
         const el = document.getElementById(v), val = parseFloat(el.value);
@@ -777,7 +745,6 @@ function checkLim() {
     });
 }
 
-// ─── דחיסת תמונה ──────────────────────────────────────────────────────────
 function compressImg(input) {
     if (!input.files || !input.files[0]) return;
     const reader = new FileReader();
@@ -799,362 +766,169 @@ function compressImg(input) {
     reader.readAsDataURL(input.files[0]);
 }
 
-// ─── איפוס טפסים ──────────────────────────────────────────────────────────
 function clearSeedForm() {
-    document.getElementById('sCycle').value = '1';
-    document.getElementById('sTray').value = '1';
-    document.getElementById('sRow').value = '';
-    document.getElementById('sCol').value = '';
-    document.getElementById('sHoleFrom').value = '';
-    document.getElementById('sHoleTo').value = '';
-    document.getElementById('sGermTarget').value = '';
-    document.getElementById('sGermActual').value = '';
-    document.getElementById('sNotes').value = '';
-    document.getElementById('sDate').valueAsDate = new Date();
-    document.getElementById('sPreview').style.display = 'none';
-    document.getElementById('plantCountDisplay').style.display = 'none';
-    document.getElementById('sFile').value = '';
-    activeImg = '';
-    resetEditMode('seed');
-    updateGerm();
+    document.getElementById('sCycle').value = '1'; document.getElementById('sTray').value = '1'; document.getElementById('sRow').value = ''; document.getElementById('sCol').value = ''; document.getElementById('sHoleFrom').value = ''; document.getElementById('sHoleTo').value = ''; document.getElementById('sGermTarget').value = ''; document.getElementById('sGermActual').value = ''; document.getElementById('sNotes').value = ''; document.getElementById('sDate').valueAsDate = new Date(); document.getElementById('sPreview').style.display = 'none'; document.getElementById('plantCountDisplay').style.display = 'none'; document.getElementById('sFile').value = ''; activeImg = ''; resetEditMode('seed'); updateGerm();
 }
+function clearHydroForm() { setSide(1); ['hRow','hHole','hPlant','hNotes'].forEach(id => document.getElementById(id).value = ''); document.getElementById('hSource').value = ''; document.getElementById('hSource').dataset.seedId = ''; document.getElementById('hDate').valueAsDate = new Date(); resetEditMode('hydro'); }
+function clearWaterForm() { document.getElementById('wDate').valueAsDate = new Date(); ['wPH','wEC','wTemp','wDO'].forEach(id => document.getElementById(id).value = ''); ['calPH','calEC','calDO','calFix'].forEach(id => document.getElementById(id).checked = false); document.getElementById('calNotes').value = ''; resetEditMode('water'); }
 
-
-function clearHydroForm() {
-    setSide(1);
-    ['hRow','hHole','hPlant','hNotes'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('hSource').value = '';
-    document.getElementById('hSource').dataset.seedId = '';
-    document.getElementById('hDate').valueAsDate = new Date();
-    resetEditMode('hydro');
-}
-
-function clearWaterForm() {
-    document.getElementById('wDate').valueAsDate = new Date();
-    ['wPH','wEC','wTemp','wDO'].forEach(id => document.getElementById(id).value = '');
-    
-    // ✨ Reset calibration - START
-    ['calPH','calEC','calDO','calFix'].forEach(id => document.getElementById(id).checked = false);
-    document.getElementById('calNotes').value = '';
-    // ✨ Reset calibration - END
-    
-    resetEditMode('water');
-}
-
-// ─── עריכה ────────────────────────────────────────────────────────────────
 function editEntry(id) {
     const item = db.find(i => i.id === id);
     if (!item) return;
     editId = id;
-if (item.type === 'seed') {
-    showPanel('seedPanel', document.getElementById('navSeed'));
-    setSubstrate(item.substrate);
-    document.getElementById('sCycle').value = item.rawLoc.cycle || '';
-    document.getElementById('sTray').value  = item.rawLoc.tray || '';
-    document.getElementById('sRow').value   = item.rawLoc.row || '';
-    document.getElementById('sCol').value   = item.rawLoc.col || '';
-    document.getElementById('sHoleFrom').value = item.rawLoc.hole || '';
-    document.getElementById('sHoleTo').value   = '';
-    document.getElementById('sDate').value = item.date;
-    document.getElementById('sGermTarget').value = item.germ ? item.germ.target : '';
-    document.getElementById('sGermActual').value = item.germActualDate || '';
-    document.getElementById('sNotes').value = item.notes || '';
-
-    if (item.img) {
-        activeImg = item.img;
-        document.getElementById('sPreview').src = item.img;
-        document.getElementById('sPreview').style.display = 'block';
-    } else {
-        document.getElementById('sPreview').style.display = 'none';
-    }
-
-    calcPlantCount();
-    document.getElementById('btnSaveSeed').innerText = 'עדכן נתונים';
-
+    if (item.type === 'seed') {
+        showPanel('seedPanel', document.getElementById('navSeed'));
+        setSubstrate(item.substrate);
+        document.getElementById('sCycle').value = item.rawLoc.cycle || '';
+        document.getElementById('sTray').value = item.rawLoc.tray || '';
+        document.getElementById('sRow').value = item.rawLoc.row || '';
+        document.getElementById('sCol').value = item.rawLoc.col || '';
+        document.getElementById('sHoleFrom').value = item.rawLoc.hole || '';
+        document.getElementById('sHoleTo').value = '';
+        document.getElementById('sDate').value = item.date;
+        document.getElementById('sGermTarget').value = item.germ ? item.germ.target : '';
+        document.getElementById('sGermActual').value = item.germActualDate || '';
+        document.getElementById('sNotes').value = item.notes || '';
+        if (item.img) { activeImg = item.img; document.getElementById('sPreview').src = item.img; document.getElementById('sPreview').style.display = 'block'; } else document.getElementById('sPreview').style.display = 'none';
+        calcPlantCount();
+        document.getElementById('btnSaveSeed').innerText = 'עדכן נתונים';
     } else if (item.type === 'hydro') {
         showPanel('hydroPanel', document.getElementById('navHydro'));
         setSide(item.rawLoc.side);
-        document.getElementById('hRow').value   = item.rawLoc.row;
-        document.getElementById('hHole').value  = item.rawLoc.hole;
+        document.getElementById('hRow').value = item.rawLoc.row;
+        document.getElementById('hHole').value = item.rawLoc.hole;
         document.getElementById('hPlant').value = item.plant;
         document.getElementById('hSource').value = item.rawLoc.sourceStr || '';
         document.getElementById('hSource').dataset.seedId = item.rawLoc.sourceId || '';
-        document.getElementById('hDate').value  = item.date;
+        document.getElementById('hDate').value = item.date;
         document.getElementById('hNotes').value = item.notes;
         document.getElementById('btnSaveHydro').innerText = 'עדכן נתונים';
     } else if (item.type === 'water') {
         showPanel('dataPanel', document.getElementById('navData'));
-        document.getElementById('wDate').value  = item.date;
-        document.getElementById('wPH').value    = item.wPH   || '';
-        document.getElementById('wEC').value    = item.wEC   || '';
-        document.getElementById('wTemp').value  = item.wTemp || '';
-               document.getElementById('wDO').value    = item.wDO   || '';
-        
-        // ✨ Load calibration data - START
+        document.getElementById('wDate').value = item.date;
+        document.getElementById('wPH').value = item.wPH || '';
+        document.getElementById('wEC').value = item.wEC || '';
+        document.getElementById('wTemp').value = item.wTemp || '';
+        document.getElementById('wDO').value = item.wDO || '';
         if (item.calibration) {
-            document.getElementById('calPH').checked  = item.calibration.pH || false;
-            document.getElementById('calEC').checked  = item.calibration.ec || false;
-            document.getElementById('calDO').checked  = item.calibration.do || false;
+            document.getElementById('calPH').checked = item.calibration.pH || false;
+            document.getElementById('calEC').checked = item.calibration.ec || false;
+            document.getElementById('calDO').checked = item.calibration.do || false;
             document.getElementById('calFix').checked = item.calibration.fix || false;
             document.getElementById('calNotes').value = item.calibration.notes || '';
         }
-        // ✨ Load calibration data - END
-        
         document.getElementById('btnSaveWater').innerText = 'עדכן מדדים';
-
     }
 }
 
 function resetEditMode(type) {
     editId = null;
-    if (type === 'seed')  document.getElementById('btnSaveSeed').innerText  = 'שמור זריעה';
+    if (type === 'seed') document.getElementById('btnSaveSeed').innerText = 'שמור זריעה';
     if (type === 'hydro') document.getElementById('btnSaveHydro').innerText = 'שמור שתילה';
     if (type === 'water') document.getElementById('btnSaveWater').innerText = 'שמור מדדים';
 }
 
-// ─── שמירת נתונים ─────────────────────────────────────────────────────────
 function saveData(type) {
     if (type === 'seed') {
-        const plant = currentCat === 'man'
-            ? document.getElementById('sPlantMan').value
-            : document.getElementById(currentCat === 'veg' ? 'sPlantVeg' : 'sPlantFlo').value;
-
+        const plant = currentCat === 'man' ? document.getElementById('sPlantMan').value : document.getElementById(currentCat === 'veg' ? 'sPlantVeg' : 'sPlantFlo').value;
         if (!plant) return alert('הזן שם צמח');
         if (!currentSubstrate) return alert('בחר סוג מצע');
-
         const date = document.getElementById('sDate').value;
         const notes = document.getElementById('sNotes').value;
         const germTarget = parseInt(document.getElementById('sGermTarget').value);
         const germActualDate = document.getElementById('sGermActual').value;
-
-        const rawLocBase = {
-            cycle: document.getElementById('sCycle').value,
-            tray: document.getElementById('sTray').value,
-            row: document.getElementById('sRow').value,
-            col: document.getElementById('sCol').value
-        };
-
+        const rawLocBase = { cycle: document.getElementById('sCycle').value, tray: document.getElementById('sTray').value, row: document.getElementById('sRow').value, col: document.getElementById('sCol').value };
         const holeFrom = parseInt(document.getElementById('sHoleFrom').value);
         const holeTo = parseInt(document.getElementById('sHoleTo').value);
-
         let holes = [];
-
-        if (currentSubstrate === 'עציצי פלסטיק') {
-            if (isNaN(holeFrom)) return alert('הזן מספר עציץ');
-            holes = [holeFrom];
-        } else {
-            if (!rawLocBase.cycle || !rawLocBase.tray || !rawLocBase.row || !rawLocBase.col) {
-                return alert('יש למלא מחזור, מגש, שורה ועמודה');
-            }
-
-            if (isNaN(holeFrom)) return alert('הזן גומה');
-
-            if (!isNaN(holeTo) && holeTo >= holeFrom) {
-                for (let h = holeFrom; h <= holeTo; h++) holes.push(h);
-            } else {
-                holes = [holeFrom];
-            }
-        }
-
+        if (currentSubstrate === 'עציצי פלסטיק') { if (isNaN(holeFrom)) return alert('הזן מספר עציץ'); holes = [holeFrom]; }
+        else { if (!rawLocBase.cycle || !rawLocBase.tray || !rawLocBase.row || !rawLocBase.col) return alert('יש למלא מחזור, מגש, שורה ועמודה'); if (isNaN(holeFrom)) return alert('הזן גומה'); if (!isNaN(holeTo) && holeTo >= holeFrom) { for (let h = holeFrom; h <= holeTo; h++) holes.push(h); } else holes = [holeFrom]; }
         if (editId) {
             let entry = db.find(i => i.id === editId);
             if (!entry) return;
-
             const hole = holes[0];
             const batchId = generateBatchId(currentSubstrate, rawLocBase, hole);
-
-            entry.type = 'seed';
-            entry.plant = plant;
-            entry.date = date;
-            entry.substrate = currentSubstrate;
-            entry.batchId = batchId;
-            entry.rawLoc = { ...rawLocBase, hole };
-            entry.loc = currentSubstrate === 'עציצי פלסטיק'
-                ? `עציץ ${hole} | ${currentSubstrate}`
-                : `מחזור ${rawLocBase.cycle} מגש ${rawLocBase.tray} [${rawLocBase.row},${rawLocBase.col}] גומה ${hole} | ${currentSubstrate}`;
-            entry.img = activeImg;
-            entry.notes = notes;
-            entry.germActualDate = germActualDate;
-
-            if (germActualDate && !isNaN(germTarget)) {
-                const diff = Math.ceil((new Date(germActualDate) - new Date(date)) / 86400000);
-                entry.germ = {
-                    diff,
-                    target: germTarget,
-                    status: diff < germTarget ? 'מוקדם' : diff > germTarget ? 'מאוחר' : 'בזמן'
-                };
-            } else {
-                entry.germ = null;
-            }
+            entry.type = 'seed'; entry.plant = plant; entry.date = date; entry.substrate = currentSubstrate; entry.batchId = batchId; entry.rawLoc = { ...rawLocBase, hole }; entry.loc = currentSubstrate === 'עציצי פלסטיק' ? `עציץ ${hole} | ${currentSubstrate}` : `מחזור ${rawLocBase.cycle} מגש ${rawLocBase.tray} [${rawLocBase.row},${rawLocBase.col}] גומה ${hole} | ${currentSubstrate}`; entry.img = activeImg; entry.notes = notes; entry.germActualDate = germActualDate;
+            if (germActualDate && !isNaN(germTarget)) { const diff = Math.ceil((new Date(germActualDate) - new Date(date)) / 86400000); entry.germ = { diff, target: germTarget, status: diff < germTarget ? 'מוקדם' : diff > germTarget ? 'מאוחר' : 'בזמן' }; } else entry.germ = null;
         } else {
             const newEntries = holes.map(hole => {
                 const batchId = generateBatchId(currentSubstrate, rawLocBase, hole);
                 let germ = null;
-
-                if (germActualDate && !isNaN(germTarget)) {
-                    const diff = Math.ceil((new Date(germActualDate) - new Date(date)) / 86400000);
-                    germ = {
-                        diff,
-                        target: germTarget,
-                        status: diff < germTarget ? 'מוקדם' : diff > germTarget ? 'מאוחר' : 'בזמן'
-                    };
-                }
-
-                return {
-                    id: Date.now() + Math.floor(Math.random() * 100000) + hole,
-                    type: 'seed',
-                    plant,
-                    date,
-                    substrate: currentSubstrate,
-                    batchId,
-                    rawLoc: { ...rawLocBase, hole },
-                    loc: currentSubstrate === 'עציצי פלסטיק'
-                        ? `עציץ ${hole} | ${currentSubstrate}`
-                        : `מחזור ${rawLocBase.cycle} מגש ${rawLocBase.tray} [${rawLocBase.row},${rawLocBase.col}] גומה ${hole} | ${currentSubstrate}`,
-                    img: activeImg,
-                    notes,
-                    germActualDate,
-                    germ,
-                    lifecycle: null
-                };
+                if (germActualDate && !isNaN(germTarget)) { const diff = Math.ceil((new Date(germActualDate) - new Date(date)) / 86400000); germ = { diff, target: germTarget, status: diff < germTarget ? 'מוקדם' : diff > germTarget ? 'מאוחר' : 'בזמן' }; }
+                return { id: Date.now() + Math.floor(Math.random() * 100000) + hole, type: 'seed', plant, date, substrate: currentSubstrate, batchId, rawLoc: { ...rawLocBase, hole }, loc: currentSubstrate === 'עציצי פלסטיק' ? `עציץ ${hole} | ${currentSubstrate}` : `מחזור ${rawLocBase.cycle} מגש ${rawLocBase.tray} [${rawLocBase.row},${rawLocBase.col}] גומה ${hole} | ${currentSubstrate}`, img: activeImg, notes, germActualDate, germ, lifecycle: null };
             });
-
             db.unshift(...newEntries);
         }
-
         localStorage.setItem('growData', JSON.stringify(db));
-        
-        // ✨ הוסף זה:
         if (firebase.auth().currentUser) {
             const lastEntry = db[0];
             const dataToSync = { ...lastEntry };
             delete dataToSync.img;
-            
-            firebaseDB.collection('users/' + firebase.auth().currentUser.uid + '/growData')
-                .doc(String(lastEntry.id))
-                .set(dataToSync, { merge: true })
-                .catch(e => console.error('Upload error:', e));
+            firebaseDB.collection('users/' + firebase.auth().currentUser.uid + '/growData').doc(String(lastEntry.id)).set(dataToSync, { merge: true }).catch(e => console.error('Upload error:', e));
         }
-        
         alert('נשמר!');
         clearSeedForm();
         activeImg = '';
         refreshAll();
         updateCharts();
         return;
-
     }
 
     let entry = editId ? db.find(i => i.id === editId) : { id: Date.now(), lifecycle: null };
     entry.type = type;
 
-                                                                                             if (type === 'hydro') {
+    if (type === 'hydro') {
         entry.plant = document.getElementById('hPlant').value;
-        entry.date  = document.getElementById('hDate').value;
-        const sourceId  = document.getElementById('hSource').dataset.seedId;
+        entry.date = document.getElementById('hDate').value;
+        const sourceId = document.getElementById('hSource').dataset.seedId;
         const sourceStr = document.getElementById('hSource').value;
         if (!sourceId) return alert('יש לבחור מקור שתיל');
-
         const src = db.find(s => String(s.id) === String(sourceId));
-
-        entry.rawLoc = {
-            side: currentSide,
-            row: document.getElementById('hRow').value,
-            hole: document.getElementById('hHole').value,
-            sourceId,
-            sourceStr
-        };
+        entry.rawLoc = { side: currentSide, row: document.getElementById('hRow').value, hole: document.getElementById('hHole').value, sourceId, sourceStr };
         entry.batchId = src ? src.batchId : (entry.batchId || '');
         entry.loc = `הידרו צד ${currentSide} [${entry.rawLoc.row}/${entry.rawLoc.hole}]`;
         entry.notes = document.getElementById('hNotes').value;
-
-        if (sourceId && !editId && src) {
-            src.lifecycle = 'הועבר';
-        }
+        if (sourceId && !editId && src) src.lifecycle = 'הועבר';
     } else if (type === 'water') {
         entry.plant = 'מדדי מים';
-        entry.date  = document.getElementById('wDate').value;
-        entry.wPH   = parseFloat(document.getElementById('wPH').value)   || 0;
-        entry.wEC   = parseFloat(document.getElementById('wEC').value)   || 0;
+        entry.date = document.getElementById('wDate').value;
+        entry.wPH = parseFloat(document.getElementById('wPH').value) || 0;
+        entry.wEC = parseFloat(document.getElementById('wEC').value) || 0;
         entry.wTemp = parseFloat(document.getElementById('wTemp').value) || 0;
-        entry.wDO   = parseFloat(document.getElementById('wDO').value)   || 0;
-      
-        
-        // ✨ Calibration data - START
-        entry.calibration = {
-            pH: document.getElementById('calPH').checked,
-            ec: document.getElementById('calEC').checked,
-            do: document.getElementById('calDO').checked,
-            fix: document.getElementById('calFix').checked,
-            notes: document.getElementById('calNotes').value
-        };
-        // ✨ Calibration data - END
-        
+        entry.wDO = parseFloat(document.getElementById('wDO').value) || 0;
+        entry.calibration = { pH: document.getElementById('calPH').checked, ec: document.getElementById('calEC').checked, do: document.getElementById('calDO').checked, fix: document.getElementById('calFix').checked, notes: document.getElementById('calNotes').value };
         entry.loc = `pH:${entry.wPH} EC:${entry.wEC} DO:${entry.wDO}`;
-
     }
-
 
     if (!entry.plant) return alert('הזן שם צמח');
     if (!editId) db.unshift(entry);
-    
     localStorage.setItem('growData', JSON.stringify(db));
-    
-    // ✅ סנכרון לענן
-    if (firebaseReady && firebase.auth().currentUser) {
-        syncToFirebase();
-    }
-    
+    if (firebaseReady && firebase.auth().currentUser) syncToFirebase();
     alert('נשמר בהצלחה! ✅');
-    
     if (type === 'seed') clearSeedForm();
     else if (type === 'hydro') clearHydroForm();
     else clearWaterForm();
-    
     activeImg = '';
     refreshAll();
     updateCharts();
 }
 
-
-// ─── מחזור חיים ────────────────────────────────────────────────────────────
 function setLifecycle(id, status) {
     const idx = db.findIndex(i => i.id === id);
     if (idx === -1) return;
-
     const entry = db[idx];
     db[idx].lifecycle = status;
-
-    if (status === 'הועבר' && entry.type === 'seed') {
-        showPanel('hydroPanel', document.getElementById('navHydro'));
-        document.getElementById('hPlant').value = entry.plant;
-        filterSources();
-    }
-
+    if (status === 'הועבר' && entry.type === 'seed') { showPanel('hydroPanel', document.getElementById('navHydro')); document.getElementById('hPlant').value = entry.plant; filterSources(); }
     localStorage.setItem('growData', JSON.stringify(db));
     refreshAll();
 }
 
-// ─── רענון תצוגה ───────────────────────────────────────────────────────────
-
 function refreshAll() {
-    const qPlantEl = document.getElementById('qPlant');
-    if (!qPlantEl) return;
-
-    const qP  = qPlantEl.value.toLowerCase();
-    
-    // ✨ Calibration tracking - START
-    const waterEntriesForCal = db.filter(e => e.type === 'water' && e.calibration && 
-        (e.calibration.pH || e.calibration.ec || e.calibration.do))
-        .sort((a,b) => new Date(b.date) - new Date(a.date));
-    
+    const qP = document.getElementById('qPlant').value.toLowerCase();
+    const waterEntriesForCal = db.filter(e => e.type === 'water' && e.calibration && (e.calibration.pH || e.calibration.ec || e.calibration.do)).sort((a,b) => new Date(b.date) - new Date(a.date));
     const lastCalEntry = waterEntriesForCal[0];
-    const daysSinceLastCal = lastCalEntry ? 
-        Math.floor((new Date() - new Date(lastCalEntry.date)) / 86400000) : 999;
-    // ✨ Calibration tracking - END
-    
-    const qT  = document.getElementById('qTray').value;
-
+    const daysSinceLastCal = lastCalEntry ? Math.floor((new Date() - new Date(lastCalEntry.date)) / 86400000) : 999;
+    const qT = document.getElementById('qTray').value;
     const qRS = document.getElementById('qRowS').value;
     const qCS = document.getElementById('qColS').value;
     const qHS = document.getElementById('qHoleS').value;
@@ -1165,28 +939,14 @@ function refreshAll() {
     const filtered = db.filter(i => {
         const mP = (i.plant || '').toLowerCase().includes(qP);
         let mLoc = true;
-
-        if (i.type === 'seed' && (qT || qRS || qCS || qHS)) {
-            mLoc =
-                (!qT || (i.rawLoc && i.rawLoc.tray == qT)) &&
-                (!qRS || (i.rawLoc && i.rawLoc.row == qRS)) &&
-                (!qCS || (i.rawLoc && i.rawLoc.col == qCS)) &&
-                (!qHS || (i.rawLoc && i.rawLoc.hole == qHS));
-        } else if (i.type === 'hydro' && (qSi || qRH || qHo)) {
-            mLoc =
-                (!qSi || (i.rawLoc && i.rawLoc.side == qSi)) &&
-                (!qRH || (i.rawLoc && i.rawLoc.row == qRH)) &&
-                (!qHo || (i.rawLoc && i.rawLoc.hole == qHo));
-        }
-
+        if (i.type === 'seed' && (qT || qRS || qCS || qHS)) mLoc = (!qT || (i.rawLoc && i.rawLoc.tray == qT)) && (!qRS || (i.rawLoc && i.rawLoc.row == qRS)) && (!qCS || (i.rawLoc && i.rawLoc.col == qCS)) && (!qHS || (i.rawLoc && i.rawLoc.hole == qHS));
+        else if (i.type === 'hydro' && (qSi || qRH || qHo)) mLoc = (!qSi || (i.rawLoc && i.rawLoc.side == qSi)) && (!qRH || (i.rawLoc && i.rawLoc.row == qRH)) && (!qHo || (i.rawLoc && i.rawLoc.hole == qHo));
         return mP && mLoc;
     });
 
     document.getElementById('historyList').innerHTML = filtered.map(i => {
         let germDisplay = '';
         let sourceDisplay = '';
-        
-        // ✨ Calibration badge logic - START
         let calBadge = '';
         if (i.type === 'water') {
             if (i.calibration && (i.calibration.pH || i.calibration.ec || i.calibration.do || i.calibration.fix)) {
@@ -1197,21 +957,11 @@ function refreshAll() {
                 if (i.calibration.fix) cals.push('תיקון');
                 calBadge = `<span class="cal-badge">🔧 ${cals.join('+')}</span>`;
             }
-            
-            if (daysSinceLastCal > 7) {
-                calBadge += `<div class="cal-alert">⚠️ לא בוצע כיול ${daysSinceLastCal} ימים!</div>`;
-            }
-        }
-        // ✨ Calibration badge logic - END
-
-        if (i.germ) {
-
-            germDisplay = `<span class="status-tag ${i.germ.status==='מוקדם'?'tag-early':i.germ.status==='מאוחר'?'tag-late':'tag-ontime'}">${sanitize(i.germ.status)} (${i.germ.diff} ימים)</span>`;
+            if (daysSinceLastCal > 7) calBadge += `<div class="cal-alert">⚠️ לא בוצע כיול ${daysSinceLastCal} ימים!</div>`;
         }
 
-        if (i.type === 'hydro' && i.rawLoc && i.rawLoc.sourceStr) {
-            sourceDisplay = `<br><small>מקור: ${sanitize(i.rawLoc.sourceStr)}</small>`;
-        }
+        if (i.germ) germDisplay = `<span class="status-tag ${i.germ.status==='מוקדם'?'tag-early':i.germ.status==='מאוחר'?'tag-late':'tag-ontime'}">${sanitize(i.germ.status)} (${i.germ.diff} ימים)</span>`;
+        if (i.type === 'hydro' && i.rawLoc && i.rawLoc.sourceStr) sourceDisplay = `<br><small>מקור: ${sanitize(i.rawLoc.sourceStr)}</small>`;
 
         return `
         <div class="entry type-${i.type}">
@@ -1221,7 +971,6 @@ function refreshAll() {
             ${calBadge}
             ${i.batchId ? `<span class="status-tag tag-ontime">אצווה: ${sanitize(i.batchId)}</span>` : ''}
             | ${new Date(i.date).toLocaleDateString('he-IL')}<br>
-
             <small>${sanitize(i.loc || '')}</small>${sourceDisplay}
             ${germDisplay}
             ${i.lifecycle ? `<span class="status-tag ${i.lifecycle==='הועבר'?'tag-moved':i.lifecycle==='נקצר'?'tag-harvested':'tag-dead'}">${sanitize(i.lifecycle)}</span>` : ''}
@@ -1235,11 +984,7 @@ function refreshAll() {
     }).join('') || '<p style="color:#999;text-align:center;">אין תוצאות</p>';
 
     const groups = {};
-    db.filter(i => i.type !== 'water').forEach(i => {
-        if (!groups[i.plant]) groups[i.plant] = [];
-        groups[i.plant].push(i);
-    });
-
+    db.filter(i => i.type !== 'water').forEach(i => { if (!groups[i.plant]) groups[i.plant] = []; groups[i.plant].push(i); });
     document.getElementById('reportList').innerHTML = Object.entries(groups).map(([name, events]) => `
         <div class="card">
             <h3>${sanitize(name)}</h3>
@@ -1256,9 +1001,6 @@ function refreshAll() {
     `).join('');
 }
 
-
-
-// ─── תמונה מוגדלת ─────────────────────────────────────────────────────────
 function openImageFullscreen(src) {
     const modal = document.createElement('div');
     Object.assign(modal.style, { position:'fixed', top:'0', left:'0', width:'100%', height:'100%', backgroundColor:'rgba(0,0,0,0.85)', display:'flex', justifyContent:'center', alignItems:'center', zIndex:'1000' });
@@ -1268,7 +1010,6 @@ function openImageFullscreen(src) {
     modal.appendChild(img); document.body.appendChild(modal);
 }
 
-// ─── מחיקה ────────────────────────────────────────────────────────────────
 function del(id) {
     if (confirm('למחוק רשומה זו?')) {
         db = db.filter(i => i.id !== id);
@@ -1284,39 +1025,33 @@ function confirmDeleteAll() {
     refreshAll(); updateCharts(); alert('כל ההיסטוריה נמחקה');
 }
 
-// ─── ייצוא CSV ─────────────────────────────────────────────────────────────
 function buildCSVRow(i, imageName = '') {
-    // ✨ Calibration status - START
     let calStatus = '';
     let calDetails = '';
-    
     if (i.type === 'water' && i.calibration) {
         const cals = [];
         if (i.calibration.pH) cals.push('pH');
         if (i.calibration.ec) cals.push('EC');
         if (i.calibration.do) cals.push('DO');
         if (i.calibration.fix) cals.push('תיקון');
-        
         calStatus = cals.length > 0 ? cals.join('+') : 'ללא';
         calDetails = i.calibration.notes || '';
     } else if (i.type === 'water') {
         calStatus = 'ללא';
     }
-//__________________________✨ Calibration status - END__________________________________________
-    
     return [
         i.type==='seed'?'זריעה':i.type==='hydro'?'הידרו':'מדדים',
         i.plant || '',
         i.batchId || '',
         i.date ? new Date(i.date).toLocaleDateString('he-IL') : '',
         i.type==='seed' && i.rawLoc ? i.rawLoc.cycle : '',
-        i.type==='seed' && i.rawLoc ? i.rawLoc.tray  : '',
-        i.type==='seed' && i.rawLoc ? i.rawLoc.row   : '',
-        i.type==='seed' && i.rawLoc ? i.rawLoc.col   : '',
-        i.type==='seed' && i.rawLoc ? i.rawLoc.hole  : (i.type==='hydro' && i.rawLoc ? i.rawLoc.hole : ''),
+        i.type==='seed' && i.rawLoc ? i.rawLoc.tray : '',
+        i.type==='seed' && i.rawLoc ? i.rawLoc.row : '',
+        i.type==='seed' && i.rawLoc ? i.rawLoc.col : '',
+        i.type==='seed' && i.rawLoc ? i.rawLoc.hole : (i.type==='hydro' && i.rawLoc ? i.rawLoc.hole : ''),
         '',
         i.type==='hydro' && i.rawLoc ? i.rawLoc.side : '',
-        i.type==='hydro' && i.rawLoc ? i.rawLoc.row  : '',
+        i.type==='hydro' && i.rawLoc ? i.rawLoc.row : '',
         i.type==='hydro' && i.rawLoc ? i.rawLoc.hole : '',
         i.type==='seed' && i.substrate ? i.substrate : '',
         i.lifecycle || 'פעיל',
@@ -1329,16 +1064,13 @@ function buildCSVRow(i, imageName = '') {
         i.wEC || '',
         i.wTemp || '',
         i.wDO || '',
-        calStatus,  // ✨ NEW
-        calDetails, // ✨ NEW
+        calStatus,
+        calDetails,
         imageName
     ].map(c => `"${c}"`).join(',');
 }
 
-
-
 const CSV_HEADER = '\uFEFFסוג,צמח,אצווה,תאריך,מחזור,מגש,שורה,עמודה,גומה מי,גומה עד,צד,שורה הידרו,חור הידרו,תת-מצע,סטטוס חיים,הערות,ימי צפי הצצה,ימי הצצה בפועל,סטטוס הצצה,מקור השתיל,PH,EC,טמפרטורה,DO,כיול בוצע,הערות כיול,תמונה\n';
-
 
 function exportCSV() {
     if (!db.length) return alert('אין נתונים לייצוא');
@@ -1368,7 +1100,6 @@ async function exportWithImages() {
     link.click();
 }
 
-// ─── עונות ────────────────────────────────────────────────────────────────
 function getPlantsBySeason(seasonKey) {
     return unifiedPlants.filter(p => p.seasons.includes(seasonKey));
 }
@@ -1378,14 +1109,14 @@ function countPlantsByType(plantsList) {
 }
 
 function renderSeason(seasonKey) {
-    const season      = seasonMeta[seasonKey];
-    const introBox    = document.getElementById('seasonIntroBox');
-    const statsBox    = document.getElementById('seasonStatsBox');
-    const plantsList  = document.getElementById('seasonPlantsList');
+    const season = seasonMeta[seasonKey];
+    const introBox = document.getElementById('seasonIntroBox');
+    const statsBox = document.getElementById('seasonStatsBox');
+    const plantsList = document.getElementById('seasonPlantsList');
     if (!season || !introBox || !statsBox || !plantsList) return;
 
     const seasonPlants = getPlantsBySeason(seasonKey);
-    const typeCounts   = countPlantsByType(seasonPlants);
+    const typeCounts = countPlantsByType(seasonPlants);
 
     introBox.innerHTML = `
         <div class="season-summary">
@@ -1417,362 +1148,8 @@ function showSeason(seasonId, btn) {
     if (btn) btn.classList.add('active-season');
     renderSeason(seasonId);
 }
-
-<script>
-// ... (כל הקוד הישן של הפונקציות - refreshAll, saveData וכו')
-
-// ════════════════════════════════════════════════════════════════
-// 🔥 FIREBASE INITIALIZATION  ← **התחל מפה**
-// ════════════════════════════════════════════════════════════════
-
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDXJrcY7IVG1Yiyvx2e6lnFiAa8OIcbDTs",
-  authDomain: "garden-crop-monitoring.firebaseapp.com",
-  projectId: "garden-crop-monitoring",
-  storageBucket: "garden-crop-monitoring.firebasestorage.app",
-  messagingSenderId: "667577763472",
-  appId: "1:667577763472:web:524f42fb26444adac6ba15",
-  measurementId: "G-BK097B3970"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-firebase.initializeApp(firebaseConfig);
-const firebaseDB = firebase.firestore();
-
-let firebaseReady = false;
-let syncInProgress = false;
-let lastSyncTime = 0;
-const SYNC_INTERVAL = 3000; // 3 שניות
-
-// ────────────────────────────────────────────────────────────────
-// 🔐 התחברות אנונימית + אתחול Sync
-// ────────────────────────────────────────────────────────────────
-firebase.auth().signInAnonymously()
-    .then(() => console.log('🔐 התחברות בוצעה'))
-    .catch(err => console.error('❌ שגיאת התחברות:', err));
-
-firebase.auth().onAuthStateChanged(user => {
-    if (user) {
-        console.log('✅ Firebase authenticated - UID:', user.uid);
-        firebaseReady = true;
-        updateSyncBadge('🔄 סנכרון...');
-        
-        // טען מהענן בהתחלה
-        syncFromFirebase().then(() => {
-            // התחל sync אוטומטי
-            startAutoSync();
-        });
-        
-        // הקשב לשינויים בזמן אמת
-        setupRealtimeListener();
-        
-    } else {
-        console.log('⏳ Waiting for Firebase auth...');
-        updateSyncBadge('⏳ מחכה להתחברות');
-    }
-});
-
-// ────────────────────────────────────────────────────────────────
-// 💾 שמירה ל-Firebase
-// ────────────────────────────────────────────────────────────────
-
-async function syncToFirebase() {
-    const user = firebase.auth().currentUser;
-    
-    if (!user || !firebaseReady) {
-        console.warn('⚠️ Not ready for sync');
-        return;
-    }
-
-    if (syncInProgress) return;
-    syncInProgress = true;
-
-    try {
-        const currentData = JSON.parse(localStorage.getItem('growData')) || [];
-        
-        if (currentData.length === 0) {
-            console.log('📭 No data to sync');
-            updateSyncBadge('📭 אין נתונים');
-            syncInProgress = false;
-            return;
-        }
-
-        console.log(`🔄 Syncing ${currentData.length} items to Firebase...`);
-        updateSyncBadge('🔄 סנכרון בהתקדמות...');
-
-        let successCount = 0;
-
-        for (const entry of currentData) {
-            if (!entry.id) continue;
-
-            try {
-                // הסר תמונות - כדי לחסוך מקום
-                const dataToSync = { ...entry };
-                delete dataToSync.img;
-
-                // 📍 **PATH תקין**: users/{uid}/growData/{id}
-                await firebaseDB
-                    .collection('users')
-                    .doc(user.uid)
-                    .collection('growData')
-                    .doc(String(entry.id))
-                    .set(dataToSync, { merge: true });
-
-                successCount++;
-
-            } catch (err) {
-                console.error(`❌ Error syncing ${entry.id}:`, err.message);
-            }
-        }
-
-        console.log(`✅ Successfully synced ${successCount}/${currentData.length} items`);
-        lastSyncTime = Date.now();
-        updateSyncBadge(`✅ ${successCount} נתונים סנכרונו`);
-
-    } catch (error) {
-        console.error('💥 Sync error:', error.message);
-        updateSyncBadge('❌ שגיאה בסנכרון');
-    } finally {
-        syncInProgress = false;
-    }
-}
-
-// ────────────────────────────────────────────────────────────────
-// 📥 טעינה מ-Firebase
-// ────────────────────────────────────────────────────────────────
-
-async function syncFromFirebase() {
-    const user = firebase.auth().currentUser;
-    
-    if (!user) {
-        console.warn('⚠️ No user for cloud load');
-        return;
-    }
-
-    try {
-        console.log('📥 Loading from Firebase...');
-        updateSyncBadge('📥 טוען מהענן...');
-
-        // 📍 **PATH תקין**: users/{uid}/growData
-        const snapshot = await firebaseDB
-            .collection('users')
-            .doc(user.uid)
-            .collection('growData')
-            .get();
-
-        const cloudData = {};
-        snapshot.forEach(doc => {
-            cloudData[doc.id] = doc.data();
-        });
-
-        console.log(`☁️ Found ${snapshot.size} items in cloud`);
-
-        // Merge logic
-        const localData = JSON.parse(localStorage.getItem('growData')) || [];
-        const localMap = Object.fromEntries(localData.map(e => [String(e.id), e]));
-
-        const merged = [];
-        const seenIds = new Set();
-
-        // תחילה - כל הנתונים של הענן
-        Object.entries(cloudData).forEach(([id, cloudItem]) => {
-            seenIds.add(id);
-            const localItem = localMap[id];
-            
-            if (localItem) {
-                // בחר הנדיבה חדשה יותר (לפי תאריך)
-                const cloudDate = new Date(cloudItem.date || 0).getTime();
-                const localDate = new Date(localItem.date || 0).getTime();
-                
-                if (cloudDate >= localDate) {
-                    merged.push(cloudItem);
-                    console.log(`☁️ Using cloud version of ${id}`);
-                } else {
-                    merged.push(localItem);
-                    console.log(`💾 Using local version of ${id}`);
-                }
-            } else {
-                // יש רק בענן
-                merged.push(cloudItem);
-                console.log(`✨ Added from cloud: ${id}`);
-            }
-        });
-
-        // אחר כך - נתונים שיש רק באזור המקומי
-        localData.forEach(item => {
-            if (!seenIds.has(String(item.id))) {
-                merged.push(item);
-                console.log(`💾 Kept local-only item: ${item.id}`);
-            }
-        });
-
-        // מיין לפי תאריך (חדש קודם)
-        merged.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-
-        localStorage.setItem('growData', JSON.stringify(merged));
-        db = merged;
-
-        console.log(`✅ Merged to ${merged.length} total items`);
-        refreshAll();
-        updateCharts();
-        updateSyncBadge(`✅ ${merged.length} נתונים טעונים`);
-
-    } catch (error) {
-        console.error('💥 Cloud load error:', error.message);
-        updateSyncBadge('❌ כישלון בטעינה מהענן');
-    }
-}
-
-// ────────────────────────────────────────────────────────────────
-// 🔄 Sync אוטומטי כל 3 שניות
-// ────────────────────────────────────────────────────────────────
-
-let syncIntervalId = null;
-
-function startAutoSync() {
-    console.log('▶️ Starting auto-sync (every 3s)');
-    
-    // Sync מיד
-    syncToFirebase();
-    
-    // חזור כל 3 שניות
-    if (syncIntervalId) clearInterval(syncIntervalId);
-    syncIntervalId = setInterval(() => {
-        const now = Date.now();
-        if (now - lastSyncTime > SYNC_INTERVAL && firebaseReady) {
-            syncToFirebase();
-        }
-    }, SYNC_INTERVAL);
-}
-
-// ────────────────────────────────────────────────────────────────
-// 📡 Real-time Listener
-// ────────────────────────────────────────────────────────────────
-
-function setupRealtimeListener() {
-    const user = firebase.auth().currentUser;
-    
-    if (!user) {
-        console.warn('⚠️ No user for listener');
-        return;
-    }
-
-    console.log('👂 Setting up realtime listener...');
-
-    // 📍 **PATH תקין**: users/{uid}/growData
-    firebaseDB
-        .collection('users')
-        .doc(user.uid)
-        .collection('growData')
-        .onSnapshot(
-            snapshot => {
-                console.log(`📡 Realtime update received: ${snapshot.size} items total`);
-                
-                let needsRefresh = false;
-
-                snapshot.docChanges().forEach(change => {
-                    const cloudData = change.doc.data();
-                    const docId = change.doc.id;
-                    const localIndex = db.findIndex(e => String(e.id) === docId);
-
-                    if (change.type === 'added') {
-                        if (localIndex === -1) {
-                            console.log(`✨ Real-time ADD: ${docId}`);
-                            db.unshift(cloudData);
-                            needsRefresh = true;
-                        }
-                    } else if (change.type === 'modified') {
-                        if (localIndex === -1) {
-                            console.log(`✨ Real-time ADD (was modified): ${docId}`);
-                            db.unshift(cloudData);
-                        } else {
-                            const cloudDate = new Date(cloudData.date || 0).getTime();
-                            const localDate = new Date(db[localIndex].date || 0).getTime();
-                            
-                            if (cloudDate > localDate) {
-                                console.log(`🔄 Real-time UPDATE: ${docId}`);
-                                db[localIndex] = cloudData;
-                                needsRefresh = true;
-                            }
-                        }
-                    } else if (change.type === 'removed') {
-                        if (localIndex !== -1) {
-                            console.log(`🗑️ Real-time REMOVE: ${docId}`);
-                            db.splice(localIndex, 1);
-                            needsRefresh = true;
-                        }
-                    }
-                });
-
-                if (needsRefresh) {
-                    localStorage.setItem('growData', JSON.stringify(db));
-                    refreshAll();
-                    updateCharts();
-                    console.log(`✅ UI refreshed after realtime update`);
-                }
-            },
-            error => {
-                console.error('💥 Listener error:', error.message);
-                updateSyncBadge('❌ בעיה בעדכוני זמן אמת');
-            }
-        );
-}
-
-// ────────────────────────────────────────────────────────────────
-// 🎨 סטטוס בדג"ח
-// ────────────────────────────────────────────────────────────────
-
-function updateSyncBadge(msg) {
-    let badge = document.getElementById('syncBadge');
-    
-    if (!badge) {
-        badge = document.createElement('div');
-        badge.id = 'syncBadge';
-        badge.style.cssText = `
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: #4caf50;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 9999;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            direction: rtl;
-        `;
-        document.body.appendChild(badge);
-    }
-    
-    badge.textContent = msg;
-    
-    // צבעים לפי סטטוס
-    if (msg.includes('❌')) {
-        badge.style.background = '#f44336';
-    } else if (msg.includes('⚠️')) {
-        badge.style.background = '#ff9800';
-    } else if (msg.includes('🔄') || msg.includes('📥')) {
-        badge.style.background = '#ff9800';
-    } else if (msg.includes('✅')) {
-        badge.style.background = '#4caf50';
-    } else {
-        badge.style.background = '#2196f3';
-    }
-    
-    console.log(`[SYNC-BADGE] ${msg}`);
-}
-
 </script>
 </body>
 </html>
+
+

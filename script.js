@@ -14,32 +14,34 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
+console.log('Firebase initialized');
+
 // Anonymous Sign-in
 auth.signInAnonymously()
     .then((userCredential) => {
         const userId = userCredential.user.uid;
-        console.log('✅ Firebase authenticated - UID:', userId);
+        console.log('Firebase authenticated - UID:', userId);
         loadData(userId);
     })
     .catch((error) => {
-        console.error('❌ Firebase authentication failed:', error);
+        console.error('Firebase authentication failed:', error);
     });
 
 // Load Data from Firestore
 function loadData(userId) {
-    console.log('📥 Loading from Firebase...');
+    console.log('Loading from Firebase...');
     db.collection('users').doc(userId).collection('growData').get()
         .then((querySnapshot) => {
             if (querySnapshot.empty) {
-                console.log('ℹ️ No data found in Firebase');
+                console.log('No data found in Firebase');
             } else {
                 querySnapshot.forEach((doc) => {
-                    console.log('✅ Data loaded:', doc.data());
+                    console.log('Data loaded:', doc.data());
                 });
             }
         })
         .catch((error) => {
-            console.error('❌ Error loading data:', error);
+            console.error('Error loading data:', error);
         });
 }
 
@@ -47,11 +49,11 @@ function loadData(userId) {
 function saveData(userId, data) {
     db.collection('users').doc(userId).collection('growData').add(data)
         .then(() => {
-            console.log('✅ Data saved successfully');
+            console.log('Data saved successfully');
         })
         .catch((error) => {
-            console.error('❌ Error saving data:', error);
+            console.error('Error saving data:', error);
         });
 }
 
-console.log('🚀 GrowManager PRO initialized');
+console.log('GrowManager PRO initialized');

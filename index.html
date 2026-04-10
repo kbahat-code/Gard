@@ -30,7 +30,6 @@
             margin: auto;
         }
         
-        /* שורת הלחצנים העליונה */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -173,7 +172,6 @@
             gap: 5px;
         }
         
-        /* שורה אחת - 4 שדות */
         .single-row {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -207,6 +205,7 @@
             background: #e8f5e9;
             font-weight: bold;
         }
+        
         .main-btn {
             width: 100%;
             padding: 15px;
@@ -358,7 +357,6 @@
             font-weight: bold;
         }
         
-        /* תיבות קטנות לגבולות */
         .limit-input {
             width: 70px;
             padding: 6px;
@@ -392,7 +390,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
-
 <!-- שורת הלחצנים העליונה -->
 <div class="top-bar">
     <div class="user-section">
@@ -410,6 +407,7 @@
         <div class="nav-item" data-panel="historyPanel">🔍 חיפוש</div>
         <div class="nav-item" data-panel="reportPanel">🗂️ כרטיסיות</div>
     </div>
+
     <!-- פאנל זריעה -->
     <div id="seedPanel" class="panel active">
         <div class="card">
@@ -422,7 +420,6 @@
                 <div class="opt" data-substrate="עציצי פלסטיק">עציצי פלסטיק</div>
             </div>
             
-            <!-- שורה אחת: מחזור, מגש, מגומה, עד גומה -->
             <div class="single-row">
                 <div>
                     <label>מחזור</label>
@@ -493,7 +490,6 @@
         <div class="card">
             <h2>💧 שתילה במערכת הידרו</h2>
             
-            <!-- שורה אחת: צד וחור -->
             <div class="grid-2">
                 <div>
                     <label>צד:</label>
@@ -584,7 +580,6 @@
             </div>
             
             <h3>📝 מדידה חדשה</h3>
-            <!-- שורה אחת: תאריך + כל המדדים -->
             <div class="grid-4">
                 <div>
                     <label>תאריך:</label>
@@ -611,7 +606,6 @@
             </button>
         </div>
         
-        <!-- שורת כיול -->
         <div class="card">
             <h3>⚙️ כיול חיישנים</h3>
             <label>תאריך כיול:</label>
@@ -743,7 +737,6 @@
         </div>
     </div>
 </div>
-
 <script>
 // ═══════════════════════════════════════════════════════════════
 // 🔥 FIREBASE CONFIG & INITIALIZATION
@@ -761,6 +754,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const firestore = firebase.firestore();
+
 // ═══════════════════════════════════════════════════════════════
 // 🌐 GLOBAL VARIABLES
 // ═══════════════════════════════════════════════════════════════
@@ -804,7 +798,6 @@ const plants = {
         {n:"צבעוני", d:12, season:"סתיו-אביב", tips:{זריעה:["זריעה רדודה", "טמפ' 15-20°C"], גידול:["צל חלקי", "פריחה: 80-100 יום"]}}
     ]
 };
-
 // ═══════════════════════════════════════════════════════════════
 // 🔐 AUTHENTICATION FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
@@ -880,6 +873,7 @@ auth.onAuthStateChanged(user => {
         showLoginUI();
     }
 });
+
 // ═══════════════════════════════════════════════════════════════
 // 💾 SYNC FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
@@ -1167,7 +1161,6 @@ function saveData(type) {
             return;
         }
 
-        // בדיקה האם החור תפוס
         const occupied = db.find(i => 
             i.type === 'hydro' && 
             i.hydroLoc.side === side && 
@@ -1240,6 +1233,7 @@ function saveData(type) {
         refreshAll();
         updateCharts();
         alert('✅ מדדים נשמרו בהצלחה');
+
     } else if (type === 'calibration') {
         const calDate = document.getElementById('calibrationDate').value;
         const calPH = document.getElementById('calPH').checked;
@@ -1347,9 +1341,6 @@ function deleteItem(id) {
     updateCharts();
     alert('✅ רשומה נמחקה');
 }
-
-// המשך בהודעה הבאה - קוד ארוך מדי...
-
 // ═══════════════════════════════════════════════════════════════
 // 🎯 UI UPDATE FUNCTIONS
 // ═══════════════════════════════════════════════════════════════
@@ -1380,7 +1371,6 @@ function updateGerm() {
             germDate.setDate(germDate.getDate() + plantData.d);
             germInput.value = germDate.toLocaleDateString('he-IL');
             
-            // הצג טיפים
             if (plantData.tips) {
                 let html = '<strong>🌱 מידע חשוב:</strong><br>';
                 html += `<strong>עונת זריעה:</strong> ${plantData.season}<br>`;
@@ -1507,12 +1497,10 @@ function renderTable() {
     sorted.forEach(item => {
         const row = document.createElement('tr');
         
-        // תאריך
         const dateCell = document.createElement('td');
         dateCell.textContent = new Date(item.date).toLocaleDateString('he-IL');
         row.appendChild(dateCell);
         
-        // סוג
         const typeCell = document.createElement('td');
         const typeBadge = document.createElement('span');
         typeBadge.className = `badge badge-${item.type}`;
@@ -1524,22 +1512,18 @@ function renderTable() {
         typeCell.appendChild(typeBadge);
         row.appendChild(typeCell);
         
-        // צמח
         const plantCell = document.createElement('td');
         plantCell.textContent = item.plant || '-';
         row.appendChild(plantCell);
         
-        // מחזור
         const cycleCell = document.createElement('td');
         cycleCell.textContent = item.location?.cycle || '-';
         row.appendChild(cycleCell);
         
-        // מגש
         const trayCell = document.createElement('td');
         trayCell.textContent = item.location?.tray || '-';
         row.appendChild(trayCell);
         
-        // מיקום
         const locCell = document.createElement('td');
         if (item.type === 'seed') {
             locCell.textContent = `גומה ${item.location?.hole || '-'}`;
@@ -1550,7 +1534,6 @@ function renderTable() {
         }
         row.appendChild(locCell);
         
-        // נבט בתאריך
         const germCell = document.createElement('td');
         if (item.type === 'seed' && item.germActual) {
             const expected = new Date(item.germExpected);
@@ -1571,7 +1554,6 @@ function renderTable() {
         }
         row.appendChild(germCell);
         
-        // מדדים
         const metricsCell = document.createElement('td');
         if (item.type === 'water') {
             const metrics = [];
@@ -1589,7 +1571,6 @@ function renderTable() {
         }
         row.appendChild(metricsCell);
         
-        // תמונה
         const imgCell = document.createElement('td');
         if (item.img) {
             const thumb = document.createElement('img');
@@ -1613,13 +1594,11 @@ function renderTable() {
         }
         row.appendChild(imgCell);
         
-        // הערות
         const notesCell = document.createElement('td');
         notesCell.textContent = item.notes || '-';
         notesCell.style.fontSize = '10px';
         row.appendChild(notesCell);
         
-        // פעולות
         const actionsCell = document.createElement('td');
         actionsCell.style.whiteSpace = 'nowrap';
         
@@ -1811,7 +1790,6 @@ function updateCharts() {
         doMax: parseFloat(document.getElementById('mDoMax').value || 100)
     };
     
-    // pH Chart
     const phData = waterData.map(i => i.ph || null);
     if (charts.ph) charts.ph.destroy();
     
@@ -1843,11 +1821,7 @@ function updateCharts() {
                                 borderColor: '#ff9800',
                                 borderWidth: 2,
                                 borderDash: [5, 5],
-                                label: {
-                                    content: `Min: ${limits.phMin}`,
-                                    enabled: true,
-                                    position: 'start'
-                                }
+                                label: { content: `Min: ${limits.phMin}`, enabled: true, position: 'start' }
                             },
                             maxLine: {
                                 type: 'line',
@@ -1856,11 +1830,7 @@ function updateCharts() {
                                 borderColor: '#f44336',
                                 borderWidth: 2,
                                 borderDash: [5, 5],
-                                label: {
-                                    content: `Max: ${limits.phMax}`,
-                                    enabled: true,
-                                    position: 'start'
-                                }
+                                label: { content: `Max: ${limits.phMax}`, enabled: true, position: 'start' }
                             }
                         }
                     }
@@ -1876,7 +1846,6 @@ function updateCharts() {
         });
     }
     
-    // EC Chart
     const ecData = waterData.map(i => i.ec || null);
     if (charts.ec) charts.ec.destroy();
     
@@ -1908,11 +1877,7 @@ function updateCharts() {
                                 borderColor: '#ff9800',
                                 borderWidth: 2,
                                 borderDash: [5, 5],
-                                label: {
-                                    content: `Min: ${limits.ecMin}`,
-                                    enabled: true,
-                                    position: 'start'
-                                }
+                                label: { content: `Min: ${limits.ecMin}`, enabled: true, position: 'start' }
                             },
                             maxLine: {
                                 type: 'line',
@@ -1921,11 +1886,7 @@ function updateCharts() {
                                 borderColor: '#f44336',
                                 borderWidth: 2,
                                 borderDash: [5, 5],
-                                label: {
-                                    content: `Max: ${limits.ecMax}`,
-                                    enabled: true,
-                                    position: 'start'
-                                }
+                                label: { content: `Max: ${limits.ecMax}`, enabled: true, position: 'start' }
                             }
                         }
                     }
@@ -1941,7 +1902,6 @@ function updateCharts() {
         });
     }
     
-    // Temperature Chart
     const tempData = waterData.map(i => i.temp || null);
     if (charts.temp) charts.temp.destroy();
     
@@ -1973,11 +1933,7 @@ function updateCharts() {
                                 borderColor: '#ff9800',
                                 borderWidth: 2,
                                 borderDash: [5, 5],
-                                label: {
-                                    content: `Min: ${limits.tmMin}°C`,
-                                    enabled: true,
-                                    position: 'start'
-                                }
+                                label: { content: `Min: ${limits.tmMin}°C`, enabled: true, position: 'start' }
                             },
                             maxLine: {
                                 type: 'line',
@@ -1986,11 +1942,7 @@ function updateCharts() {
                                 borderColor: '#f44336',
                                 borderWidth: 2,
                                 borderDash: [5, 5],
-                                label: {
-                                    content: `Max: ${limits.tmMax}°C`,
-                                    enabled: true,
-                                    position: 'start'
-                                }
+                                label: { content: `Max: ${limits.tmMax}°C`, enabled: true, position: 'start' }
                             }
                         }
                     }
@@ -2006,7 +1958,6 @@ function updateCharts() {
         });
     }
     
-    // DO Chart
     const doData = waterData.map(i => i.do || null);
     if (charts.do) charts.do.destroy();
     
@@ -2038,11 +1989,7 @@ function updateCharts() {
                                 borderColor: '#ff9800',
                                 borderWidth: 2,
                                 borderDash: [5, 5],
-                                label: {
-                                    content: `Min: ${limits.doMin}%`,
-                                    enabled: true,
-                                    position: 'start'
-                                }
+                                label: { content: `Min: ${limits.doMin}%`, enabled: true, position: 'start' }
                             },
                             maxLine: {
                                 type: 'line',
@@ -2051,11 +1998,7 @@ function updateCharts() {
                                 borderColor: '#f44336',
                                 borderWidth: 2,
                                 borderDash: [5, 5],
-                                label: {
-                                    content: `Max: ${limits.doMax}%`,
-                                    enabled: true,
-                                    position: 'start'
-                                }
+                                label: { content: `Max: ${limits.doMax}%`, enabled: true, position: 'start' }
                             }
                         }
                     }
@@ -2071,7 +2014,6 @@ function updateCharts() {
         });
     }
 }
-
 // ═══════════════════════════════════════════════════════════════
 // 🗂️ REPORT CARDS
 // ═══════════════════════════════════════════════════════════════
@@ -2081,7 +2023,6 @@ function generateReports() {
     
     reportDiv.innerHTML = '';
     
-    // קבלת רשימת צמחים פעילים בלבד
     const activePlants = db.filter(i => 
         (i.type === 'seed' || i.type === 'hydro') && 
         i.status === 'active'
@@ -2109,7 +2050,6 @@ function generateReports() {
         let html = `<h3>🌱 ${plant}</h3>`;
         html += `<p style="font-size:12px;color:#666;">סך הכל: ${items.length} יחידות פעילות</p>`;
         
-        // חיפוש נתוני צמח
         const plantData = 
             plants.veg.find(p => p.n === plant) || 
             plants.flo.find(p => p.n === plant);
@@ -2137,7 +2077,6 @@ function generateReports() {
             html += `</div>`;
         }
         
-        // פירוט מיקומים
         html += '<table style="font-size:10px;margin-top:10px;">';
         html += '<thead><tr><th>תאריך</th><th>מיקום</th><th>סטטוס</th></tr></thead>';
         html += '<tbody>';
@@ -2166,7 +2105,6 @@ function generateReports() {
         reportDiv.appendChild(card);
     }
     
-    // הוספת התראת החלפת מים
     const lastChange = localStorage.getItem('lastWaterChange');
     if (lastChange) {
         const lastDate = new Date(lastChange);
@@ -2192,7 +2130,6 @@ function generateReports() {
         }
     }
     
-    // בדיקת כיולים
     const calibrations = db.filter(i => i.type === 'calibration').sort((a, b) => new Date(b.date) - new Date(a.date));
     
     const latestCalibrations = {
@@ -2248,8 +2185,9 @@ function generateReports() {
         reportDiv.insertBefore(calAlert, reportDiv.firstChild);
     }
 }
+
 // ═══════════════════════════════════════════════════════════════
-// 📤 EXPORT FUNCTION
+// 📤 EXPORT FUNCTION - תוקן לתמיכה מלאה בעברית באקסל
 // ═══════════════════════════════════════════════════════════════
 async function exportData() {
     if (db.length === 0) {
@@ -2260,44 +2198,132 @@ async function exportData() {
     try {
         const zip = new JSZip();
         
-        // CSV Export
-        let csv = 'תאריך,סוג,צמח,מחזור,מגש,גומה,צד,חור,pH,EC,טמפרטורה,DO,הערות\n';
+        // ═══════════════════════════════════════════════════════
+        // יצירת CSV עם BOM לתמיכה בעברית באקסל
+        // ═══════════════════════════════════════════════════════
         
-        db.forEach(item => {
+        // הגדרת תוויות עמודות בעברית
+        const headers = [
+            'תאריך',
+            'סוג',
+            'צמח',
+            'מחזור',
+            'מגש',
+            'גומה',
+            'צד הידרו',
+            'חור הידרו',
+            'pH',
+            'EC',
+            'טמפרטורה',
+            'DO',
+            'סטטוס',
+            'תאריך נביטה צפוי',
+            'תאריך נביטה בפועל',
+            'ימי הצצה',
+            'מצע',
+            'מקור שתיל',
+            'חיישנים שכוילו',
+            'הערות'
+        ];
+        
+        // פונקציה לעטיפת ערך ב-CSV בצורה בטוחה
+        function csvEscape(value) {
+            if (value === null || value === undefined) return '';
+            const str = String(value);
+            // עוטפים תמיד במרכאות כדי לתמוך בעברית, פסיקים ושורות חדשות
+            return '"' + str.replace(/"/g, '""') + '"';
+        }
+        
+        // בניית שורת הכותרות
+        const headerRow = headers.map(h => csvEscape(h)).join(',');
+        
+        // בניית שורות הנתונים
+        const dataRows = db.map(item => {
+            const typeHebrew = 
+                item.type === 'seed' ? 'זריעה' :
+                item.type === 'hydro' ? 'שתילה' :
+                item.type === 'water' ? 'מדדי מים' :
+                item.type === 'calibration' ? 'כיול' : 
+                (item.type || '');
+            
+            const statusHebrew = 
+                item.status === 'active' ? 'פעיל' :
+                item.status === 'harvested' ? 'נקצר' :
+                item.status === 'destroyed' ? 'הושמד' :
+                item.status === 'transferred' ? 'הועבר' :
+                (item.status || '');
+            
             const row = [
                 item.date || '',
-                item.type || '',
+                typeHebrew,
                 item.plant || '',
                 item.location?.cycle || '',
                 item.location?.tray || '',
                 item.location?.hole || '',
                 item.hydroLoc?.side || '',
                 item.hydroLoc?.hole || '',
-                item.ph || '',
-                item.ec || '',
-                item.temp || '',
-                item.do || '',
-                (item.notes || '').replace(/,/g, ';')
+                item.ph !== undefined && item.ph !== null ? item.ph : '',
+                item.ec !== undefined && item.ec !== null ? item.ec : '',
+                item.temp !== undefined && item.temp !== null ? item.temp : '',
+                item.do !== undefined && item.do !== null ? item.do : '',
+                statusHebrew,
+                item.germExpected || '',
+                item.germActual || '',
+                item.germDays || '',
+                item.substrate || '',
+                item.source || '',
+                item.sensors || '',
+                item.notes || ''
             ];
-            csv += row.join(',') + '\n';
+            
+            return row.map(v => csvEscape(v)).join(',');
         });
         
-        zip.file('growmanager_data.csv', csv);
+        // הוספת BOM (Byte Order Mark) לתחילת הקובץ לזיהוי UTF-8 באקסל
+        const BOM = '\uFEFF';
+        const csvContent = BOM + headerRow + '\n' + dataRows.join('\n');
         
-        // Images Export
+        zip.file('growmanager_data.csv', csvContent);
+        
+        // ═══════════════════════════════════════════════════════
+        // ייצוא תמונות
+        // ═══════════════════════════════════════════════════════
         const imgFolder = zip.folder('images');
         db.forEach((item, index) => {
             if (item.img && item.img.startsWith('data:image')) {
                 const base64Data = item.img.split(',')[1];
-                const fileName = `${item.type}_${item.plant || 'unknown'}_${index}.jpg`;
+                const safePlantName = (item.plant || 'unknown').replace(/[^a-zA-Z\u0590-\u05FF0-9]/g, '_');
+                const fileName = `${item.type}_${safePlantName}_${index}.jpg`;
                 imgFolder.file(fileName, base64Data, { base64: true });
             }
         });
         
-        // Generate ZIP
+        // ═══════════════════════════════════════════════════════
+        // יצירת קובץ README עם הסבר על הנתונים
+        // ═══════════════════════════════════════════════════════
+        const readmeContent = '\uFEFF' +
+            'GrowManager PRO - ייצוא נתונים\n' +
+            '================================\n\n' +
+            'תאריך ייצוא: ' + new Date().toLocaleDateString('he-IL') + '\n' +
+            'סך הכל רשומות: ' + db.length + '\n\n' +
+            'הוראות פתיחה באקסל:\n' +
+            '1. פתח את הקובץ growmanager_data.csv\n' +
+            '2. אם מופיע גיבריש - ודא שהקידוד מוגדר ל-UTF-8\n' +
+            '3. בעת ייבוא ידני: בחר File > Import ובחר UTF-8\n\n' +
+            'עמודות הקובץ:\n' +
+            '- תאריך: תאריך הרשומה (YYYY-MM-DD)\n' +
+            '- סוג: זריעה / שתילה / מדדי מים / כיול\n' +
+            '- צמח: שם הצמח\n' +
+            '- מחזור / מגש / גומה: מיקום בזריעה\n' +
+            '- צד הידרו / חור הידרו: מיקום במערכת הידרו\n' +
+            '- pH / EC / טמפרטורה / DO: מדדי מים\n' +
+            '- סטטוס: פעיל / נקצר / הושמד / הועבר\n';
+        
+        zip.file('README.txt', readmeContent);
+        
+        // יצירת ה-ZIP והורדה
         const content = await zip.generateAsync({ type: 'blob' });
         
-        // Download
         const url = URL.createObjectURL(content);
         const a = document.createElement('a');
         a.href = url;
@@ -2305,7 +2331,7 @@ async function exportData() {
         a.click();
         URL.revokeObjectURL(url);
         
-        alert('✅ הנתונים יוצאו בהצלחה!');
+        alert('✅ הנתונים יוצאו בהצלחה!\n\nהקובץ כולל:\n• growmanager_data.csv (פתח באקסל)\n• תיקיית images (תמונות)\n• README.txt (הוראות)');
         
     } catch (error) {
         console.error('❌ Export error:', error);
@@ -2327,24 +2353,20 @@ function refreshAll() {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 GrowManager PRO - Initializing...');
     
-    // טעינת נתונים לוקאליים
     loadFromLocal();
     loadLimits();
     
-    // אתחול תאריך ברירת מחדל
     document.getElementById('sDate').value = new Date().toISOString().split('T')[0];
     document.getElementById('hDate').value = new Date().toISOString().split('T')[0];
     document.getElementById('wDate').value = new Date().toISOString().split('T')[0];
     document.getElementById('calibrationDate').value = new Date().toISOString().split('T')[0];
     
-    // אתחול תאריך החלפת מים
     const storedWaterChange = localStorage.getItem('lastWaterChange');
     if (storedWaterChange) {
         document.getElementById('lastWaterChange').value = storedWaterChange;
         updateWaterChangeDate();
     }
     
-    // מילוי רשימות צמחים
     const vegSelect = document.getElementById('sPlantVeg');
     const floSelect = document.getElementById('sPlantFlo');
     

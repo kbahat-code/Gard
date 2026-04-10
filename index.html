@@ -1005,8 +1005,7 @@ async function exportZIP() {
     link.click();
     
     alert('✅ ZIP נשמר עם תמונות');
-}
-// ═══════════════════════════════════════════════════════════════
+}// ═══════════════════════════════════════════════════════════════
 // 🔍 SEARCH & FILTERS
 // ═══════════════════════════════════════════════════════════════
 function populateFilters() {
@@ -1314,6 +1313,28 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// 🔚 END OF GROWMANAGER PRO
+// 🌐 WINDOW GLOBAL FUNCTIONS (for onclick attributes)
 // ═══════════════════════════════════════════════════════════════
-console.log('📦 GrowManager PRO Loaded - 4/4 Complete');
+window.showPanel = showPanel;
+window.selectSub = selectSub;
+window.selectCat = selectCat;
+window.selectSide = selectSide;
+window.selectSeason = selectSeason;
+window.saveSeed = saveSeed;
+window.saveHydro = saveHydro;
+window.saveWater = saveWater;
+window.saveLimits = saveLimits;
+window.exportData = exportData;
+window.deleteEntry = deleteEntry;
+window.searchTable = searchTable;
+window.applyFilters = applyFilters;
+window.resetFilters = resetFilters;
+window.showFullImg = showFullImg;
+window.authSignup = authSignup;
+window.authLogin = authLogin;
+window.authLogout = authLogout;
+
+// ═══════════════════════════════════════════════════════════════
+// 🔚 END OF GROWMANAGER PRO - PART 4/4
+// ═══════════════════════════════════════════════════════════════
+console.log('📦 Part 4/4 Loaded - GrowManager PRO Complete! 🌱✅');

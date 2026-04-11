@@ -417,13 +417,10 @@
             100% { box-shadow: 0 0 0 0   rgba(211,47,47,0);   }
         }
 
-        /* ══════════════════════════════════════════
-           🔧 תיקון גרפים – container גובה קבוע
-        ══════════════════════════════════════════ */
         .chart-container {
             position: relative;
             width: 100%;
-            height: 220px;   /* גובה קבוע – לא ישתנה */
+            height: 220px;
             overflow: hidden;
         }
 
@@ -435,15 +432,14 @@
             height: 100% !important;
         }
     </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"><\/script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"><\/script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"><\/script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"><\/script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"><\/script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"><\/script>
 </head>
 <body>
-
 <div class="top-bar">
     <div class="user-section">
         <span id="userEmail">טוען...</span>
@@ -461,6 +457,7 @@
         <div class="nav-item"        data-panel="reportPanel">🗂️ כרטיסיות</div>
         <div class="nav-item"        data-panel="limitsPanel">⚙️ גבולות</div>
     </div>
+
     <!-- ═══════════════════════════════════════
          פאנל זריעה
     ════════════════════════════════════════ -->
@@ -536,8 +533,13 @@
             <label>הערות:</label>
             <textarea id="sNotes" placeholder="הערות..."></textarea>
 
-            <button id="btnSaveSeed" class="main-btn"
-                    style="background:var(--primary)">💾 שמור זריעה</button>
+            <div style="display:flex; gap:10px; margin-top:5px;">
+                <button id="btnSaveSeed" class="main-btn"
+                        style="background:var(--primary)">💾 שמור זריעה</button>
+                <button type="button" class="main-btn"
+                        style="background:var(--accent); flex:0 0 auto; width:auto; padding:15px 20px;"
+                        onclick="clearSeedForm()">🧹 נקה טופס</button>
+            </div>
         </div>
     </div>
     <!-- ═══════════════════════════════════════
@@ -578,8 +580,9 @@
                     style="background:var(--secondary)">💾 שמור שתילה</button>
         </div>
     </div>
+
     <!-- ═══════════════════════════════════════
-         פאנל מדדים  ← הגרפים תוקנו כאן
+         פאנל מדדים
     ════════════════════════════════════════ -->
     <div id="dataPanel" class="panel">
 
@@ -620,10 +623,14 @@
                         border-right-color:#ff9800;color:#e65100;">
             </div>
 
-            <button id="btnSaveWater" class="main-btn"
-                    style="background:var(--accent)">💾 שמור מדדים</button>
+            <div style="display:flex; gap:10px; margin-top:5px;">
+                <button id="btnSaveWater" class="main-btn"
+                        style="background:var(--accent)">💾 שמור מדדים</button>
+                <button type="button" class="main-btn"
+                        style="background:var(--accent); flex:0 0 auto; width:auto; padding:15px 20px;"
+                        onclick="clearMetricsForm()">🧹 נקה טופס</button>
+            </div>
         </div>
-
         <div class="card">
             <h2>⚙️ כיול חיישנים</h2>
             <label>תאריך כיול:</label>
@@ -644,7 +651,7 @@
                     style="background:var(--warning)">✅ שמור כיול</button>
         </div>
 
-        <!-- גרפים – כל canvas עטוף ב-chart-container עם גובה קבוע -->
+        <!-- גרפים -->
         <div class="card">
             <h3>📈 גרף pH</h3>
             <div class="chart-container">
@@ -671,6 +678,7 @@
         </div>
 
     </div><!-- /dataPanel -->
+
     <!-- ═══════════════════════════════════════
          פאנל חיפוש
     ════════════════════════════════════════ -->
@@ -739,7 +747,6 @@
             </div>
         </div>
     </div>
-
     <!-- ═══════════════════════════════════════
          פאנל כרטיסיות
     ════════════════════════════════════════ -->
@@ -849,11 +856,6 @@ let activeImg           = '';
 let currentCat          = 'veg';
 let currentSubstrate    = 'מגשי פלסטיק';
 
-/*
- * 🔧 תיקון גרפים:
- *    אחסון instance אחד לכל גרף.
- *    לפני יצירה – destroy מלא + ניקוי canvas.
- */
 const charts = { ph: null, ec: null, temp: null, do: null };
 
 // ═══════════════════════════════════════════════════════
@@ -1295,6 +1297,76 @@ function checkLimits() {
         }
     }
 }
+
+// ═══════════════════════════════════════════════════════
+// 🧹 CLEAR FORMS – פונקציות ניקוי טפסים חדשות
+// ═══════════════════════════════════════════════════════
+function clearSeedForm() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('sCycle').value    = '1';
+    document.getElementById('sTray').value     = '1';
+    document.getElementById('sHoleFrom').value = '1';
+    document.getElementById('sHoleTo').value   = '1';
+    document.getElementById('sDate').value     = today;
+    document.getElementById('sGermTarget').value = '';
+    document.getElementById('sGerm').value     = '';
+    document.getElementById('sNotes').value    = '';
+    document.getElementById('sPlantManual').value = '';
+
+    const plantCountDisplay = document.getElementById('plantCountDisplay');
+    if (plantCountDisplay) plantCountDisplay.style.display = 'none';
+
+    const tipsArea = document.getElementById('tipsArea');
+    if (tipsArea) tipsArea.style.display = 'none';
+
+    const preview = document.getElementById('sPreview');
+    if (preview) { preview.src = ''; preview.style.display = 'none'; }
+
+    document.getElementById('sFile').value = '';
+    activeImg = '';
+
+    // איפוס בחירת מצע לברירת מחדל
+    document.querySelectorAll('[data-substrate]').forEach(o => o.classList.remove('active-opt'));
+    const firstSubstrate = document.querySelector('[data-substrate="מגשי פלסטיק"]');
+    if (firstSubstrate) firstSubstrate.classList.add('active-opt');
+    currentSubstrate = 'מגשי פלסטיק';
+    const lblTray = document.getElementById('lblTray');
+    if (lblTray) lblTray.textContent = 'מגש';
+
+    // איפוס בחירת קטגוריה לברירת מחדל
+    document.querySelectorAll('[data-cat]').forEach(o => o.classList.remove('active-opt'));
+    const firstCat = document.querySelector('[data-cat="veg"]');
+    if (firstCat) firstCat.classList.add('active-opt');
+    currentCat = 'veg';
+    document.getElementById('sPlantVeg').classList.remove('hidden');
+    document.getElementById('sPlantFlo').classList.add('hidden');
+    document.getElementById('sPlantManual').classList.add('hidden');
+    document.getElementById('sGermTarget').setAttribute('readonly', true);
+
+    // איפוס ה-select לאפשרות הראשונה
+    const vegSel = document.getElementById('sPlantVeg');
+    if (vegSel && vegSel.options.length > 0) vegSel.selectedIndex = 0;
+
+    updateGerm();
+    updatePlantCount();
+}
+
+function clearMetricsForm() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('wDate').value  = today;
+    document.getElementById('wPH').value    = '';
+    document.getElementById('wEC').value    = '';
+    document.getElementById('wTemp').value  = '';
+    document.getElementById('wDO').value    = '';
+
+    ['wPH','wEC','wTemp','wDO'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('input-out-of-range');
+    });
+
+    const warnBox = document.getElementById('wWarn');
+    if (warnBox) warnBox.style.display = 'none';
+}
 </script>
 <script>
 // ═══════════════════════════════════════════════════════
@@ -1303,7 +1375,6 @@ function checkLimits() {
 function saveData(type) {
     if (!currentUser) { alert('❌ יש להתחבר למערכת'); return; }
 
-    /* ── זריעה ── */
     if (type === 'seed') {
         let plant;
         if (currentCat === 'manual') {
@@ -1365,7 +1436,6 @@ function saveData(type) {
         refreshAll();
         alert(`✅ ${saved} צמחים נשמרו בהצלחה`);
 
-    /* ── הידרו ── */
     } else if (type === 'hydro') {
         const plant  = document.getElementById('hPlant').value;
         const source = document.getElementById('hSource').value;
@@ -1407,7 +1477,6 @@ function saveData(type) {
         refreshAll();
         alert('✅ שתילה נשמרה בהצלחה');
 
-    /* ── מדדים ── */
     } else if (type === 'water') {
         const dateW = document.getElementById('wDate').value;
         const ph    = parseFloat(document.getElementById('wPH').value)   || 0;
@@ -1444,7 +1513,6 @@ function saveData(type) {
         updateCharts();
         alert('✅ מדדים נשמרו בהצלחה');
 
-    /* ── כיול ── */
     } else if (type === 'calibration') {
         const calDate = document.getElementById('calibrationDate').value;
         const calPH   = document.getElementById('calPH').checked;
@@ -1550,8 +1618,7 @@ function deleteItem(id) {
     updateCharts();
     alert('✅ רשומה נמחקה');
 }
-</script>
-<script>
+
 // ═══════════════════════════════════════════════════════
 // 🎯 UI HELPERS
 // ═══════════════════════════════════════════════════════
@@ -1642,11 +1709,9 @@ function renderTable() {
             return td;
         };
 
-        /* תאריך */
         addCell(item.date
             ? new Date(item.date).toLocaleDateString('he-IL') : '-');
 
-        /* סוג */
         const typeCell  = document.createElement('td');
         const typeBadge = document.createElement('span');
         typeBadge.className   = `badge badge-${item.type}`;
@@ -1670,7 +1735,6 @@ function renderTable() {
                     : '-';
         addCell(loc);
 
-        /* נביטה */
         const germCell = document.createElement('td');
         if (item.type === 'seed' && item.germActual) {
             const expected = new Date(item.germExpected);
@@ -1689,7 +1753,6 @@ function renderTable() {
         } else { germCell.textContent = '-'; }
         row.appendChild(germCell);
 
-        /* מדדים */
         const mCell = document.createElement('td');
         if (item.type === 'water') {
             const mx = [];
@@ -1705,7 +1768,6 @@ function renderTable() {
         } else { mCell.textContent = '-'; }
         row.appendChild(mCell);
 
-        /* תמונה */
         const imgCell = document.createElement('td');
         if (item.img) {
             const thumb     = document.createElement('img');
@@ -1731,7 +1793,6 @@ function renderTable() {
 
         addCell(item.notes || '-', 'font-size:10px;');
 
-        /* פעולות */
         const actionsCell = document.createElement('td');
         actionsCell.style.whiteSpace = 'nowrap';
 
@@ -1776,15 +1837,13 @@ function renderTable() {
         tbody.appendChild(row);
     });
 }
-</script>
-<script>
+
 // ═══════════════════════════════════════════════════════
 // 🔍 SEARCH & FILTER
 // ═══════════════════════════════════════════════════════
 function searchTable() {
     const input = document.getElementById('searchInput').value.toLowerCase();
-    const rows  = document.getElementById('logBody')
-                        .getElementsByTagName('tr');
+    const rows  = document.getElementById('logBody').getElementsByTagName('tr');
     for (const row of rows) {
         row.style.display =
             row.textContent.toLowerCase().includes(input) ? '' : 'none';
@@ -1798,8 +1857,7 @@ function applyFilters() {
     const type     = document.getElementById('fType').value;
     const dateFrom = document.getElementById('fDateFrom').value;
     const dateTo   = document.getElementById('fDateTo').value;
-    const rows     = document.getElementById('logBody')
-                        .getElementsByTagName('tr');
+    const rows     = document.getElementById('logBody').getElementsByTagName('tr');
 
     for (let i = 0; i < rows.length; i++) {
         const cells = rows[i].cells;
@@ -1859,20 +1917,10 @@ function populateFilters() {
     fill('fCycle', cycleSet);
     fill('fTray',  traySet);
 }
-</script>
-<script>
-// ═══════════════════════════════════════════════════════
-// 📈 CHARTS  –  תיקון גדילה אינסופית
-// ═══════════════════════════════════════════════════════
 
-/**
- * destroyChart(key)
- * ------------------
- * מבצע destroy מלא של instance קיים
- * ומנקה את ה-canvas לפני יצירת גרף חדש.
- * זה מונע את "צבירת" ה-listeners ש-Chart.js
- * מוסיף בכל render ואת גדילת ה-canvas.
- */
+// ═══════════════════════════════════════════════════════
+// 📈 CHARTS
+// ═══════════════════════════════════════════════════════
 function destroyChart(key) {
     if (charts[key]) {
         charts[key].destroy();
@@ -1880,16 +1928,6 @@ function destroyChart(key) {
     }
 }
 
-/**
- * buildChart(...)
- * ----------------
- * יוצר גרף חדש תמיד מ-canvas נקי.
- * אפשרויות מפתח נגד גדילה:
- *   • maintainAspectRatio: false  → לא מחשב מחדש גבהים
- *   • responsive: true            → עוקב אחר ה-container בלבד
- *   • animation: false            → אין re-render אנימציה
- *   • resizeDelay: 0              → ללא debounce מיותר
- */
 function buildChart(key, canvasId, label, color, min, max, dataKey, data, labels) {
     destroyChart(key);
 
@@ -1925,12 +1963,10 @@ function buildChart(key, canvasId, label, color, min, max, dataKey, data, labels
             }]
         },
         options: {
-            /* ── מניעת גדילה ── */
             responsive:           true,
-            maintainAspectRatio: false,   // גובה נשלט ע"י ה-container בלבד
-            animation:           false,   // ✅ ביטול אנימציה – מונע re-render
+            maintainAspectRatio: false,
+            animation:           false,
             resizeDelay:         0,
-
             plugins: {
                 legend: { display: true, position: 'top' },
                 annotation: {
@@ -1967,9 +2003,7 @@ function buildChart(key, canvasId, label, color, min, max, dataKey, data, labels
                 }
             },
             scales: {
-                x: {
-                    ticks: { font: { size: 10 }, maxRotation: 45 }
-                },
+                x: { ticks: { font: { size: 10 }, maxRotation: 45 } },
                 y: {
                     beginAtZero: false,
                     min:         yMin,
@@ -1981,22 +2015,11 @@ function buildChart(key, canvasId, label, color, min, max, dataKey, data, labels
     });
 }
 
-/**
- * updateCharts()
- * ---------------
- * כניסה ראשית לרענון כל ארבעת הגרפים.
- * נקראת בעת:
- *   – מעבר לטאב מדדים
- *   – שמירת מדדים חדשים
- *   – מחיקת רשומה
- *   – syncFromFirebase
- */
 function updateCharts() {
     const waterData = db
         .filter(i => i.type === 'water')
         .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-    /* אין נתונים – השמד גרפים קיימים בלבד */
     if (waterData.length === 0) {
         ['ph','ec','temp','do'].forEach(k => destroyChart(k));
         return;
@@ -2007,37 +2030,12 @@ function updateCharts() {
     );
     const l = getLimits();
 
-    buildChart(
-        'ph',   'chartPH',
-        'pH', 'rgb(33,150,243)',
-        l.phMin, l.phMax, 'ph',
-        waterData.map(i => i.ph   ?? null),
-        labels
-    );
-    buildChart(
-        'ec',   'chartEC',
-        'EC (mS/cm)', 'rgb(76,175,80)',
-        l.ecMin, l.ecMax, 'ec',
-        waterData.map(i => i.ec   ?? null),
-        labels
-    );
-    buildChart(
-        'temp', 'chartTemp',
-        'טמפרטורה (°C)', 'rgb(255,87,34)',
-        l.tmMin, l.tmMax, 'temp',
-        waterData.map(i => i.temp ?? null),
-        labels
-    );
-    buildChart(
-        'do',   'chartDO',
-        'DO (%)', 'rgb(156,39,176)',
-        l.doMin, l.doMax, 'do',
-        waterData.map(i => i.do   ?? null),
-        labels
-    );
+    buildChart('ph',   'chartPH',   'pH',             'rgb(33,150,243)',  l.phMin, l.phMax, 'ph',   waterData.map(i => i.ph   ?? null), labels);
+    buildChart('ec',   'chartEC',   'EC (mS/cm)',      'rgb(76,175,80)',   l.ecMin, l.ecMax, 'ec',   waterData.map(i => i.ec   ?? null), labels);
+    buildChart('temp', 'chartTemp', 'טמפרטורה (°C)',  'rgb(255,87,34)',   l.tmMin, l.tmMax, 'temp', waterData.map(i => i.temp ?? null), labels);
+    buildChart('do',   'chartDO',   'DO (%)',          'rgb(156,39,176)',  l.doMin, l.doMax, 'do',   waterData.map(i => i.do   ?? null), labels);
 }
-</script>
-<script>
+
 // ═══════════════════════════════════════════════════════
 // 🗂️ REPORTS
 // ═══════════════════════════════════════════════════════
@@ -2047,8 +2045,7 @@ function generateReports() {
     reportDiv.innerHTML = '';
 
     const activePlants = db.filter(i =>
-        (i.type === 'seed' || i.type === 'hydro') &&
-        i.status === 'active'
+        (i.type === 'seed' || i.type === 'hydro') && i.status === 'active'
     );
     const plantGroups = {};
     activePlants.forEach(item => {
@@ -2071,11 +2068,8 @@ function generateReports() {
             plants.veg.find(p => p.n === plant) ||
             plants.flo.find(p => p.n === plant);
 
-        let html = `
-            <h3>🌱 ${plant}</h3>
-            <p style="font-size:12px;color:#666;">
-                סך הכל: ${items.length} יחידות פעילות
-            </p>`;
+        let html = `<h3>🌱 ${plant}</h3>
+            <p style="font-size:12px;color:#666;">סך הכל: ${items.length} יחידות פעילות</p>`;
 
         if (plantData) {
             html += `<div class="info-box">
@@ -2092,28 +2086,16 @@ function generateReports() {
             html += '</div>';
         }
 
-        html += `
-            <table style="font-size:10px;margin-top:10px;">
-                <thead>
-                    <tr>
-                        <th>תאריך</th>
-                        <th>מיקום</th>
-                        <th>סטטוס</th>
-                    </tr>
-                </thead>
-                <tbody>`;
+        html += `<table style="font-size:10px;margin-top:10px;">
+            <thead><tr><th>תאריך</th><th>מיקום</th><th>סטטוס</th></tr></thead>
+            <tbody>`;
 
         items.forEach(item => {
             const loc = item.type === 'seed'
-                ? `מחזור ${item.location?.cycle||'-'}, ` +
-                  `מגש ${item.location?.tray||'-'}, ` +
-                  `גומה ${item.location?.hole||'-'}`
-                : `הידרו - צד ${item.hydroLoc?.side||'-'}, ` +
-                  `חור ${item.hydroLoc?.hole||'-'}`;
+                ? `מחזור ${item.location?.cycle||'-'}, מגש ${item.location?.tray||'-'}, גומה ${item.location?.hole||'-'}`
+                : `הידרו - צד ${item.hydroLoc?.side||'-'}, חור ${item.hydroLoc?.hole||'-'}`;
             html += `<tr>
-                <td>${item.date
-                    ? new Date(item.date).toLocaleDateString('he-IL')
-                    : '-'}</td>
+                <td>${item.date ? new Date(item.date).toLocaleDateString('he-IL') : '-'}</td>
                 <td>${loc}</td>
                 <td>${item.germActual ? '✅ נבט' : 'פעיל'}</td>
             </tr>`;
@@ -2123,7 +2105,6 @@ function generateReports() {
         reportDiv.appendChild(card);
     }
 
-    /* התראת החלפת מים */
     const lastChange = localStorage.getItem('lastWaterChange');
     if (lastChange) {
         const nextDate = new Date(lastChange);
@@ -2133,18 +2114,15 @@ function generateReports() {
         if (nextDate < today) {
             const alertCard = document.createElement('div');
             alertCard.className     = 'card';
-            alertCard.style.cssText =
-                'background:#ffebee;border-right:4px solid var(--error);';
+            alertCard.style.cssText = 'background:#ffebee;border-right:4px solid var(--error);';
             alertCard.innerHTML =
                 `<h3 style="color:var(--error);">⚠️ התראת החלפת מים</h3>
-                 <p>אחרונה: ${new Date(lastChange)
-                     .toLocaleDateString('he-IL')}</p>
+                 <p>אחרונה: ${new Date(lastChange).toLocaleDateString('he-IL')}</p>
                  <p><strong>יש להחליף מים בהקדם!</strong></p>`;
             reportDiv.insertBefore(alertCard, reportDiv.firstChild);
         }
     }
 
-    /* התראת כיול */
     const calibrations = db
         .filter(i => i.type === 'calibration')
         .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -2167,23 +2145,16 @@ function generateReports() {
         if (!date) {
             warnings.push(`${sensor} - לא בוצע כיול מעולם`);
         } else if (new Date(date) < sevenDaysAgo) {
-            warnings.push(
-                `${sensor} - לא כויל ` +
-                `${Math.floor(
-                    (today2 - new Date(date)) / (1000 * 60 * 60 * 24)
-                )} ימים`
-            );
+            warnings.push(`${sensor} - לא כויל ${Math.floor((today2 - new Date(date)) / (1000 * 60 * 60 * 24))} ימים`);
         }
     }
 
     if (warnings.length > 0) {
         const calAlert = document.createElement('div');
         calAlert.className     = 'card';
-        calAlert.style.cssText =
-            'background:#fff3e0;border-right:4px solid var(--warning);';
-        let h =
-            `<h3 style="color:var(--warning);">⚙️ התראת כיול</h3>
-             <ul style="margin:0;padding-right:20px;font-size:12px;">`;
+        calAlert.style.cssText = 'background:#fff3e0;border-right:4px solid var(--warning);';
+        let h = `<h3 style="color:var(--warning);">⚙️ התראת כיול</h3>
+                 <ul style="margin:0;padding-right:20px;font-size:12px;">`;
         warnings.forEach(w => { h += `<li>${w}</li>`; });
         h += '</ul>';
         calAlert.innerHTML = h;
@@ -2199,7 +2170,7 @@ async function exportData() {
     try {
         const zip     = new JSZip();
         const headers = [
-                                   'תאריך','סוג','צמח','מחזור','מגש','גומה','צד הידרו','חור הידרו',
+            'תאריך','סוג','צמח','מחזור','מגש','גומה','צד הידרו','חור הידרו',
             'pH','EC','טמפרטורה','DO','סטטוס','תאריך נביטה צפוי',
             'תאריך נביטה בפועל','ימי הצצה','מצע','מקור שתיל','חיישנים שכוילו','הערות'
         ];
@@ -2234,10 +2205,7 @@ async function exportData() {
         });
 
         const BOM = '\uFEFF';
-        zip.file(
-            'growmanager_data.csv',
-            BOM + headerRow + '\n' + dataRows.join('\n')
-        );
+        zip.file('growmanager_data.csv', BOM + headerRow + '\n' + dataRows.join('\n'));
 
         const imgFolder = zip.folder('images');
         db.forEach((item, index) => {
@@ -2267,9 +2235,7 @@ async function exportData() {
         const url     = URL.createObjectURL(content);
         const a       = document.createElement('a');
         a.href        = url;
-        a.download    = `GrowManager_Export_${
-            new Date().toISOString().split('T')[0]
-        }.zip`;
+        a.download    = `GrowManager_Export_${new Date().toISOString().split('T')[0]}.zip`;
         a.click();
         URL.revokeObjectURL(url);
         alert('✅ הנתונים יוצאו בהצלחה!');
@@ -2284,12 +2250,10 @@ function refreshAll() {
     populateFilters();
     generateReports();
 }
-</script>
 
-<!-- ═══════════════════════════════════════════════════
-     🚀 INIT – EVENT LISTENERS
-════════════════════════════════════════════════════ -->
-<script>
+// ═══════════════════════════════════════════════════════
+// 🚀 INIT – EVENT LISTENERS
+// ═══════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 GrowManager PRO - Initializing...');
 
@@ -2297,14 +2261,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loadLimits();
     loadWaterChangeDate();
 
-    /* ── ברירות מחדל לתאריכים ── */
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('sDate').value           = today;
     document.getElementById('hDate').value           = today;
     document.getElementById('wDate').value           = today;
     document.getElementById('calibrationDate').value = today;
 
-    /* ── אכלוס רשימות צמחים ── */
     const vegSelect = document.getElementById('sPlantVeg');
     const floSelect = document.getElementById('sPlantFlo');
     plants.veg.forEach(p => {
@@ -2318,14 +2280,11 @@ document.addEventListener('DOMContentLoaded', () => {
         floSelect.appendChild(o);
     });
 
-    /* ── ניווט ── */
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
             const panel = item.dataset.panel;
-            document.querySelectorAll('.nav-item')
-                .forEach(i => i.classList.remove('active'));
-            document.querySelectorAll('.panel')
-                .forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
             item.classList.add('active');
             document.getElementById(panel).classList.add('active');
             if (panel === 'dataPanel')   updateCharts();
@@ -2333,11 +2292,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    /* ── בחירת מצע ── */
     document.querySelectorAll('[data-substrate]').forEach(opt => {
         opt.addEventListener('click', () => {
-            document.querySelectorAll('[data-substrate]')
-                .forEach(o => o.classList.remove('active-opt'));
+            document.querySelectorAll('[data-substrate]').forEach(o => o.classList.remove('active-opt'));
             opt.classList.add('active-opt');
             currentSubstrate = opt.dataset.substrate;
             const lblTray = document.getElementById('lblTray');
@@ -2349,44 +2306,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    /* ── בחירת קטגוריה ── */
     document.querySelectorAll('[data-cat]').forEach(opt => {
         opt.addEventListener('click', () => {
-            document.querySelectorAll('[data-cat]')
-                .forEach(o => o.classList.remove('active-opt'));
+            document.querySelectorAll('[data-cat]').forEach(o => o.classList.remove('active-opt'));
             opt.classList.add('active-opt');
             currentCat = opt.dataset.cat;
-
-            document.getElementById('sPlantVeg')
-                .classList.toggle('hidden', currentCat !== 'veg');
-            document.getElementById('sPlantFlo')
-                .classList.toggle('hidden', currentCat !== 'flo');
-            document.getElementById('sPlantManual')
-                .classList.toggle('hidden', currentCat !== 'manual');
-
+            document.getElementById('sPlantVeg').classList.toggle('hidden', currentCat !== 'veg');
+            document.getElementById('sPlantFlo').classList.toggle('hidden', currentCat !== 'flo');
+            document.getElementById('sPlantManual').classList.toggle('hidden', currentCat !== 'manual');
             if (currentCat !== 'manual') {
-                document.getElementById('sGermTarget')
-                    .setAttribute('readonly', true);
+                document.getElementById('sGermTarget').setAttribute('readonly', true);
             }
             updateGerm();
         });
     });
 
-    /* ── שדות זריעה ── */
-    document.getElementById('sPlantVeg')
-        .addEventListener('change', updateGerm);
-    document.getElementById('sPlantFlo')
-        .addEventListener('change', updateGerm);
-    document.getElementById('sPlantManual')
-        .addEventListener('input',  updateGerm);
-    document.getElementById('sDate')
-        .addEventListener('change', updateGerm);
-    document.getElementById('sHoleFrom')
-        .addEventListener('input', updatePlantCount);
-    document.getElementById('sHoleTo')
-        .addEventListener('input', updatePlantCount);
+    document.getElementById('sPlantVeg').addEventListener('change', updateGerm);
+    document.getElementById('sPlantFlo').addEventListener('change', updateGerm);
+    document.getElementById('sPlantManual').addEventListener('input',  updateGerm);
+    document.getElementById('sDate').addEventListener('change', updateGerm);
+    document.getElementById('sHoleFrom').addEventListener('input', updatePlantCount);
+    document.getElementById('sHoleTo').addEventListener('input', updatePlantCount);
 
-    /* ── צילום תמונה ── */
     document.getElementById('sFile').addEventListener('change', e => {
         const file = e.target.files[0];
         if (!file) return;
@@ -2400,27 +2341,17 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsDataURL(file);
     });
 
-    /* ── כפתורי שמירה ── */
-    document.getElementById('btnSaveSeed')
-        .addEventListener('click', () => saveData('seed'));
-    document.getElementById('btnSaveHydro')
-        .addEventListener('click', () => saveData('hydro'));
-    document.getElementById('btnSaveWater')
-        .addEventListener('click', () => saveData('water'));
-    document.getElementById('btnSaveCalibration')
-        .addEventListener('click', () => saveData('calibration'));
+    document.getElementById('btnSaveSeed').addEventListener('click', () => saveData('seed'));
+    document.getElementById('btnSaveHydro').addEventListener('click', () => saveData('hydro'));
+    document.getElementById('btnSaveWater').addEventListener('click', () => saveData('water'));
+    document.getElementById('btnSaveCalibration').addEventListener('click', () => saveData('calibration'));
 
-    /* ── צביעת שדות מדדים בזמן אמת ── */
     ['wPH','wEC','wTemp','wDO'].forEach(id => {
-        document.getElementById(id)
-            .addEventListener('input', checkLimits);
+        document.getElementById(id).addEventListener('input', checkLimits);
     });
 
-    /* ── שינוי תאריך החלפת מים ── */
-    document.getElementById('lastWaterChange')
-        .addEventListener('change', updateWaterChangeDate);
+    document.getElementById('lastWaterChange').addEventListener('change', updateWaterChangeDate);
 
-    /* ── טעינה ראשונית ── */
     updateGerm();
     updatePlantCount();
     refreshAll();

@@ -195,25 +195,6 @@
             font-size: 16px;
         }
 
-        .clear-btn {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #90a4ae;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: bold;
-            color: #546e7a;
-            font-size: 14px;
-            background: #eceff1;
-            margin-top: 8px;
-            transition: background 0.2s, color 0.2s;
-        }
-
-        .clear-btn:hover {
-            background: #cfd8dc;
-            color: #263238;
-        }
-
         .action-btn {
             padding: 6px 10px;
             border: none;
@@ -335,6 +316,7 @@
             margin: 0;
         }
 
+        /* ── Metrics entry ── */
         .metrics-entry-card {
             background: #f8fffe;
             border: 2px solid #b2dfdb;
@@ -398,6 +380,7 @@
             color:        #b71c1c !important;
         }
 
+        /* ── Water indicator ── */
         .water-indicator {
             border-radius: 12px;
             padding: 12px 16px;
@@ -434,10 +417,13 @@
             100% { box-shadow: 0 0 0 0   rgba(211,47,47,0);   }
         }
 
+        /* ══════════════════════════════════════════
+           🔧 תיקון גרפים – container גובה קבוע
+        ══════════════════════════════════════════ */
         .chart-container {
             position: relative;
             width: 100%;
-            height: 220px;
+            height: 220px;   /* גובה קבוע – לא ישתנה */
             overflow: hidden;
         }
 
@@ -449,14 +435,15 @@
             height: 100% !important;
         }
     </style>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"><\/script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"><\/script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"><\/script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"><\/script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"><\/script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"><\/script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
+
 <div class="top-bar">
     <div class="user-section">
         <span id="userEmail">טוען...</span>
@@ -474,7 +461,6 @@
         <div class="nav-item"        data-panel="reportPanel">🗂️ כרטיסיות</div>
         <div class="nav-item"        data-panel="limitsPanel">⚙️ גבולות</div>
     </div>
-
     <!-- ═══════════════════════════════════════
          פאנל זריעה
     ════════════════════════════════════════ -->
@@ -552,9 +538,6 @@
 
             <button id="btnSaveSeed" class="main-btn"
                     style="background:var(--primary)">💾 שמור זריעה</button>
-            <button type="button" class="clear-btn" onclick="clearSeedForm()">
-                🗑️ נקה טופס
-            </button>
         </div>
     </div>
     <!-- ═══════════════════════════════════════
@@ -595,9 +578,8 @@
                     style="background:var(--secondary)">💾 שמור שתילה</button>
         </div>
     </div>
-
     <!-- ═══════════════════════════════════════
-         פאנל מדדים
+         פאנל מדדים  ← הגרפים תוקנו כאן
     ════════════════════════════════════════ -->
     <div id="dataPanel" class="panel">
 
@@ -640,9 +622,6 @@
 
             <button id="btnSaveWater" class="main-btn"
                     style="background:var(--accent)">💾 שמור מדדים</button>
-            <button type="button" class="clear-btn" onclick="clearMetricsForm()">
-                🗑️ נקה טופס
-            </button>
         </div>
 
         <div class="card">
@@ -665,6 +644,7 @@
                     style="background:var(--warning)">✅ שמור כיול</button>
         </div>
 
+        <!-- גרפים – כל canvas עטוף ב-chart-container עם גובה קבוע -->
         <div class="card">
             <h3>📈 גרף pH</h3>
             <div class="chart-container">
@@ -869,6 +849,11 @@ let activeImg           = '';
 let currentCat          = 'veg';
 let currentSubstrate    = 'מגשי פלסטיק';
 
+/*
+ * 🔧 תיקון גרפים:
+ *    אחסון instance אחד לכל גרף.
+ *    לפני יצירה – destroy מלא + ניקוי canvas.
+ */
 const charts = { ph: null, ec: null, temp: null, do: null };
 
 // ═══════════════════════════════════════════════════════
@@ -1310,69 +1295,6 @@ function checkLimits() {
         }
     }
 }
-
-// ═══════════════════════════════════════════════════════
-// 🗑️ CLEAR FORMS
-// ═══════════════════════════════════════════════════════
-function clearSeedForm() {
-    const today = new Date().toISOString().split('T')[0];
-
-    document.getElementById('sCycle').value    = '1';
-    document.getElementById('sTray').value     = '1';
-    document.getElementById('sHoleFrom').value = '1';
-    document.getElementById('sHoleTo').value   = '1';
-    document.getElementById('sDate').value     = today;
-    document.getElementById('sGermTarget').value = '';
-    document.getElementById('sGerm').value     = '';
-    document.getElementById('sNotes').value    = '';
-
-    document.getElementById('sPlantVeg').selectedIndex   = 0;
-    document.getElementById('sPlantFlo').selectedIndex   = 0;
-    document.getElementById('sPlantManual').value        = '';
-
-    activeImg = '';
-    const preview = document.getElementById('sPreview');
-    preview.src           = '';
-    preview.style.display = 'none';
-
-    document.getElementById('sFile').value = '';
-
-    const tipsArea = document.getElementById('tipsArea');
-    if (tipsArea) tipsArea.style.display = 'none';
-
-    const countDisplay = document.getElementById('plantCountDisplay');
-    if (countDisplay) countDisplay.style.display = 'none';
-
-    // איפוס קטגוריה לברירת מחדל
-    currentCat = 'veg';
-    document.querySelectorAll('[data-cat]')
-        .forEach(o => o.classList.remove('active-opt'));
-    document.querySelector('[data-cat="veg"]').classList.add('active-opt');
-    document.getElementById('sPlantVeg').classList.remove('hidden');
-    document.getElementById('sPlantFlo').classList.add('hidden');
-    document.getElementById('sPlantManual').classList.add('hidden');
-    document.getElementById('sGermTarget').setAttribute('readonly', true);
-
-    updateGerm();
-    updatePlantCount();
-}
-
-function clearMetricsForm() {
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('wDate').value  = today;
-    document.getElementById('wPH').value    = '';
-    document.getElementById('wEC').value    = '';
-    document.getElementById('wTemp').value  = '';
-    document.getElementById('wDO').value    = '';
-
-    ['wPH','wEC','wTemp','wDO'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.remove('input-out-of-range');
-    });
-
-    const warnBox = document.getElementById('wWarn');
-    if (warnBox) warnBox.style.display = 'none';
-}
 </script>
 <script>
 // ═══════════════════════════════════════════════════════
@@ -1381,6 +1303,7 @@ function clearMetricsForm() {
 function saveData(type) {
     if (!currentUser) { alert('❌ יש להתחבר למערכת'); return; }
 
+    /* ── זריעה ── */
     if (type === 'seed') {
         let plant;
         if (currentCat === 'manual') {
@@ -1442,6 +1365,7 @@ function saveData(type) {
         refreshAll();
         alert(`✅ ${saved} צמחים נשמרו בהצלחה`);
 
+    /* ── הידרו ── */
     } else if (type === 'hydro') {
         const plant  = document.getElementById('hPlant').value;
         const source = document.getElementById('hSource').value;
@@ -1483,6 +1407,7 @@ function saveData(type) {
         refreshAll();
         alert('✅ שתילה נשמרה בהצלחה');
 
+    /* ── מדדים ── */
     } else if (type === 'water') {
         const dateW = document.getElementById('wDate').value;
         const ph    = parseFloat(document.getElementById('wPH').value)   || 0;
@@ -1519,6 +1444,7 @@ function saveData(type) {
         updateCharts();
         alert('✅ מדדים נשמרו בהצלחה');
 
+    /* ── כיול ── */
     } else if (type === 'calibration') {
         const calDate = document.getElementById('calibrationDate').value;
         const calPH   = document.getElementById('calPH').checked;
@@ -1691,7 +1617,8 @@ function updatePlantCount() {
         display.style.display = 'none';
     }
 }
-
+</script>
+<script>
 // ═══════════════════════════════════════════════════════
 // 📊 TABLE
 // ═══════════════════════════════════════════════════════
@@ -1715,9 +1642,11 @@ function renderTable() {
             return td;
         };
 
+        /* תאריך */
         addCell(item.date
             ? new Date(item.date).toLocaleDateString('he-IL') : '-');
 
+        /* סוג */
         const typeCell  = document.createElement('td');
         const typeBadge = document.createElement('span');
         typeBadge.className   = `badge badge-${item.type}`;
@@ -1741,6 +1670,7 @@ function renderTable() {
                     : '-';
         addCell(loc);
 
+        /* נביטה */
         const germCell = document.createElement('td');
         if (item.type === 'seed' && item.germActual) {
             const expected = new Date(item.germExpected);
@@ -1759,6 +1689,7 @@ function renderTable() {
         } else { germCell.textContent = '-'; }
         row.appendChild(germCell);
 
+        /* מדדים */
         const mCell = document.createElement('td');
         if (item.type === 'water') {
             const mx = [];
@@ -1774,6 +1705,7 @@ function renderTable() {
         } else { mCell.textContent = '-'; }
         row.appendChild(mCell);
 
+        /* תמונה */
         const imgCell = document.createElement('td');
         if (item.img) {
             const thumb     = document.createElement('img');
@@ -1799,6 +1731,7 @@ function renderTable() {
 
         addCell(item.notes || '-', 'font-size:10px;');
 
+        /* פעולות */
         const actionsCell = document.createElement('td');
         actionsCell.style.whiteSpace = 'nowrap';
 
@@ -1843,7 +1776,8 @@ function renderTable() {
         tbody.appendChild(row);
     });
 }
-
+</script>
+<script>
 // ═══════════════════════════════════════════════════════
 // 🔍 SEARCH & FILTER
 // ═══════════════════════════════════════════════════════
@@ -1928,8 +1862,17 @@ function populateFilters() {
 </script>
 <script>
 // ═══════════════════════════════════════════════════════
-// 📈 CHARTS
+// 📈 CHARTS  –  תיקון גדילה אינסופית
 // ═══════════════════════════════════════════════════════
+
+/**
+ * destroyChart(key)
+ * ------------------
+ * מבצע destroy מלא של instance קיים
+ * ומנקה את ה-canvas לפני יצירת גרף חדש.
+ * זה מונע את "צבירת" ה-listeners ש-Chart.js
+ * מוסיף בכל render ואת גדילת ה-canvas.
+ */
 function destroyChart(key) {
     if (charts[key]) {
         charts[key].destroy();
@@ -1937,6 +1880,16 @@ function destroyChart(key) {
     }
 }
 
+/**
+ * buildChart(...)
+ * ----------------
+ * יוצר גרף חדש תמיד מ-canvas נקי.
+ * אפשרויות מפתח נגד גדילה:
+ *   • maintainAspectRatio: false  → לא מחשב מחדש גבהים
+ *   • responsive: true            → עוקב אחר ה-container בלבד
+ *   • animation: false            → אין re-render אנימציה
+ *   • resizeDelay: 0              → ללא debounce מיותר
+ */
 function buildChart(key, canvasId, label, color, min, max, dataKey, data, labels) {
     destroyChart(key);
 
@@ -1972,10 +1925,12 @@ function buildChart(key, canvasId, label, color, min, max, dataKey, data, labels
             }]
         },
         options: {
+            /* ── מניעת גדילה ── */
             responsive:           true,
-            maintainAspectRatio: false,
-            animation:           false,
+            maintainAspectRatio: false,   // גובה נשלט ע"י ה-container בלבד
+            animation:           false,   // ✅ ביטול אנימציה – מונע re-render
             resizeDelay:         0,
+
             plugins: {
                 legend: { display: true, position: 'top' },
                 annotation: {
@@ -2026,11 +1981,22 @@ function buildChart(key, canvasId, label, color, min, max, dataKey, data, labels
     });
 }
 
+/**
+ * updateCharts()
+ * ---------------
+ * כניסה ראשית לרענון כל ארבעת הגרפים.
+ * נקראת בעת:
+ *   – מעבר לטאב מדדים
+ *   – שמירת מדדים חדשים
+ *   – מחיקת רשומה
+ *   – syncFromFirebase
+ */
 function updateCharts() {
     const waterData = db
         .filter(i => i.type === 'water')
         .sort((a, b) => new Date(a.date) - new Date(b.date));
 
+    /* אין נתונים – השמד גרפים קיימים בלבד */
     if (waterData.length === 0) {
         ['ph','ec','temp','do'].forEach(k => destroyChart(k));
         return;
@@ -2041,16 +2007,37 @@ function updateCharts() {
     );
     const l = getLimits();
 
-    buildChart('ph',   'chartPH',   'pH',            'rgb(33,150,243)',
-        l.phMin, l.phMax, 'ph',   waterData.map(i => i.ph   ?? null), labels);
-    buildChart('ec',   'chartEC',   'EC (mS/cm)',     'rgb(76,175,80)',
-        l.ecMin, l.ecMax, 'ec',   waterData.map(i => i.ec   ?? null), labels);
-    buildChart('temp', 'chartTemp', 'טמפרטורה (°C)', 'rgb(255,87,34)',
-        l.tmMin, l.tmMax, 'temp', waterData.map(i => i.temp ?? null), labels);
-    buildChart('do',   'chartDO',   'DO (%)',         'rgb(156,39,176)',
-        l.doMin, l.doMax, 'do',   waterData.map(i => i.do   ?? null), labels);
+    buildChart(
+        'ph',   'chartPH',
+        'pH', 'rgb(33,150,243)',
+        l.phMin, l.phMax, 'ph',
+        waterData.map(i => i.ph   ?? null),
+        labels
+    );
+    buildChart(
+        'ec',   'chartEC',
+        'EC (mS/cm)', 'rgb(76,175,80)',
+        l.ecMin, l.ecMax, 'ec',
+        waterData.map(i => i.ec   ?? null),
+        labels
+    );
+    buildChart(
+        'temp', 'chartTemp',
+        'טמפרטורה (°C)', 'rgb(255,87,34)',
+        l.tmMin, l.tmMax, 'temp',
+        waterData.map(i => i.temp ?? null),
+        labels
+    );
+    buildChart(
+        'do',   'chartDO',
+        'DO (%)', 'rgb(156,39,176)',
+        l.doMin, l.doMax, 'do',
+        waterData.map(i => i.do   ?? null),
+        labels
+    );
 }
-
+</script>
+<script>
 // ═══════════════════════════════════════════════════════
 // 🗂️ REPORTS
 // ═══════════════════════════════════════════════════════
@@ -2136,6 +2123,7 @@ function generateReports() {
         reportDiv.appendChild(card);
     }
 
+    /* התראת החלפת מים */
     const lastChange = localStorage.getItem('lastWaterChange');
     if (lastChange) {
         const nextDate = new Date(lastChange);
@@ -2156,6 +2144,7 @@ function generateReports() {
         }
     }
 
+    /* התראת כיול */
     const calibrations = db
         .filter(i => i.type === 'calibration')
         .sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -2210,7 +2199,7 @@ async function exportData() {
     try {
         const zip     = new JSZip();
         const headers = [
-            'תאריך','סוג','צמח','מחזור','מגש','גומה','צד הידרו','חור הידרו',
+                                   'תאריך','סוג','צמח','מחזור','מגש','גומה','צד הידרו','חור הידרו',
             'pH','EC','טמפרטורה','DO','סטטוס','תאריך נביטה צפוי',
             'תאריך נביטה בפועל','ימי הצצה','מצע','מקור שתיל','חיישנים שכוילו','הערות'
         ];
@@ -2297,10 +2286,10 @@ function refreshAll() {
 }
 </script>
 
+<!-- ═══════════════════════════════════════════════════
+     🚀 INIT – EVENT LISTENERS
+════════════════════════════════════════════════════ -->
 <script>
-// ═══════════════════════════════════════════════════════
-// 🚀 INIT – EVENT LISTENERS
-// ═══════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 GrowManager PRO - Initializing...');
 
@@ -2308,12 +2297,14 @@ document.addEventListener('DOMContentLoaded', () => {
     loadLimits();
     loadWaterChangeDate();
 
+    /* ── ברירות מחדל לתאריכים ── */
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('sDate').value           = today;
     document.getElementById('hDate').value           = today;
     document.getElementById('wDate').value           = today;
     document.getElementById('calibrationDate').value = today;
 
+    /* ── אכלוס רשימות צמחים ── */
     const vegSelect = document.getElementById('sPlantVeg');
     const floSelect = document.getElementById('sPlantFlo');
     plants.veg.forEach(p => {
@@ -2327,6 +2318,7 @@ document.addEventListener('DOMContentLoaded', () => {
         floSelect.appendChild(o);
     });
 
+    /* ── ניווט ── */
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => {
             const panel = item.dataset.panel;
@@ -2341,6 +2333,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    /* ── בחירת מצע ── */
     document.querySelectorAll('[data-substrate]').forEach(opt => {
         opt.addEventListener('click', () => {
             document.querySelectorAll('[data-substrate]')
@@ -2356,6 +2349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    /* ── בחירת קטגוריה ── */
     document.querySelectorAll('[data-cat]').forEach(opt => {
         opt.addEventListener('click', () => {
             document.querySelectorAll('[data-cat]')
@@ -2378,6 +2372,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    /* ── שדות זריעה ── */
     document.getElementById('sPlantVeg')
         .addEventListener('change', updateGerm);
     document.getElementById('sPlantFlo')
@@ -2391,6 +2386,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sHoleTo')
         .addEventListener('input', updatePlantCount);
 
+    /* ── צילום תמונה ── */
     document.getElementById('sFile').addEventListener('change', e => {
         const file = e.target.files[0];
         if (!file) return;
@@ -2404,6 +2400,7 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsDataURL(file);
     });
 
+    /* ── כפתורי שמירה ── */
     document.getElementById('btnSaveSeed')
         .addEventListener('click', () => saveData('seed'));
     document.getElementById('btnSaveHydro')
@@ -2413,14 +2410,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnSaveCalibration')
         .addEventListener('click', () => saveData('calibration'));
 
+    /* ── צביעת שדות מדדים בזמן אמת ── */
     ['wPH','wEC','wTemp','wDO'].forEach(id => {
         document.getElementById(id)
             .addEventListener('input', checkLimits);
     });
 
+    /* ── שינוי תאריך החלפת מים ── */
     document.getElementById('lastWaterChange')
         .addEventListener('change', updateWaterChangeDate);
 
+    /* ── טעינה ראשונית ── */
     updateGerm();
     updatePlantCount();
     refreshAll();

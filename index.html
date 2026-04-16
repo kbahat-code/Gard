@@ -906,19 +906,55 @@ async function syncToFirebase() {
     if (!currentUser) return;
     try {
         updateSyncBadge('syncing','מסנכרן...');
-        const batch = firestore.batch();
         const userRef = firestore.collection('users').doc(currentUser.uid).collection('growData');
+
+        // קרא את כל המסמכים הקיימים מהענן
         const existing = await userRef.get();
-        existing.forEach(doc => batch.delete(doc.ref));
-        db.forEach(item => {
-            const docRef = userRef.doc(String(item.id));
-            const d = {...item}; delete d.img;
-            batch.set(docRef, {...d, lastModified: firebase.firestore.FieldValue.serverTimestamp()});
+        const cloudMap = {};
+        existing.forEach(doc => { cloudMap[doc.id] = doc.data(); });
+
+        const batch = firestore.batch();
+        let changeCount = 0;
+
+        // מחק מהענן רשומות שנמחקו מקומית
+        const localIds = new Set(db.map(i => String(i.id)));
+        existing.forEach(doc => {
+            if (!localIds.has(doc.id)) {
+                batch.delete(doc.ref);
+                changeCount++;
+            }
         });
-        await batch.commit();
-        updateSyncBadge('success',`${db.length} פריטים נשמרו`);
-    } catch(error) { console.error('❌ Sync:', error); updateSyncBadge('error',error.message); }
+
+        // עדכן רק רשומות שהשתנו או חדשות
+        db.forEach(item => {
+            const docId  = String(item.id);
+            const d      = {...item};
+            delete d.img; // אל תשמור תמונות בפיירסטור
+
+            const cloud = cloudMap[docId];
+
+            // בדוק אם הרשומה קיימת בענן ואם שדה ה-timestamp זהה
+            if (cloud && cloud.timestamp === item.timestamp) {
+                return; // זהה – אין צורך לשמור
+            }
+
+            const docRef = userRef.doc(docId);
+            batch.set(docRef, {...d, lastModified: firebase.firestore.FieldValue.serverTimestamp()});
+            changeCount++;
+        });
+
+        if (changeCount > 0) {
+            await batch.commit();
+            updateSyncBadge('success', `${changeCount} שינויים נשמרו`);
+        } else {
+            updateSyncBadge('ready', 'אין שינויים לשמירה');
+        }
+    } catch(error) {
+        console.error('❌ Sync:', error);
+        updateSyncBadge('error', error.message);
+    }
 }
+
 async function syncFromFirebase() {
     if (!currentUser) return;
     try {
@@ -948,7 +984,11 @@ function initFirebaseSync() {
         if (snap.metadata.hasPendingWrites) return;
         syncFromFirebase();
     }, err=>{ console.error('❌ Snapshot:', err); updateSyncBadge('error','שגיאת מעקב'); });
-    setInterval(()=>{ if(navigator.onLine&&currentUser) syncToFirebase(); else updateSyncBadge('offline','אין חיבור'); },30000);
+   setInterval(()=>{ 
+    if(navigator.onLine && currentUser) syncToFirebase(); 
+    else updateSyncBadge('offline','אין חיבור'); 
+}, 300000); // 5 דקות במקום 30 שניות
+
 }
 function saveAndSync() { localStorage.setItem('growData',JSON.stringify(db)); syncToFirebase(); }
 function loadFromLocal() {
@@ -1367,8 +1407,10 @@ function saveEdit() {
         item.text        = gv('eLbText');
     }
 
-    closeEditModal();
-    saveAndSync();
+item.timestamp = Date.now(); // חיוני! בלי זה syncToFirebase לא יזהה שינוי
+closeEditModal();
+saveAndSync();
+
     refreshAll();
     updateCharts();
     alert('✅ הרשומה עודכנה בהצלחה');

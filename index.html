@@ -676,61 +676,75 @@
     </div>
 
     <!-- ═══ פאנל הגדרות ═══ -->
-    <div id="settingsPanel" class="panel">
-        <div class="card">
-            <h2>⚙️ הגדרות מערכת</h2>
-            <div class="setting-row">
-                <label>📧 אימייל:</label>
-                <input type="email" id="userEmail" placeholder="אימייל לזיהוי">
-            </div>
-            <div class="setting-row">
-                <label>🔐 סיסמה:</label>
-                <input type="password" id="userPassword" placeholder="סיסמה">
-            </div>
-            <div class="setting-row">
-                <label>🏢 שם החווה:</label>
-                <input type="text" id="farmName" placeholder="שם החווה">
-            </div>
-            <div class="setting-row">
-                <label>📱 מספר טלפון:</label>
-                <input type="tel" id="farmPhone" placeholder="מספר טלפון">
-            </div>
-            <div class="setting-row">
-                <label>🌐 כתובת:</label>
-                <input type="text" id="farmAddress" placeholder="כתובת">
-            </div>
-            <div class="setting-row">
-                <label>📅 ימי הצצה ברירת מחדל:</label>
-                <input type="number" id="defaultGermDays" value="7">
-            </div>
-            <div class="setting-row">
-                <label>📤 ייצוא נתונים:</label>
-                <button onclick="exportAllData()" class="main-btn"
-                        style="background:var(--secondary);width:100%;">
-                    📥 הורד קובץ גיבוי
-                </button>
-            </div>
-            <div class="setting-row">
-                <label>📥 ייבוא נתונים:</label>
-                <input type="file" id="importFile" accept=".json">
-                <button onclick="importData()" class="main-btn"
-                        style="background:var(--warning);width:100%;margin-top:5px;">
-                    📤 העלה קובץ גיבוי
-                </button>
-            </div>
-            <div class="setting-row">
-                <label>🗑️ מחיקת נתונים:</label>
-                <button onclick="clearAllData()" class="main-btn"
-                        style="background:var(--danger);width:100%;">
-                    🧹 נקה את כל הנתונים
-                </button>
-            </div>
-            <button onclick="saveSettings()" class="main-btn"
-                    style="background:var(--primary);margin-top:20px;">
-                💾 שמור הגדרות
-            </button>
+<div id="settingsPanel" class="panel">
+    <h2>⚙️ הגדרות מערכת</h2>
+    <div class="settings-grid">
+        <div class="setting-item">
+            <label for="userName">👤 שם המשתמש:</label>
+            <input type="text" id="userName" placeholder="הכנס שם">
+        </div>
+        <div class="setting-item">
+            <label for="languageSelect">🌐 שפה:</label>
+            <select id="languageSelect">
+                <option value="he">עברית</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <label for="themeSelect">🎨 ערכת נושא:</label>
+            <select id="themeSelect">
+                <option value="light">בהיר</option>
+                <option value="dark">כהה</option>
+                <option value="high-contrast">ניגודיות גבוהה</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <label for="autoSave">💾 שמירה אוטומטית:</label>
+            <select id="autoSave">
+                <option value="5">כל 5 דקות</option>
+                <option value="10" selected>כל 10 דקות</option>
+                <option value="30">כל 30 דקות</option>
+                <option value="0">כבוי</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <label for="notifications">🔔 התראות:</label>
+            <select id="notifications">
+                <option value="all">כל ההתראות</option>
+                <option value="important" selected>רק חשובות</option>
+                <option value="none">ללא</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <label for="dataRetention">🗑️ שמירת נתונים:</label>
+            <select id="dataRetention">
+                <option value="30">30 יום</option>
+                <option value="90" selected>90 יום</option>
+                <option value="180">180 יום</option>
+                <option value="365">שנה</option>
+            </select>
+        </div>
+        <div class="setting-item full-width">
+            <label for="backupFrequency">💾 גיבוי אוטומטי:</label>
+            <select id="backupFrequency">
+                <option value="daily">יומי</option>
+                <option value="weekly" selected>שבועי</option>
+                <option value="monthly">חודשי</option>
+                <option value="never">כבוי</option>
+            </select>
+        </div>
+        <div class="setting-item full-width">
+            <button onclick="exportAllData()" class="btn-export">📤 יצא הכל ל-JSON</button>
+            <button onclick="importData()" class="btn-import">📥 יבא מ-JSON</button>
+            <button onclick="createBackup()" class="btn-backup">💾 צור גיבוי מלא</button>
+        </div>
+        <div class="setting-item full-width">
+            <button onclick="resetAllData()" class="btn-danger">🗑️ אפס את כל הנתונים</button>
+            <button onclick="clearCache()" class="btn-warning">🧹 נקה מטמון</button>
         </div>
     </div>
+</div>
+
 
     <!-- ═══ פופאפ תמונה ═══ -->
     <div id="imagePopup" class="popup" onclick="this.style.display='none'">
@@ -768,10 +782,11 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
 // ============================================================================
+// GrowManager PRO - קובץ ראשי מתוקן
+// ============================================================================
+
 // 1. הגדרות Firebase
-// ============================================================================
 const firebaseConfig = {
     apiKey: "AIzaSyCw6sFQJQ5V5Q5Q5Q5Q5Q5Q5Q5Q5Q5Q5Q5Q5Q",
     authDomain: "growmanager-pro.firebaseapp.com",
@@ -781,8 +796,230 @@ const firebaseConfig = {
     appId: "1:123456789012:web:abcdef1234567890abcdef"
 };
 
-// אתחול Firebase
-let app, db;
+// 2. משתנים גלובליים
+let app, db, currentUser;
+let allLogs = [], allPlants = [], allWaterData = [], allCalibrations = [], allLogbook = [];
+let isSaving = false;
+
+// 3. פונקציות אתחול
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🚀 GrowManager PRO loaded");
+    
+    initDates();
+    initPlantLists();
+    loadSettings();
+    loadAllData();
+    initEvents();
+    initCharts();
+    showPanel('seedPanel');
+});
+
+// 4. פונקציות עזר כלליות
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('he-IL');
+}
+
+function showMessage(message, type = "info") {
+    const messageDiv = document.getElementById('messagePopup');
+    if (!messageDiv) return;
+    
+    document.getElementById('messageText').textContent = message;
+    messageDiv.style.display = 'flex';
+    
+    setTimeout(() => {
+        messageDiv.style.display = 'none';
+    }, 3000);
+}
+
+function showPanel(panelId) {
+    document.querySelectorAll('.panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+    
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    document.getElementById(panelId).classList.add('active');
+    document.querySelector(`.nav-item[data-panel="${panelId}"]`).classList.add('active');
+}
+
+// 5. פונקציות מיזוג נתונים (מתוקנות)
+function mergeArraysUnique(arr1, arr2, isDuplicateFunc) {
+    const merged = [...arr1];
+    
+    arr2.forEach(item2 => {
+        const isDuplicate = merged.some(item1 => isDuplicateFunc(item1, item2));
+        if (!isDuplicate) {
+            merged.push(item2);
+        }
+    });
+    
+    return merged;
+}
+
+function saveMergedDataToLocal() {
+    localStorage.setItem('growLogs', JSON.stringify(allLogs));
+    localStorage.setItem('growPlants', JSON.stringify(allPlants));
+    localStorage.setItem('waterMetrics', JSON.stringify(allWaterData));
+    localStorage.setItem('calibrations', JSON.stringify(allCalibrations));
+    localStorage.setItem('logbook', JSON.stringify(allLogbook));
+}
+
+// 6. פונקציות טעינת נתונים
+async function loadAllData() {
+    console.log("📥 Loading all data...");
+    
+    try {
+        loadLocalData();
+        
+        if (db) {
+            await loadFirebaseData();
+        }
+        
+        mergeAndDisplayData();
+        
+        console.log("✅ All data loaded successfully");
+    } catch (error) {
+        console.error("❌ Error loading data:", error);
+        showMessage("⚠️ שגיאה בטעינת הנתונים. בדוק את החיבור לאינטרנט.");
+    }
+}
+
+function loadLocalData() {
+    try {
+        allLogs = JSON.parse(localStorage.getItem('growLogs') || '[]');
+        allPlants = JSON.parse(localStorage.getItem('growPlants') || '[]');
+        allWaterData = JSON.parse(localStorage.getItem('waterMetrics') || '[]');
+        allCalibrations = JSON.parse(localStorage.getItem('calibrations') || '[]');
+        allLogbook = JSON.parse(localStorage.getItem('logbook') || '[]');
+        
+        console.log(`📊 Local data loaded: ${allLogs.length} logs, ${allPlants.length} plants`);
+    } catch (e) {
+        console.error("❌ Error loading local data:", e);
+        allLogs = []; allPlants = []; allWaterData = []; 
+        allCalibrations = []; allLogbook = [];
+    }
+}
+
+// 7. פונקציות שמירה (מתוקנות ללא כפילויות)
+async function saveSeed() {
+    if (isSaving) {
+        showMessage('⚠️ אנא המתן, השמירה מתבצעת...');
+        return;
+    }
+    isSaving = true;
+    
+    try {
+        const seedData = collectSeedData();
+        
+        if (!validateSeedData(seedData)) {
+            isSaving = false;
+            return;
+        }
+        
+        if (isDuplicateSeedEntry(seedData)) {
+            showMessage("⚠️ רשומה זו כבר קיימת במערכת");
+            isSaving = false;
+            return;
+        }
+        
+        const entryId = generateUniqueId('seed');
+        const entry = {
+            id: entryId,
+            ...seedData,
+            timestamp: new Date().toISOString(),
+            user: localStorage.getItem('userEmail') || 'anonymous'
+        };
+        
+        allLogs.push(entry);
+        localStorage.setItem('growLogs', JSON.stringify(allLogs));
+        
+        if (db) {
+            await saveToFirebase('logs', entryId, entry);
+        }
+        
+        updateSeedHistory();
+        showMessage("✅ זריעה נשמרה בהצלחה!");
+        resetSeedForm();
+        
+    } catch (error) {
+        console.error("❌ Error saving seed:", error);
+        showMessage("⚠️ שגיאה בשמירת הזריעה");
+    } finally {
+        isSaving = false;
+    }
+}
+
+// 8. פונקציות תצוגה (מתוקנות)
+function updateAllDisplays() {
+    updateSeedHistory();
+    updateHydroHistory();
+    updateWaterHistory();
+    updateCalibrationHistory();
+    updateLogbookHistory();
+    updateWaterChangeStatus();
+    updateLimitsDisplay();
+}
+
+// 9. פונקציות אירועים
+function initEvents() {
+    // בחירת מצע
+    document.querySelectorAll('.selector .opt').forEach(opt => {
+        opt.addEventListener('click', function() {
+            document.querySelectorAll('.selector .opt').forEach(o => 
+                o.classList.remove('active-opt'));
+            this.classList.add('active-opt');
+            
+            const cat = this.dataset.cat;
+            document.getElementById('sPlantVeg').classList.add('hidden');
+            document.getElementById('sPlantFlo').classList.add('hidden');
+            document.getElementById('sPlantManual').classList.add('hidden');
+            
+            if (cat === 'veg') {
+                document.getElementById('sPlantVeg').classList.remove('hidden');
+                updatePlantTips();
+            } else if (cat === 'flo') {
+                document.getElementById('sPlantFlo').classList.remove('hidden');
+                updatePlantTips();
+            } else {
+                document.getElementById('sPlantManual').classList.remove('hidden');
+                document.getElementById('tipsArea').style.display = 'none';
+            }
+        });
+    });
+    
+    // שמירת זריעה
+    document.getElementById('btnSaveSeed').addEventListener('click', function() {
+        if (isSaving) {
+            showMessage('⚠️ אנא המתן, השמירה מתבצעת...');
+            return;
+        }
+        saveSeed();
+    });
+    
+    // שמירת שתילה
+    document.getElementById('btnSaveHydro').addEventListener('click', function() {
+        if (isSaving) {
+            showMessage('⚠️ אנא המתן, השמירה מתבצעת...');
+            return;
+        }
+        saveHydro();
+    });
+    
+    // שמירת מדדים
+    document.getElementById('btnSaveWater').addEventListener('click', function() {
+        if (isSaving) {
+            showMessage('⚠️ אנא המתן, השמירה מתבצעת...');
+            return;
+        }
+        saveWaterMetrics();
+    });
+}
+
+// 10. אתחול Firebase
 try {
     app = firebase.initializeApp(firebaseConfig);
     db = firebase.firestore(app);
@@ -790,6 +1027,11 @@ try {
 } catch (e) {
     console.error("❌ Firebase initialization error:", e);
 }
+
+// ============================================================================
+// סיום הקובץ הראשי
+// ============================================================================
+
 
 // ============================================================================
 // 2. משתנים גלובליים

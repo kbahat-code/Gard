@@ -299,8 +299,9 @@
             <label>סוג מצע:</label>
             <div class="selector">
                 <div class="opt active-opt" data-substrate="מגשי פלסטיק">מגשי פלסטיק</div>
-                <div class="opt"            data-substrate="צמר סלעים">צמר
-                <div class="opt"            data-substrate="עציצי פלסטיק">עציצי פלסטיק</div>
+                <div class="opt" data-substrate="צמר סלעים">צמר סלעים</div>
+                <div class="opt" data-substrate="עציצי פלסטיק">עציצי פלסטיק</div>
+
             </div>
             <div class="single-row">
                 <div>
@@ -1075,17 +1076,24 @@ function mergeAndDisplayData() {
         
         // מיזוג מדדי מים - מניעת כפילויות לפי תאריך ושעה
         allWaterData = mergeArraysUnique(allWaterData, window.firebaseData.water,
-            (a, b) => a.date === b.date && a
+        (a, b) => a.date === b.date && a
+
     // מיזוג כיולים - מניעת כפילויות לפי תאריך, שעה וסוג חיישן
-    allCalibrations = mergeArraysUnique(allCalibrations, window.firebaseData.calibrations,
-        (a, b) => a.date === b.date && a.time === b.time && a.sensorType === b.sensorType);
+allCalibrations = mergeArraysUnique(allCalibrations, window.firebaseData.calibrations,
+    (a, b) => a.date === b.date && a.time === b.time && a.sensorType === b.sensorType);
     
-    // מיזוג לוגבוק - מניעת כפילויות לפי תאריך, שעה וטקסט
-    allLogbook = mergeArraysUnique(allLogbook, window.firebaseData.logbook,
-        (a, b) => a.date === b.date && a.time === b.time && a.text === b.text);
-    
-    console.log(`✅ Data merged: ${allLogs.length} logs, ${allPlants.length} plants`);
+console.log(`✅ Data merged: ${allLogs.length} logs, ${allPlants.length} plants`);
 }
+
+// שמירת הנתונים הממוזגים ב-Local Storage
+function saveMergedDataToLocal() {
+    localStorage.setItem('growLogs', JSON.stringify(allLogs));
+    localStorage.setItem('growPlants', JSON.stringify(allPlants));
+    localStorage.setItem('waterMetrics', JSON.stringify(allWaterData));
+    localStorage.setItem('calibrations', JSON.stringify(allCalibrations));
+    localStorage.setItem('logbook', JSON.stringify(allLogbook));
+}
+
 
 // שמירת הנתונים הממוזגים ב-Local Storage
 saveMergedDataToLocal();
@@ -1098,6 +1106,24 @@ arr2.forEach(item2 => {
         merged.push(item2);
     }
 });
+
+return merged;
+}
+
+// פונקציה למיזוג מערכים ייחודיים
+function mergeArraysUnique(arr1, arr2, isDuplicateFunc) {
+    const merged = [...arr1];
+    
+    arr2.forEach(item2 => {
+        const isDuplicate = merged.some(item1 => isDuplicateFunc(item1, item2));
+        if (!isDuplicate) {
+            merged.push(item2);
+        }
+    });
+    
+    return merged;
+}
+
 
 return merged;
 try {
@@ -1302,6 +1328,7 @@ const recentPlants = allPlants
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 10);
 
+
 container.innerHTML = recentPlants.map(plant => `
     <div class="history-item">
         <div class="history-header">
@@ -1333,7 +1360,19 @@ container.innerHTML = recentWater.map(entry => {
         <div class="history-header">
             <span class="history-date">${formatDate(entry.date)} ${entry.time}</span>
             <span class="history-cycle">מחזור ${entry.cycle}</span>
-            <button onclick="deleteWater('${entry.id}')`
+            <button onclick="deleteWater('${entry.id}')" class="delete-btn">🗑️</button>
+        </div>
+        <div class="history-details">
+            <span class="${phClass}">pH: ${entry.pH.toFixed(1)}</span>
+            <span class="${ecClass}">EC: ${entry.EC.toFixed(2)}</span>
+            <span class="${tempClass}">טמפ': ${entry.temp}°C</span>
+            <span class="${doClass}">DO: ${entry.DO}%</span>
+        </div>
+        ${entry.notes ? `<div class="history-notes">📝 ${entry.notes}</div>` : ''}
+    </div>
+    `;
+}).join('');
+
 const recentCalibrations = allCalibrations
     .sort((a, b) => new Date(b.date + 'T' + b.time) - new Date(a.date + 'T' + a.time))
     .slice(0, 10);
@@ -1438,9 +1477,18 @@ container.innerHTML = `
 `;
 document.getElementById('seedCount').textContent = seedCount;
 document.getElementById('hydroCount').textContent = hydroCount;
-document.getElementById('waterCount').textContent = waterCount`
+document.getElementById('waterCount').textContent = waterCount;
+
+const tips = [
+    "💡 טיפ: שמור על טמפרטורת מים בין 18-24°C לצמיחה אופטימלית",
+    "💡 טיפ: בדוק pH כל יום ושמור עליו בין 5.5-6.5",
+    "💡 טיפ: החלף מים כל 14-21 ימים למניעת הצטברות מלחים",
+    "💡 טיפ: כיול חיישנים כל 30 ימים להבטחת דיוק המדידות"
+];
+
 const randomTip = tips[Math.floor(Math.random() * tips.length)];
 document.getElementById('plantTip').textContent = randomTip;
+
 try {
     // מחיקה מהמערך המקומי
     const index = allLogs.findIndex(log => log.id === id);

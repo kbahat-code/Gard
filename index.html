@@ -590,6 +590,11 @@
     <div id="logbookPanel" class="panel">
         <div class="card">
             <h2>📓 לוגבוק – יומן הערות</h2>
+<div id="logbookPanel" class="panel">
+    <div class="card">
+        <h2>📓 לוגבוק – יומן הערות</h2>
+        <div id="logbookContainer" style="margin-bottom: 20px;"></div>
+        
             <div class="grid-2">
                 <div>
                     <label>📅 תאריך:</label>
@@ -2237,6 +2242,24 @@ function refreshAll() {
     populateFilters();
     generateReports();
     renderLogbook();
+}
+// ═══════════════════════════════════════════════════════
+// 💾 LOAD FROM LOCAL
+// ═══════════════════════════════════════════════════════
+function loadFromLocal() {
+    const saved = localStorage.getItem('growData');
+    if (saved) {
+        try {
+            db = JSON.parse(saved);
+            console.log('✅ נתונים טעונים מ-localStorage:', db.length, 'רשומות');
+        } catch (e) {
+            console.error('❌ שגיאה בטעינת נתונים:', e);
+            db = [];
+        }
+    } else {
+        console.log('ℹ️ אין נתונים קודמים - התחל חדש');
+        db = [];
+    }
 }
 
 // ═══════════════════════════════════════════════════════

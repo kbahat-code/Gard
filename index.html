@@ -1007,11 +1007,21 @@ function initFirebaseSync() {
     }, 30000); // 30 שניות
 }
 
-function saveAndSync() { localStorage.setItem('growData',JSON.stringify(db)); syncToFirebase(); }
-function loadFromLocal() {
-    const s = localStorage.getItem('growData');
-    if (s) { try { db=JSON.parse(s); } catch(e){ db=[]; } } else { db=[]; }
+function saveAndSync() {
+    // ✅ שמור ב-localStorage
+    localStorage.setItem('growData', JSON.stringify(db));
+    
+    // ✅ סנכרן עם Firebase
+    syncToFirebase();
+    
+    // ✅ רענן בדיוק את מה שצריך - בלי כפלויות!
+    renderTable();
+    populateFilters();
+    renderLogbook(); // ✅ רענן לוגבוק
+    generateReports();
+    updateCharts();
 }
+
 
 // ═══════════════════════════════════════════════════════
 // 💧 WATER CHANGE
@@ -1535,38 +1545,45 @@ function saveLogbookEntry() {
     refreshAll();
     alert('✅ הערה נשמרה בהצלחה');
 }
-
 function renderLogbook() {
-    const list = document.getElementById('logbookList');
-    if (!list) return;
-    list.innerHTML = '';
-    const entries = db
-        .filter(i=>i.type==='logbook')
-        .sort((a,b)=>new Date(b.date)-new Date(a.date));
-    if (entries.length===0) {
-        list.innerHTML='<div class="info-box">📭 אין הערות בלוגבוק</div>';
-        return;
-    }
-    entries.forEach(entry => {
-        const div = document.createElement('div');
-        div.className = 'logbook-entry';
-        const catEmoji = {
-            'כללי':'📝','תצפית':'👁️','טיפול':'🔧',
-            'בעיה':'⚠️','הצלחה':'✅','תזכורת':'🔔'
-        }[entry.lbCategory] || '📝';
-        div.innerHTML = `
-            <div class="lb-date">
-                ${catEmoji} ${entry.lbCategory || 'כללי'} &nbsp;|&nbsp;
-                📅 ${entry.date ? new Date(entry.date).toLocaleDateString('he-IL') : '-'}
+    const logContainer = document.getElementById('logbookContainer');
+    
+    // ✅ חיוני! מנקה את כל ההערות הישנות
+    logContainer.innerHTML = '';
+    
+    // ✅ מחזיק רשימת IDs שכבר הוצגו (למניעת כפלויות)
+    const displayedIds = new Set();
+    
+    db.forEach(item => {
+        // ✅ בדיקה 1: האם יש הערה?
+        if (!item.notes || item.notes.trim() === '') return;
+        
+        // ✅ בדיקה 2: האם כבר הוצגנו את ההערה הזו?
+        if (displayedIds.has(item.id)) {
+            console.warn('⚠️ הערה כפולה זוהתה והוסרה: ' + item.id);
+            return;
+        }
+        
+        // ✅ סמן שהערה זו כבר הוצגה
+        displayedIds.add(item.id);
+        
+        // ✅ יצור את האלמנט
+        const noteDiv = document.createElement('div');
+        noteDiv.className = 'note-item'; // עיצוב
+        noteDiv.id = 'note-' + item.id; // זהות ייחודית
+        noteDiv.innerHTML = `
+            <div style="padding: 10px; margin: 5px 0; background: #f0f0f0; border-radius: 5px;">
+                <strong>${item.name}</strong>
+                <p>${item.notes}</p>
+                <button onclick="deleteNote('${item.id}')">🗑️ מחק הערה</button>
             </div>
-            <div class="lb-text">${entry.text||''}</div>
-            <div class="lb-actions">
-                <button class="action-btn btn-edit" onclick="openEditModal(${entry.id})">✏️ ערוך</button>
-                <button class="btn-del" onclick="deleteItemPermanent(${entry.id})">❌ מחק</button>
-            </div>`;
-        list.appendChild(div);
+        `;
+        logContainer.appendChild(noteDiv);
     });
+    
+    console.log('✅ לוגבוק עדכן - ' + displayedIds.size + ' הערות');
 }
+
 
 // ═══════════════════════════════════════════════════════
 // 🗑️ DELETE – מחיקה לצמיתות (לשימוש בחיפוש)

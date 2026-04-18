@@ -902,6 +902,7 @@ function updateSyncBadge(status,message) {
     badge.title = message||status;
     if (status==='success') setTimeout(()=>{ badge.textContent=icons.ready; badge.title='מוכן'; },2000);
 }
+ 
 async function syncToFirebase() {
     if (!currentUser) return;
     try {
@@ -916,12 +917,13 @@ async function syncToFirebase() {
         const batch = firestore.batch();
         let changeCount = 0;
 
-        // מחק מהענן רשומות שנמחקו מקומית
+        // ✅ מחק מהענן רשומות שנמחקו מקומית
         const localIds = new Set(db.map(i => String(i.id)));
         existing.forEach(doc => {
             if (!localIds.has(doc.id)) {
                 batch.delete(doc.ref);
                 changeCount++;
+                console.log(`🗑️ מחק מ-Firestore: ${doc.id}`);
             }
         });
 
@@ -954,6 +956,7 @@ async function syncToFirebase() {
         updateSyncBadge('error', error.message);
     }
 }
+
 
 async function syncFromFirebase() {
     if (!currentUser) return;
@@ -1197,29 +1200,49 @@ function saveData(type) {
             alert('❌ נא למלא את כל השדות החובה'); return;
         }
         if (holeFrom>holeTo) { alert('❌ גומה התחלה חייבת להיות קטנה או שווה לגומה סיום'); return; }
+        
         const plantData = currentCat==='manual' ? null : plants[currentCat].find(p=>p.n===plant);
         const germDays  = plantData ? plantData.d : parseInt(document.getElementById('sGermTarget').value||7);
         const germDate  = new Date(dateSeed);
         germDate.setDate(germDate.getDate()+germDays);
+        
         let saved=0;
         for (let hole=holeFrom; hole<=holeTo; hole++) {
+            const batchId = `${cycle}-${tray}-${hole}`;
+            
+            // ✅ בדוק אם הרשומה קיימת כבר
+            const existingItem = db.find(i => 
+                i.type==='seed' && 
+                i.batchId===batchId && 
+                i.date===dateSeed &&
+                i.plant===plant
+            );
+            
+            if (existingItem) {
+                console.warn(`⚠️ רשומה ${batchId} קיימת כבר - דלג`);
+                continue;
+            }
+            
             const newId = db.length ? Math.max(...db.map(i=>i.id))+1 : 1;
             db.push({
                 id:newId, type:'seed', category:currentCat, plant,
                 date:dateSeed, substrate:currentSubstrate,
                 location:{cycle,tray,hole},
-                batchId:`${cycle}-${tray}-${hole}`,
+                batchId:batchId,
                 germDays, germExpected:germDate.toISOString().split('T')[0],
                 germActual:null, notes, img:activeImg||'',
                 timestamp:Date.now(), status:'active'
             });
             saved++;
         }
+        
+        if (saved===0) { alert('⚠️ כל הרשומות קיימות כבר'); return; }
+        
         activeImg='';
         const prev=document.getElementById('sPreview'); if(prev) prev.style.display='none';
         const notesEl=document.getElementById('sNotes'); if(notesEl) notesEl.value='';
         saveAndSync(); refreshAll();
-        alert(`✅ ${saved} צמחים נשמרו בהצלחה`);
+        alert(`✅ ${saved} צמחים חדשים נשמרו בהצלחה`);
 
     } else if (type==='hydro') {
         const plant  = document.getElementById('hPlant').value;
@@ -1229,8 +1252,21 @@ function saveData(type) {
         const dateH  = document.getElementById('hDate').value;
         const notes  = document.getElementById('hNotes').value;
         if (!plant||!dateH||!side||!hole) { alert('❌ נא למלא את כל השדות החובה'); return; }
+        
+        // ✅ בדוק אם החור תפוס
         const occupied = db.find(i=>i.type==='hydro'&&i.hydroLoc&&i.hydroLoc.side===side&&i.hydroLoc.hole===hole&&i.status==='active');
         if (occupied) { alert('❌ החור תפוס'); return; }
+        
+        // ✅ בדוק אם רשומה כמו זו קיימת כבר
+        const existing = db.find(i=>
+            i.type==='hydro' && 
+            i.plant===plant && 
+            i.date===dateH &&
+            i.source===source
+        );
+        
+        if (existing) { alert('⚠️ רשומה זו קיימת כבר'); return; }
+        
         const newId = db.length ? Math.max(...db.map(i=>i.id))+1 : 1;
         db.push({
             id:newId, type:'hydro', plant, source:source||'לא צוין',
@@ -1253,6 +1289,17 @@ function saveData(type) {
         const tgtDO    = parseFloat(document.getElementById('wTargetDO').value)||null;
         if (!dateW) { alert('❌ נא למלא תאריך מדידה'); return; }
         if (ph===0&&ec===0&&temp===0&&dox===0) { alert('❌ נא למלא לפחות ערך אחד'); return; }
+        
+        // ✅ בדוק אם רשומה זהה קיימת כבר
+        const existing = db.find(i=>
+            i.type==='water' && 
+            i.date===dateW && 
+            i.time===timeW &&
+            i.ph===ph && i.ec===ec && i.temp===temp && i['do']===dox
+        );
+        
+        if (existing) { alert('⚠️ רשומת מדדים זו קיימת כבר'); return; }
+        
         const newId = db.length ? Math.max(...db.map(i=>i.id))+1 : 1;
         db.push({
             id:newId, type:'water', date:dateW, time:timeW,
@@ -1272,10 +1319,21 @@ function saveData(type) {
         const calDO   = document.getElementById('calDO').checked;
         if (!calDate) { alert('❌ נא למלא תאריך כיול'); return; }
         if (!calPH&&!calEC&&!calDO) { alert('❌ נא לסמן לפחות חיישן אחד'); return; }
+        
         const sensors=[];
         if (calPH) sensors.push('pH');
         if (calEC) sensors.push('EC');
         if (calDO) sensors.push('DO');
+        
+        // ✅ בדוק אם כיול לחיישנים אלה בתאריך זה קיים כבר
+        const existing = db.find(i=>
+            i.type==='calibration' && 
+            i.date===calDate &&
+            i.sensors===sensors.join(', ')
+        );
+        
+        if (existing) { alert('⚠️ כיול זה קיים כבר'); return; }
+        
         const newId = db.length ? Math.max(...db.map(i=>i.id))+1 : 1;
         db.push({
             id:newId, type:'calibration',
@@ -1288,6 +1346,7 @@ function saveData(type) {
         alert('✅ כיול נשמר בהצלחה');
     }
 }
+
 </script>
 <script>
 // ═══════════════════════════════════════════════════════
@@ -1436,6 +1495,17 @@ function saveLogbookEntry() {
     const lbCat  = catEl.value;
     if (!lbDate) { alert('❌ נא לבחור תאריך'); return; }
     if (!lbText) { alert('❌ נא להזין הערה'); return; }
+    
+    // ✅ בדוק אם הערה זהה קיימת כבר
+    const existing = db.find(i=>
+        i.type==='logbook' && 
+        i.date===lbDate &&
+        i.text===lbText &&
+        i.lbCategory===lbCat
+    );
+    
+    if (existing) { alert('⚠️ הערה זו קיימת כבר'); return; }
+    
     const newId = db.length ? Math.max(...db.map(i=>i.id))+1 : 1;
     db.push({
         id: newId,
@@ -1489,13 +1559,19 @@ function renderLogbook() {
 // ═══════════════════════════════════════════════════════
 function deleteItemPermanent(id) {
     if (!confirm('❌ האם למחוק רשומה זו לצמיתות? פעולה זו אינה הפיכה!')) return;
+    
+    // ✅ מחק מהמערך המקומי
     db = db.filter(i=>i.id!==id);
+    
+    // ✅ סנכרן עם Firestore (יוחק שם בשורה הבאה של syncToFirebase)
     saveAndSync();
+    
     refreshAll();
     updateCharts();
     renderLogbook();
     alert('✅ רשומה נמחקה לצמיתות');
 }
+
 
 // ═══════════════════════════════════════════════════════
 // פעולות על רשומות

@@ -1552,73 +1552,126 @@ function saveLogbookEntry() {
 }
 function renderLogbook() {
     const logContainer = document.getElementById('logbookContainer');
-    
-    // ✅ חיוני! מנקה את כל ההערות הישנות
     logContainer.innerHTML = '';
-    
-    // ✅ מחזיק רשימת IDs שכבר הוצגו (למניעת כפלויות)
-    const displayedIds = new Set();
-    
+
     db.forEach(item => {
-        // ✅ בדיקה 1: האם יש הערה?
-        if (!item.notes || item.notes.trim() === '') return;
-        
-        // ✅ בדיקה 2: האם כבר הוצגנו את ההערה הזו?
-        if (displayedIds.has(item.id)) {
-            console.warn('⚠️ הערה כפולה זוהתה והוסרה: ' + item.id);
-            return;
+        if (item.type === 'logbook') {
+            const noteDiv = document.createElement('div');
+            noteDiv.className = 'note-card';
+            noteDiv.innerHTML = `
+                <div class="note-header">
+                    <span class="note-date">${new Date(item.timestamp).toLocaleDateString('he-IL')}</span>
+                    <button class="delete-btn" onclick="showDeleteConfirm('${item.id}')">🗑️ מחק</button>
+                </div>
+                <p class="note-text">${escapeHtml(item.content)}</p>
+            `;
+            logContainer.appendChild(noteDiv);
         }
-        
-        // ✅ סמן שהערה זו כבר הוצגה
-        displayedIds.add(item.id);
-        
-        // ✅ יצור את האלמנט
-        const noteDiv = document.createElement('div');
-        noteDiv.className = 'note-item'; // עיצוב
-        noteDiv.id = 'note-' + item.id; // זהות ייחודית
-        noteDiv.innerHTML = `
-            <div style="padding: 10px; margin: 5px 0; background: #f0f0f0; border-radius: 5px;">
-                <strong>${item.name}</strong>
-                <p>${item.notes}</p>
-                <button onclick="deleteNote('${item.id}')">🗑️ מחק הערה</button>
-            </div>
-        `;
-        logContainer.appendChild(noteDiv);
     });
-    
-    console.log('✅ לוגבוק עדכן - ' + displayedIds.size + ' הערות');
+
+    console.log('✅ לוגבוק עדכן');
 }
+
 
 
 // ═══════════════════════════════════════════════════════
 // 🗑️ DELETE – מחיקה לצמיתות (לשימוש בחיפוש)
 // ═══════════════════════════════════════════════════════
-function deleteItemPermanent(id) {
-    if (!confirm('❌ האם למחוק רשומה זו לצמיתות? פעולה זו אינה הפיכה!')) return;
-    
-    // ✅ מחק מהמערך המקומי
-    db = db.filter(i => i.id !== id);
-    
-    // ✅ עדכן localStorage מיד
-    localStorage.setItem('growData', JSON.stringify(db));
-    
-    // ✅ סנכרן עם Firebase
-    syncToFirebase();
-    
-    // ✅ רענן את הטבלה מיד
-    renderTable();
-    populateFilters();
-    
-    // ✅ רענן דוחות
-    generateReports();
-    
-    // ✅ אם זה לוגבוק, רענן
+// ✅ הראה חלון עם שאלה - כן / לא
+function showDeleteConfirm(itemId) {
+    const modal = document.createElement('div');
+    modal.className = 'confirm-modal';
+    modal.innerHTML = `
+        <div class="confirm-box">
+            <p>⚠️ האם אתה בטוח שברצונך למחוק הערה זו לצמיתות?</p>
+            <div class="confirm-buttons">
+                <button class="btn-yes" onclick="deleteNotePermanent('${itemId}')">✅ כן, מחק</button>
+                <button class="btn-no" onclick="closeDeleteConfirm()">❌ לא, ביטול</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// ✅ סגור את ה-Modal
+function closeDeleteConfirm() {
+    const modal = document.querySelector('.confirm-modal');
+    if (modal) modal.remove();
+}
+
+// ✅ מחק את ההערה לצמיתות
+function deleteNotePermanent(itemId) {
+    db = db.filter(item => item.id !== itemId);
+    saveToLocal();
     renderLogbook();
-    
-    // ✅ רענן גרפים אם היה מדד
-    updateCharts();
-    
-    alert('✅ רשומה נמחקה לצמיתות');
+    closeDeleteConfirm();
+    console.log('🗑️ הערה נמחקה לצמיתות: ' + itemId);
+}
+
+/* ✅ Modal עם שאלה - כן / לא */
+.confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.confirm-box {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    direction: rtl;
+    max-width: 400px;
+}
+
+.confirm-box p {
+    font-size: 18px;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.confirm-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.btn-yes, .btn-no {
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-yes {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-yes:hover {
+    background: #c0392b;
+    transform: scale(1.05);
+}
+
+.btn-no {
+    background: #95a5a6;
+    color: white;
+}
+
+.btn-no:hover {
+    background: #7f8c8d;
+    transform: scale(1.05);
 }
 
 

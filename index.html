@@ -313,6 +313,8 @@
             background: #7f8c8d;
             transform: scale(1.05);
         }
+        .btn-hydro { background: #00bcd4; }
+        .btn-destroy-action { background: #e91e63; }
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -721,6 +723,30 @@
     </div>
 </div>
 
+<!-- Modal להעברה להידרו -->
+<div id="transferModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3>💧 העברה למערכת הידרופונית</h3>
+        <div id="transferModalBody"></div>
+        <div class="modal-btn-row">
+            <button onclick="confirmTransferToHydro()" class="main-btn" style="background:var(--secondary);">✅ אשר העברה</button>
+            <button onclick="closeTransferModal()" class="main-btn" style="background:#999;">✖ ביטול</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal להשמדה -->
+<div id="destroyModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3>🚨 השמדת שתיל</h3>
+        <div id="destroyModalBody"></div>
+        <div class="modal-btn-row">
+            <button onclick="confirmDestroy()" class="main-btn" style="background:var(--error);">⚠️ אשר השמדה</button>
+            <button onclick="closeDestroyModal()" class="main-btn" style="background:#999;">✖ ביטול</button>
+        </div>
+    </div>
+</div>
+
 <script>
 // ═════════════════════════════════════════════════════════════════
 // 🔥 FIREBASE CONFIG
@@ -747,6 +773,8 @@ let activeImg           = '';
 let currentCat          = 'veg';
 let currentSubstrate    = 'מגשי פלסטיק';
 let editingId           = null;
+let transferringId      = null;
+let destroyingId        = null;
 const charts = { ph: null, ec: null, temp: null, do: null };
 
 // ═════════════════════════════════════════════════════════════════
@@ -924,7 +952,6 @@ function logout() {
     .catch(err=>alert('❌ שגיאה: '+err.message));
 }
 
-// Firebase Auth listener - רק פעם אחת
 auth.onAuthStateChanged(user => {
     if (user) {
         currentUser = user;
@@ -956,13 +983,13 @@ function updateSyncBadge(status,message) {
 }
 
 // ═════════════════════════════════════════════════════════════════
-// 💾 FIREBASE SYNC - **ללא כפלויות**
+// 💾 FIREBASE SYNC
 // ═════════════════════════════════════════════════════════════════
 
 function initFirebaseSync() {
     console.log('🔄 initFirebaseSync - התחלה');
     syncFromFirebase();
-    setInterval(syncFromFirebase, 30000); // כל 30 שניות
+    setInterval(syncFromFirebase, 30000);
 }
 
 async function syncToFirebase() {
@@ -978,7 +1005,6 @@ async function syncToFirebase() {
         const batch = firestore.batch();
         let changeCount = 0;
 
-        // מחק מהענן רשומות שנמחקו מקומית
         const localIds = new Set(db.map(i => String(i.id)));
         existing.forEach(doc => {
             if (!localIds.has(doc.id)) {
@@ -987,7 +1013,6 @@ async function syncToFirebase() {
             }
         });
 
-        // עדכן רשומות שהשתנו
         db.forEach(item => {
             const docId = String(item.id);
             const d = {...item};
@@ -1530,6 +1555,160 @@ function closeEditModal() {
 }
 
 // ═════════════════════════════════════════════════════════════════
+// 🚀 TRANSFER TO HYDRO MODAL
+// ═════════════════════════════════════════════════════════════════
+
+function openTransferModal(seedId) {
+    const seedItem = db.find(i => i.id === seedId);
+    if (!seedItem || seedItem.type !== 'seed') {
+        alert('❌ לא נמצאה רשומת זריעה');
+        return;
+    }
+
+    transferringId = seedId;
+    const body = document.getElementById('transferModalBody');
+    if (!body) return;
+
+    let html = `<div class="info-box">
+        <strong>צמח:</strong> ${seedItem.plant}<br>
+        <strong>מקור:</strong> מחזור ${seedItem.location?.cycle}, מגש ${seedItem.location?.tray}, גומה ${seedItem.location?.hole}<br>
+        <strong>סטטוס:</strong> ${seedItem.status === 'active' ? '🌱 פעיל' : '✅ נבט'}
+    </div>
+    <label style="margin-top:15px; color: var(--primary); font-weight: bold;">בחר מיקום בהידרופוניקה:</label>
+    <div class="grid-2">
+        <div>
+            <label>צד:</label>
+            <select id="transferSide">
+                <option value="">בחר צד...</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+        </div>
+        <div>
+            <label>חור:</label>
+            <input type="number" id="transferHole" placeholder="מספר חור">
+        </div>
+    </div>`;
+
+    body.innerHTML = html;
+    document.getElementById('transferModal').style.display = 'flex';
+}
+
+function confirmTransferToHydro() {
+    const side = parseInt(document.getElementById('transferSide').value || 0);
+    const hole = parseInt(document.getElementById('transferHole').value || 0);
+
+    if (!side || !hole) {
+        alert('❌ נא למלא צד וחור');
+        return;
+    }
+
+    const seedItem = db.find(i => i.id === transferringId);
+    if (!seedItem) return;
+
+    // בדוק אם החור כבר תפוס
+    const occupied = db.find(i =>
+        i.type === 'hydro' &&
+        i.hydroLoc &&
+        i.hydroLoc.side === side &&
+        i.hydroLoc.hole === hole &&
+        i.status === 'active'
+    );
+
+    if (occupied) {
+        alert('❌ החור בהידרופוניקה כבר תפוס!');
+        return;
+    }
+
+    // צור רשומת הידרו חדשה
+    const newId = db.length ? Math.max(...db.map(i => i.id)) + 1 : 1;
+    const today = new Date().toISOString().split('T')[0];
+    
+    db.push({
+        id: newId,
+        type: 'hydro',
+        plant: seedItem.plant,
+        source: `${seedItem.location.cycle}-${seedItem.location.tray}-${seedItem.location.hole}`,
+        date: today,
+        hydroLoc: { side, hole },
+        notes: `העברה מזריעה - ${seedItem.notes || ''}`,
+        timestamp: Date.now(),
+        status: 'active'
+    });
+
+    // שנה את סטטוס הזריעה ל-transferred
+    seedItem.status = 'transferred';
+    seedItem.timestamp = Date.now();
+
+    closeTransferModal();
+    saveAndSync();
+    alert(`✅ השתיל הועבר בהצלחה לחור ${hole} בצד ${side}!`);
+}
+
+function closeTransferModal() {
+    transferringId = null;
+    const modal = document.getElementById('transferModal');
+    if (modal) modal.style.display = 'none';
+}
+
+// ═════════════════════════════════════════════════════════════════
+// 💀 DESTROY MODAL
+// ═════════════════════════════════════════════════════════════════
+
+function openDestroyModal(itemId) {
+    const item = db.find(i => i.id === itemId);
+    if (!item) {
+        alert('❌ לא נמצאה רשומה');
+        return;
+    }
+
+    destroyingId = itemId;
+    const body = document.getElementById('destroyModalBody');
+    if (!body) return;
+
+    let itemInfo = '';
+    if (item.type === 'seed') {
+        itemInfo = `<strong>צמח:</strong> ${item.plant}<br>
+                   <strong>מיקום:</strong> מחזור ${item.location?.cycle}, מגש ${item.location?.tray}, גומה ${item.location?.hole}<br>`;
+    } else if (item.type === 'hydro') {
+        itemInfo = `<strong>צמח:</strong> ${item.plant}<br>
+                   <strong>מיקום:</strong> צד ${item.hydroLoc?.side}, חור ${item.hydroLoc?.hole}<br>`;
+    }
+
+    const html = `<div class="info-box" style="border-right-color: var(--error); background: #ffebee; color: #b71c1c;">
+        ${itemInfo}
+        <strong style="color: var(--error);">⚠️ פעולה זו תשמוד את השתיל לצמיתות!</strong>
+    </div>
+    <label style="margin-top:15px;">הוסף הערה על סיבת ההשמדה (אופציונלי):</label>
+    <textarea id="destroyReason" rows="3" placeholder="מחלה, טרגר, וכו'..."></textarea>`;
+
+    body.innerHTML = html;
+    document.getElementById('destroyModal').style.display = 'flex';
+}
+
+function confirmDestroy() {
+    const item = db.find(i => i.id === destroyingId);
+    if (!item) return;
+
+    const reason = document.getElementById('destroyReason').value;
+
+    item.status = 'destroyed';
+    item.destroyedReason = reason || 'לא צוין';
+    item.destroyedDate = new Date().toISOString().split('T')[0];
+    item.timestamp = Date.now();
+
+    closeDestroyModal();
+    saveAndSync();
+    alert('🗑️ השתיל סומן כהושמד בהצלחה');
+}
+
+function closeDestroyModal() {
+    destroyingId = null;
+    const modal = document.getElementById('destroyModal');
+    if (modal) modal.style.display = 'none';
+}
+
+// ═════════════════════════════════════════════════════════════════
 // 📓 LOGBOOK
 // ═════════════════════════════════════════════════════════════════
 
@@ -1696,6 +1875,26 @@ function renderTable() {
         editBtn.className='action-btn btn-edit';
         editBtn.onclick=()=>openEditModal(item.id);
         actionsCell.appendChild(editBtn);
+
+        // הוסף כפתור להעברה להידרו רק לזריעה
+        if (item.type === 'seed' && item.status === 'active') {
+            const transferBtn = document.createElement('button');
+            transferBtn.textContent = '💧';
+            transferBtn.className = 'action-btn btn-transfer';
+            transferBtn.title = 'העברה למערכת הידרו';
+            transferBtn.onclick = () => openTransferModal(item.id);
+            actionsCell.appendChild(transferBtn);
+        }
+
+        // הוסף כפתור להשמדה לזריעה והידרו
+        if ((item.type === 'seed' || item.type === 'hydro') && item.status === 'active') {
+            const destroyBtn = document.createElement('button');
+            destroyBtn.textContent = '🗑️';
+            destroyBtn.className = 'action-btn btn-destroy-action';
+            destroyBtn.title = 'שמוד שתיל';
+            destroyBtn.onclick = () => openDestroyModal(item.id);
+            actionsCell.appendChild(destroyBtn);
+        }
 
         const delBtn=document.createElement('button');
         delBtn.textContent='❌'; 
@@ -1936,7 +2135,8 @@ async function exportData() {
                 const statusH =
                     item.status==='active'      ? 'פעיל'  :
                     item.status==='harvested'   ? 'נקצר'  :
-                    item.status==='destroyed'   ? 'הושמד' : (item.status||'');
+                    item.status==='destroyed'   ? 'הושמד' :
+                    item.status==='transferred' ? 'הועבר' : (item.status||'');
                 return [
                     item.date||'', typeH, item.plant||'',
                     item.location?.cycle||'', item.location?.tray||'',
@@ -2257,9 +2457,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Modal close on background click
     const editModal=document.getElementById('editModal');
+    const transferModal=document.getElementById('transferModal');
+    const destroyModal=document.getElementById('destroyModal');
     if (editModal) {
         editModal.addEventListener('click',e=>{
             if (e.target===editModal) closeEditModal();
+        });
+    }
+    if (transferModal) {
+        transferModal.addEventListener('click',e=>{
+            if (e.target===transferModal) closeTransferModal();
+        });
+    }
+    if (destroyModal) {
+        destroyModal.addEventListener('click',e=>{
+            if (e.target===destroyModal) closeDestroyModal();
         });
     }
 
@@ -2268,7 +2480,7 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshAll();
     updateCharts();
 
-    // Firebase listener - if currentUser not yet set, request login
+    // Firebase listener
     if (!currentUser) {
         setTimeout(showLoginUI, 100);
     } else {

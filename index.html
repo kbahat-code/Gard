@@ -1013,7 +1013,7 @@ function initFirebaseSync() {
 }
 
 function saveAndSync() {
-    // ✅ שמור ב-localStorage
+      // ✅ שמור ב-localStorage
     localStorage.setItem('growData', JSON.stringify(db));
     
     // ✅ סנכרן עם Firebase
@@ -1022,10 +1022,13 @@ function saveAndSync() {
     // ✅ רענן בדיוק את מה שצריך - בלי כפלויות!
     renderTable();
     populateFilters();
-    renderLogbook(); // ✅ רענן לוגבוק
+    if (typeof renderLogbook === 'function') {
+        renderLogbook(); // ✅ רענן לוגבוק רק אם הפונקציה קיימת
+    }
     generateReports();
     updateCharts();
 }
+
 
 
 // ═══════════════════════════════════════════════════════

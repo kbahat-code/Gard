@@ -981,18 +981,32 @@ async function syncFromFirebase() {
 }
 function initFirebaseSync() {
     if (!currentUser) return;
+    
+    // ✅ קרא נתונים מהענן בהתחלה
     syncFromFirebase();
+    
+    // ✅ הקשב לשינויים בענן (Realtime)
     const userRef = firestore.collection('users').doc(currentUser.uid).collection('growData');
-    unsubscribeSnapshot = userRef.onSnapshot(snap=>{
+    unsubscribeSnapshot = userRef.onSnapshot(snap => {
         if (snap.metadata.hasPendingWrites) return;
+        console.log('🔄 נתונים מהענן התעדכנו - מסנכרן...');
         syncFromFirebase();
-    }, err=>{ console.error('❌ Snapshot:', err); updateSyncBadge('error','שגיאת מעקב'); });
-   setInterval(()=>{ 
-    if(navigator.onLine && currentUser) syncToFirebase(); 
-    else updateSyncBadge('offline','אין חיבור'); 
-}, 300000); // 5 דקות במקום 30 שניות
+    }, err => {
+        console.error('❌ Snapshot:', err);
+        updateSyncBadge('error', 'שגיאת מעקב');
+    });
 
+    // ✅ סנכרן כל 30 שניות (לא 5 דקות!)
+    setInterval(() => {
+        if (navigator.onLine && currentUser) {
+            console.log('⏰ סנכרון תקופתי...');
+            syncToFirebase();
+        } else {
+            updateSyncBadge('offline', 'אין חיבור');
+        }
+    }, 30000); // 30 שניות
 }
+
 function saveAndSync() { localStorage.setItem('growData',JSON.stringify(db)); syncToFirebase(); }
 function loadFromLocal() {
     const s = localStorage.getItem('growData');
@@ -1561,16 +1575,30 @@ function deleteItemPermanent(id) {
     if (!confirm('❌ האם למחוק רשומה זו לצמיתות? פעולה זו אינה הפיכה!')) return;
     
     // ✅ מחק מהמערך המקומי
-    db = db.filter(i=>i.id!==id);
+    db = db.filter(i => i.id !== id);
     
-    // ✅ סנכרן עם Firestore (יוחק שם בשורה הבאה של syncToFirebase)
-    saveAndSync();
+    // ✅ עדכן localStorage מיד
+    localStorage.setItem('growData', JSON.stringify(db));
     
-    refreshAll();
-    updateCharts();
+    // ✅ סנכרן עם Firebase
+    syncToFirebase();
+    
+    // ✅ רענן את הטבלה מיד
+    renderTable();
+    populateFilters();
+    
+    // ✅ רענן דוחות
+    generateReports();
+    
+    // ✅ אם זה לוגבוק, רענן
     renderLogbook();
+    
+    // ✅ רענן גרפים אם היה מדד
+    updateCharts();
+    
     alert('✅ רשומה נמחקה לצמיתות');
 }
+
 
 
 // ═══════════════════════════════════════════════════════

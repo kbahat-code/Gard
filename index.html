@@ -259,6 +259,74 @@
         }
         .logbook-entry .lb-text { color: #333; }
         .logbook-entry .lb-actions { margin-top: 6px; }
+
+        /* ✅ Modal עם שאלה - כן / לא */
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .confirm-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            direction: rtl;
+            max-width: 400px;
+        }
+
+        .confirm-box p {
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn-yes, .btn-no {
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-yes {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-yes:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .btn-no {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-no:hover {
+            background: #7f8c8d;
+            transform: scale(1.05);
+        }
+    </style>
+
     </style>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
@@ -1555,18 +1623,20 @@ function saveLogbookEntry() {
 }
 function renderLogbook() {
     const logContainer = document.getElementById('logbookContainer');
+    if (!logContainer) return;
     logContainer.innerHTML = '';
 
     db.forEach(item => {
         if (item.type === 'logbook') {
             const noteDiv = document.createElement('div');
-            noteDiv.className = 'note-card';
+            noteDiv.className = 'logbook-entry';
             noteDiv.innerHTML = `
-                <div class="note-header">
-                    <span class="note-date">${new Date(item.timestamp).toLocaleDateString('he-IL')}</span>
-                    <button class="delete-btn" onclick="showDeleteConfirm('${item.id}')">🗑️ מחק</button>
+                <div class="lb-date">${new Date(item.date).toLocaleDateString('he-IL')} - ${item.lbCategory}</div>
+                <div class="lb-text">${escapeHtml(item.text)}</div>
+                <div class="lb-actions">
+                    <button class="action-btn btn-edit" onclick="openEditModal(${item.id})">✏️ ערוך</button>
+                    <button class="action-btn btn-destroy" onclick="showDeleteConfirm('${item.id}')">🗑️ מחק</button>
                 </div>
-                <p class="note-text">${escapeHtml(item.content)}</p>
             `;
             logContainer.appendChild(noteDiv);
         }
@@ -1605,79 +1675,12 @@ function closeDeleteConfirm() {
 // ✅ מחק את ההערה לצמיתות
 function deleteNotePermanent(itemId) {
     db = db.filter(item => item.id !== itemId);
-    saveToLocal();
+    localStorage.setItem('growData',JSON.stringify(db));
+    syncToFirebase();
     renderLogbook();
     closeDeleteConfirm();
     console.log('🗑️ הערה נמחקה לצמיתות: ' + itemId);
 }
-
-/* ✅ Modal עם שאלה - כן / לא */
-.confirm-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.confirm-box {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    direction: rtl;
-    max-width: 400px;
-}
-
-.confirm-box p {
-    font-size: 18px;
-    margin-bottom: 25px;
-    color: #333;
-}
-
-.confirm-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-}
-
-.btn-yes, .btn-no {
-    padding: 12px 25px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.btn-yes {
-    background: #e74c3c;
-    color: white;
-}
-
-.btn-yes:hover {
-    background: #c0392b;
-    transform: scale(1.05);
-}
-
-.btn-no {
-    background: #95a5a6;
-    color: white;
-}
-
-.btn-no:hover {
-    background: #7f8c8d;
-    transform: scale(1.05);
-}
-
-
 
 // ═══════════════════════════════════════════════════════
 // פעולות על רשומות
@@ -1921,7 +1924,7 @@ function renderTable() {
         // מחיקה לצמיתות
         const delBtn=document.createElement('button');
         delBtn.textContent='❌'; delBtn.className='btn-del';
-        delBtn.onclick=()=>deleteItemPermanent(item.id);
+        delBtn.onclick=()=>deleteNotePermanent(item.id);
         actionsCell.appendChild(delBtn);
         row.appendChild(actionsCell);
         tbody.appendChild(row);
@@ -2317,6 +2320,24 @@ function loadFromLocal() {
         db = [];
     }
 }
+
+// ═══════════════════════════════════════════════════════
+// 🛡️ HELPER FUNCTIONS
+// ═══════════════════════════════════════════════════════
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function deleteItemPermanent(itemId) {
+    db = db.filter(item => item.id !== itemId);
+    localStorage.setItem('growData', JSON.stringify(db));
+    syncToFirebase();
+    refreshAll();
+    console.log('🗑️ רשומה נמחקה לצמיתות: ' + itemId);
+}
+
 
 // ═══════════════════════════════════════════════════════
 // 🚀 INIT
